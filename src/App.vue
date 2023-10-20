@@ -1,26 +1,62 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>
+    <NavBar />
+    <SearchBar />
+    <ApartmentList :apartments="apartments" />
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import NavBar from './components/NavBar.vue'
+import ApartmentList from './components/ApartmentList.vue'
+import SearchBar from './components/SearchBar.vue'
 
 export default {
-  name: 'App',
   components: {
-    HelloWorld
+    NavBar,
+    SearchBar,
+    ApartmentList
+  },
+  data() {
+    return {
+      apartments: [
+      {
+        id: 1,
+        name: "Luxury Downtown Apartment",
+        address: "123 Main St, Cityville",
+        bedrooms: 2,
+        bathrooms: 2,
+        price: 2500,
+        sqft: 1200,
+        imageUrl: require("@/assets/stockapartmentphoto1.jpg"),
+        description: "Modern apartment with a great view of the city. Close to shops and public transport."
+      },
+      {
+        id: 2,
+        name: "Cozy Suburban Flat",
+        address: "456 Elm St, Townsburg",
+        bedrooms: 1,
+        bathrooms: 1,
+        price: 1500,
+        sqft: 800,
+        imageUrl: require("@/assets/stockapartmentphoto2.jpg"),
+        description: "Quiet flat with a nice balcony, close to parks and schools."
+      },
+      ] // Gain apartments.com API information.
+    };
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+  html {
+    height: 100%;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+  }
 </style>
+
