@@ -21,7 +21,7 @@ git clone https://github.com/your-username/boston-apartments-hub.git
 Navigate to the project directory and install dependencies:
 bash
 Copy code
-cd boston-apartments-hub
+cd bostonrentals -> frontend
 npm install
 Run the application:
 sql
