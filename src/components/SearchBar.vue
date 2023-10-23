@@ -5,7 +5,7 @@
       <p>Let us help you find your dream home.</p>
     </div>
     <div class="search-bar">
-      <input class="search-input" type="text" placeholder="Search for apartments..." v-model="query" />
+      <input class="search-input" type="text" placeholder="Search for rentals..." v-model="query" />
       <button class="search-button" @click="search">Search</button>
     </div>
   </div>
@@ -85,6 +85,7 @@ h1 {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    text-align: center;
   }
 </style>
   

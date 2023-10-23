@@ -3,6 +3,7 @@
     <NavBar />
     <SearchBar />
     <ApartmentList :apartments="apartments" />
+    <RentalTools />
   </div>
 </template>
 
@@ -10,12 +11,14 @@
 import NavBar from './components/NavBar.vue'
 import ApartmentList from './components/ApartmentList.vue'
 import SearchBar from './components/SearchBar.vue'
+import RentalTools from './components/RentalTools.vue'
 
 export default {
   components: {
     NavBar,
     SearchBar,
-    ApartmentList
+    ApartmentList,
+    RentalTools
   },
   data() {
     return {
@@ -29,7 +32,6 @@ export default {
         price: 2500,
         sqft: 1200,
         imageUrl: require("@/assets/stockapartmentphoto1.jpg"),
-        description: "Modern apartment with a great view of the city. Close to shops and public transport."
       },
       {
         id: 2,
@@ -40,7 +42,6 @@ export default {
         price: 1500,
         sqft: 800,
         imageUrl: require("@/assets/stockapartmentphoto2.jpg"),
-        description: "Quiet flat with a nice balcony, close to parks and schools."
       },
       ] // Gain apartments.com API information.
     };

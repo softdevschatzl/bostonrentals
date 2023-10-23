@@ -1,7 +1,7 @@
 <template>
-  <div class="apartments-section">
+  <div class="apartments-section double-color-background">
     <div class="apartments-header">
-      <h1>Find Apartments Near {{ location }}</h1>
+      <h1>Find Rentals Near {{ location }}</h1>
     </div>
     <div class="apartments-wrapper">
       <ApartmentItem v-for="apartment in apartments" :key="apartment.id" :apartment="apartment" />
@@ -28,6 +28,12 @@ export default {
 </script>
 
 <style scoped>
+  .double-color-background {
+    height: 100%;
+
+    background: linear-gradient(to bottom, #668d5e 15%, #4b4b4b 25%, #4b4b4b 75%);
+  }
+
   .apartments-section {
     min-height: 70vh;
     width: 100%;
@@ -36,6 +42,7 @@ export default {
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
+    position: relative;
   }
 
   .apartments {
@@ -54,7 +61,7 @@ export default {
     transform: scale(1.1);
   }
   .apartments-wrapper {
-    margin-top: 10vh;
+    margin-top: 7vh;
     display: flex;
     justify-content: space-evenly;
     width: 100%;

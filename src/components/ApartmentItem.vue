@@ -1,14 +1,18 @@
 <template>
-    <div class="apartments">
-        {{ apartment.name }}
-        {{ apartment.address }}
-        {{ apartment.bedrooms }}
-        {{ apartment.bathrooms }}
-        {{ apartment.sqft }}
-        <img :src="apartment.imageUrl" alt="Apartment Image" class="apartment-image">
-        {{ apartment.price }}
-        {{ apartment.description }}
+  <div class="apartments" :style="backgroundStyle">
+    <div class="border-left"></div>
+    <div class="border-right"></div>
+    <div class="content">
+      <div class="name">{{ apartment.name }}</div>
+      <div class="address">{{ apartment.address }}</div>
+      <div class="details">
+        <span>{{ apartment.bedrooms }} Beds,</span>
+        <span>{{ apartment.bathrooms }} Baths,</span>
+        <span>{{ apartment.sqft }} sqft</span>
+      </div>
+      <div class="price">${{ apartment.price }}/month</div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -16,27 +20,135 @@
         name: 'ApartmentItem',
         props: {
             apartment: Object,
+        },
+        computed: {
+          backgroundStyle() {
+            return {
+              backgroundImage: `url(${this.apartment.imageUrl})`,
+              backgroundSize: 'cover', 
+              backgroundPosition: 'center'
+            };
+          }
         }
     }
 </script>
 
 <style scoped>
   .apartments {
-    background-color: rgb(255, 255, 255);
+    background-color: rgba(255, 255, 255, 0.7);  /* Semi-transparent white to see the apartment image */
     height: 30vh;
     width: 30vw;
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    text-align: center;
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+    overflow: hidden;  /* Ensure no child element spills out of the rounded corners */
+    position: relative;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
   }
+
+  .apartments::before, .apartments::after {
+    content: "";
+    position: absolute;
+    background: #668d5e;
+    transition: all 0.3s ease-in-out;
+    z-index: 1;
+  }
+
+  /* Initial state for the top border */
+  .apartments::before {
+    top: 0;
+    left: 50%; 
+    right: 50%; 
+    height: 6px;
+    width: 0;
+  }
+
+  /* Initial state for the bottom border */
+  .apartments::after {
+    bottom: 0;
+    left: 50%;
+    right: 50%;
+    height: 6px;
+    width: 0;
+  }
+
+  .apartments > .border-left::before, .apartments > .border-right::before {
+    content: "";
+    position: absolute;
+    background: #668d5e;
+    transition: all 0.3s ease-in-out;
+    z-index: 1;
+  }
+
+  /* Initial state for the left border */
+  .apartments > .border-left::before {
+    top: 50%;
+    bottom: 50%;
+    left: 0;
+    width: 6px;
+    height: 0;
+  }
+
+  /* Initial state for the right border */
+  .apartments > .border-right::before {
+    top: 50%;
+    bottom: 50%;
+    right: 0;
+    width: 6px;
+    height: 0;
+  }
+
+  .apartments:hover::before, .apartments:hover::after {
+    left: 0;
+    right: 0;
+    width: 100%;
+  }
+
+  .apartments:hover > .border-left::before, .apartments:hover > .border-right::before {
+    top: 0;
+    bottom: 0;
+    height: 100%;
+  }
+
   .apartments:hover {
-    transition: .3s ease-in-out;
-    transform: scale(1.1);
+    transform: scale(1.05);
+    box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.2); /* Slightly increase shadow depth on hover for better effect */
   }
-  .apartment-image {
-    height: 100px;
+
+  .content {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    right: 15px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.3));
+    padding: 15px;
+    border-radius: 12px;
+  }
+
+  .name {
+    font-size: 1.6em;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  .address {
+    font-size: 1.2em;
+    margin-bottom: 5px;
+  }
+
+  .details span {
+    margin-right: 10px;
+  }
+
+  .price {
+    font-size: 1.4em;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+
+  .name, .address, .details, .price {
+    color: #fff;
   }
 </style>

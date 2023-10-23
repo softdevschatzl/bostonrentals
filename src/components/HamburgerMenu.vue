@@ -9,11 +9,11 @@
         <nav v-show="navOpen">
             <div class="sidemenu__wrapper">
             <ul class="sidemenu__list">
-                <li class="sidemenu__item"><a href="">Top</a></li>
-                <li class="sidemenu__item"><a href="">About</a></li>
-                <li class="sidemenu__item"><a href="">Blog</a></li>
-                <li class="sidemenu__item"><a href="">Work</a></li>
-                <li class="sidemenu__item"><a href="">Link</a></li>
+                <li class="sidemenu__item"><a href="">Home</a></li>
+                <li class="sidemenu__item"><a href="">Renter Tools</a></li>
+                <li class="sidemenu__item"><a href="">Lessor Tools</a></li>
+                <li class="sidemenu__item"><a href="">Apartments For Rent</a></li>
+                <li class="sidemenu__item"><a href="">Homes For Rent</a></li>
             </ul>
             </div>
         </nav>
@@ -95,7 +95,7 @@
             }
 
             &__wrapper {
-        padding-top: 50px;
+        padding-top: 60px;
         }
 
             &__list {
@@ -108,8 +108,8 @@
             &__item {
                 a {
             text-decoration: none;
-                    line-height: 1.6em;
-                    font-size: 1.6em;
+                    line-height: 1.2em;
+                    font-size: 1.2em;
                     padding: .5em;
                     display: block;
                     color: white;

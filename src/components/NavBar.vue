@@ -103,6 +103,7 @@
       background-color: #adadad;
       padding: 15px;
       border: none;
+      width: 12vw;
       height: 100%;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
       margin-right: -20vw;
