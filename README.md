@@ -17,14 +17,13 @@ Secure Messaging: 💌 Directly communicate with property managers without leavi
 Clone the repository and view the site:
 bash
 Copy code
-git clone https://github.com/your-username/boston-apartments-hub.git
+git clone https://github.com/theschatzinator/bostonrentals.git
 Navigate to the project directory and install dependencies:
 bash
 Copy code
 cd bostonrentals -> frontend
 npm install
 Run the application:
-sql
 Copy code
 npm start
 📊 Tech Stack
