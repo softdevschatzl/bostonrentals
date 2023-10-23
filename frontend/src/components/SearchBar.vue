@@ -79,7 +79,7 @@ h1 {
 
   .search-header {
     margin: 50px;
-    font-size: 40px;
+    font-size: 2rem;
     color: #fff;
     display: flex;
     flex-direction: column;
