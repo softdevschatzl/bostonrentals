@@ -4,7 +4,7 @@
       <h1>Find Rentals Near {{ location }}</h1>
     </div>
     <div class="apartments-wrapper">
-      <ApartmentItem v-for="apartment in apartments" :key="apartment.id" :apartment="apartment" />
+      <ApartmentItem v-for="property in apartments" :key="property.id" :propertyData="property" />
     </div>
   </div>
 </template>

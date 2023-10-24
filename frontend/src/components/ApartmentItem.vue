@@ -3,33 +3,48 @@
     <div class="border-left"></div>
     <div class="border-right"></div>
     <div class="content">
-      <div class="name">{{ apartment.name }}</div>
-      <div class="address">{{ apartment.address }}</div>
+      <div class="name">{{ address }}</div>
+      <!-- <div class="address">{{ apartment.address }}</div> --> <!-- API doesnt provide names. -->
       <div class="details">
-        <span>{{ apartment.bedrooms }} Beds,</span>
-        <span>{{ apartment.bathrooms }} Baths,</span>
-        <span>{{ apartment.sqft }} sqft</span>
+        <span>{{ bedrooms }} Beds,</span>
+        <span>{{ bathrooms }} Baths,</span>
+        <span>{{ sqft }} sqft</span>
       </div>
-      <div class="price">${{ apartment.price }}/month</div>
+      <!-- <div class="price">${{ apartment.price }}/month</div> --> <!-- API Doesnt provide pricing. -->
     </div>
   </div>
 </template>
 
 <script>
     export default {
-        name: 'ApartmentItem',
-        props: {
-            apartment: Object,
+      name: 'ApartmentItem',
+      props: {
+          apartment: Object,
+      },
+      computed: {
+        address() {
+          return this.propertyData.formattedAddress;
         },
-        computed: {
-          backgroundStyle() {
-            return {
-              backgroundImage: `url(${this.apartment.imageUrl})`,
-              backgroundSize: 'cover', 
-              backgroundPosition: 'center'
-            };
-          }
+        bedrooms() {
+          return this.propertyData.bedrooms || 'N/A';
+        },
+        bathooms() {
+          return this.propertyData.bathrooms || 'N/A';
+        },
+        sqft() {
+          return this.propertyData.squareFootage || 'N/A';
+        },
+        price() {
+          return 'TBA'; // Find a way to fetch the price of a given rental.
+        },
+        backgroundStyle() {
+          return {
+            backgroundImage: `url(${this.apartment.imageUrl})`,
+            backgroundSize: 'cover', 
+            backgroundPosition: 'center'
+          };
         }
+      },
     }
 </script>
 
