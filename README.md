@@ -3,15 +3,12 @@
 Ultimate Source for Renting in Boston!
 
 🌟 Features
-Interactive Map: 🗺️ Explore Boston's neighborhoods with our interactive map.
 
 Advanced Filters: 🔍 Tailor your search with filters like price, size, and amenities.
 
 User Reviews: 🌟 Dive into genuine reviews and get to know about prospective neighborhoods and properties.
 
 Favorites & Wishlists: ❤️ Keep track of the apartments you love.
-
-Secure Messaging: 💌 Directly communicate with property managers without leaving our platform.
 
 💡 Quickstart
 Clone the repository and view the site:
