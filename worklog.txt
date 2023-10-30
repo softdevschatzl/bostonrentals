@@ -1,0 +1,7 @@
+TODO:
+    - Run both servers, read console. Everything will be there, trust.
+
+APIs:
+    - RentCast (property data)
+    - YouGotListings (better property data, more $)
+    - ip-api (convert ip address to usable coordinates, for location data)

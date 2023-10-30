@@ -1,5 +1,5 @@
 <template>
-  <div class="apartments" :style="backgroundStyle">
+  <!-- <div class="apartments" :style="backgroundStyle"> See line 40. -->
     <div class="border-left"></div>
     <div class="border-right"></div>
     <div class="content">
@@ -12,14 +12,18 @@
       </div>
       <!-- <div class="price">${{ apartment.price }}/month</div> --> <!-- API Doesnt provide pricing. -->
     </div>
-  </div>
+  <!-- </div> See line 40. -->
 </template>
 
 <script>
     export default {
       name: 'ApartmentItem',
       props: {
-          apartment: Object,
+          apartment: {
+            type: Object,
+            required: true,
+            default: () => ({})
+          }
       },
       computed: {
         address() {
@@ -28,7 +32,7 @@
         bedrooms() {
           return this.propertyData.bedrooms || 'N/A';
         },
-        bathooms() {
+        bathrooms() {
           return this.propertyData.bathrooms || 'N/A';
         },
         sqft() {
@@ -37,13 +41,14 @@
         price() {
           return 'TBA'; // Find a way to fetch the price of a given rental.
         },
-        backgroundStyle() {
-          return {
-            backgroundImage: `url(${this.apartment.imageUrl})`,
-            backgroundSize: 'cover', 
-            backgroundPosition: 'center'
-          };
-        }
+        // YGL might have images, but RentCast does not.
+        // backgroundStyle() {
+        //   return {
+        //     backgroundImage: `url(${this.apartment.imageUrl})`,
+        //     backgroundSize: 'cover', 
+        //     backgroundPosition: 'center'
+        //   };
+        // }
       },
     }
 </script>

@@ -8,6 +8,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import NavBar from './components/NavBar.vue'
 import ApartmentList from './components/ApartmentList.vue'
 import SearchBar from './components/SearchBar.vue'
@@ -22,7 +23,9 @@ export default {
   },
   data() {
     return {
-      // apartments: [
+      // TODO: Get API access to turn GeoData Coordinates 
+      // into actual locations to feed the RentCastAPI.
+      // apartments: [    
       // {
       //   id: 1,
       //   name: "Luxury Downtown Apartment",
@@ -47,32 +50,32 @@ export default {
     };
   },
   // Retrieving location from IP to show relevant listings on start.
-  // async mounted() {
-  //   try {
-  //     const response = await axios.get('/api/location');
-  //     const locationData = response.data;
-  //     this.location = `${locationData.city}, $locationData.region`;
+  async mounted() {
+    try {
+      const response = await axios.get('/api/location');
+      const locationData = response.data;
+      this.location = `${locationData.city}, $locationData.region`;
 
-  //     await this.fetchApartmentNearLocation(locationData.latitude, locationData.longitude);
-  //   } catch (error) {
-  //     console.error("Failed to fetch user location:", error);
-  //   }
-  // },
-  // methods: {
-  //   async fetchApartmentNearLocation(latitude, longitude) {
-  //     try {
-  //       const response = await axios.get('/api/apartments', {
-  //         params: {
-  //           lat: latitude,
-  //           lon: longitude
-  //         }
-  //       });
-  //       this.apartments = response.data; // I dont know what the API would return. Guessing it's an array.
-  //     } catch (error) {
-  //       console.error('Failed to fetch apartments.');
-  //     }
-  //   }
-  // }
+      await this.fetchApartmentNearLocation(locationData.latitude, locationData.longitude);
+    } catch (error) {
+      console.error("Failed to fetch user location:", error);
+    }
+  },
+  methods: {
+    async fetchApartmentNearLocation(latitude, longitude) {
+      try {
+        const response = await axios.get('/api/apartments', {
+          params: {
+            lat: latitude,
+            lon: longitude
+          }
+        });
+        this.apartments = response.data; // I dont know what the API would return. Guessing it's an array.
+      } catch (error) {
+        console.error('Failed to fetch apartments.');
+      }
+    }
+  }
 }
 </script>
 

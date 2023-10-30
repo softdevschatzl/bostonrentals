@@ -87,6 +87,7 @@
       width: 25%;
       display: flex;
       justify-content: space-evenly;
+      flex-wrap: nowrap;
     }
     .user-sign-in:hover {
       color: #adadad;

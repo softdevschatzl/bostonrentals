@@ -1,7 +1,7 @@
 require('dotenv').config();
-import express from 'express';
-import { get } from 'axios';
-import rateLimit from 'express-rate-limit';
+const express = require('express');
+const axios = require('axios');
+const rateLimit = require('express-rate-limit');
 const apiKey = process.env.RENTCAST_API_KEY;
 
 const app = express();
@@ -9,7 +9,7 @@ const PORT = 3000;
 
 // Limits API queries. Remove when upgrading API.
 const limiter = rateLimit({
-    windowMs: 30 * 24 * 60 * 60 * 1000, // 30 days in milliseconds.
+    windowMs: 15 * 60 * 1000, // 30 days in milliseconds.
     max: 50, // Limiting API calls to 50 every month.
     message: "Too many requests from this IP."
 });
@@ -21,7 +21,7 @@ app.get('/properties', async (req, res) => {
     try {
         const { city, state, limit = 20 } = req.query;
 
-        const response = await get('https://api.rentcast.io/v1/properties', {
+        const response = await axios.get('https://api.rentcast.io/v1/properties', {
             params: {
                 city,
                 state,
@@ -44,4 +44,37 @@ app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`)
 })
 
-// 
+// Fetch user's IP to show featured apartments closest to them.
+app.get('/api/location', async (req, res) => {
+    try {
+        const userIp = req.ip;
+        const response = await axios.get(`http://ip-api.com/json/${userIp}`);
+        return res.json(response.data);
+    } catch (error) {
+        console.error("Failed to fetch user location:", error.message);
+        return res.status(500).json({ error: "Failed to fetch user location." });
+    }
+});
+
+// Fetch properties based on latitude and longitude.
+app.get('/api/apartments', async (req, res) => {
+    try {
+        const { lat, lon } = req.query;
+
+        const response = await axios.get('https://api.rentcast.io/v1/properties', {
+            params: {
+                lat,
+                lon
+            },
+            headers: {
+                'Accept': 'application.json',
+                'X-Api-Key': apiKey
+            }
+        });
+
+        return res.json(response.data);
+    } catch (error) {
+        console.error("API call failed:", error.message);
+        return res.status(500).json({ error: "Failed to fetch data." });
+    }
+});
