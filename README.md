@@ -26,14 +26,17 @@ npm install
 Run the application:
 Copy code
 npm start
+
 📊 Tech Stack
 Frontend: Vue.js and Sass
 Backend: Node.js, Express, and MongoDB
 Authentication: Passport.js
+
 📸 Screenshots
 Home	Listings	Detail
 Home Page	Listings Page	Detail Page
 🤝 Contributing
+
 We are always open to collaborations. If you have a feature suggestion, bug report, or want to contribute to the code, please feel free to open an issue or submit a pull request.
 
 📜 License
