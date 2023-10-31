@@ -3,9 +3,11 @@ const express = require('express');
 const axios = require('axios');
 const rateLimit = require('express-rate-limit');
 const apiKey = process.env.RENTCAST_API_KEY;
+const cors = require('cors');
 
 const app = express();
 const PORT = 3000;
+app.use(cors());
 
 // Limits API queries. Remove when upgrading API.
 const limiter = rateLimit({
@@ -40,14 +42,12 @@ app.get('/properties', async (req, res) => {
     }
 });
 
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`)
-})
-
 // Fetch user's IP to show featured apartments closest to them.
 app.get('/api/location', async (req, res) => {
+    console.log("Location route hit.")
     try {
-        const userIp = req.ip;
+        const userIp = '43.225.189.77';
+        // const userIp = req.ip; Use this after testing locally.
         const response = await axios.get(`http://ip-api.com/json/${userIp}`);
         return res.json(response.data);
     } catch (error) {
@@ -77,4 +77,8 @@ app.get('/api/apartments', async (req, res) => {
         console.error("API call failed:", error.message);
         return res.status(500).json({ error: "Failed to fetch data." });
     }
+});
+
+app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`)
 });

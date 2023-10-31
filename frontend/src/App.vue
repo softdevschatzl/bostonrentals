@@ -25,28 +25,8 @@ export default {
     return {
       // TODO: Get API access to turn GeoData Coordinates 
       // into actual locations to feed the RentCastAPI.
-      // apartments: [    
-      // {
-      //   id: 1,
-      //   name: "Luxury Downtown Apartment",
-      //   address: "123 Main St, Cityville",
-      //   bedrooms: 2,
-      //   bathrooms: 2,
-      //   price: 2500,
-      //   sqft: 1200,
-      //   imageUrl: require("@/assets/stockapartmentphoto1.jpg"),
-      // },
-      // {
-      //   id: 2,
-      //   name: "Cozy Suburban Flat",
-      //   address: "456 Elm St, Townsburg",
-      //   bedrooms: 1,
-      //   bathrooms: 1,
-      //   price: 1500,
-      //   sqft: 800,
-      //   imageUrl: require("@/assets/stockapartmentphoto2.jpg"),
-      // },
-      // ] // Gain apartments.com API information.
+      apartments: [],
+      location: ''
     };
   },
   // Retrieving location from IP to show relevant listings on start.
@@ -54,11 +34,11 @@ export default {
     try {
       const response = await axios.get('/api/location');
       const locationData = response.data;
-      this.location = `${locationData.city}, $locationData.region`;
+      this.location = `${locationData.city}, ${locationData.region}`;
 
       await this.fetchApartmentNearLocation(locationData.latitude, locationData.longitude);
     } catch (error) {
-      console.error("Failed to fetch user location:", error);
+      console.error("Failed to fetch user location:", error.message);
     }
   },
   methods: {
@@ -72,7 +52,7 @@ export default {
         });
         this.apartments = response.data; // I dont know what the API would return. Guessing it's an array.
       } catch (error) {
-        console.error('Failed to fetch apartments.');
+        console.error('Failed to fetch apartments.', error.message);
       }
     }
   }

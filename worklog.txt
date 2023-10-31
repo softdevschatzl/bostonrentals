@@ -4,4 +4,4 @@ TODO:
 APIs:
     - RentCast (property data)
     - YouGotListings (better property data, more $)
-    - ip-api (convert ip address to usable coordinates, for location data)
+    - ip-api (convert ip address to usable coordinates, for location data) 13.3euros/month = $169.76/yr Unlimited requests doe

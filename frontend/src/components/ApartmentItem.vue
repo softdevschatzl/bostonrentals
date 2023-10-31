@@ -4,13 +4,11 @@
     <div class="border-right"></div>
     <div class="content">
       <div class="name">{{ address }}</div>
-      <!-- <div class="address">{{ apartment.address }}</div> --> <!-- API doesnt provide names. -->
       <div class="details">
         <span>{{ bedrooms }} Beds,</span>
         <span>{{ bathrooms }} Baths,</span>
         <span>{{ sqft }} sqft</span>
       </div>
-      <!-- <div class="price">${{ apartment.price }}/month</div> --> <!-- API Doesnt provide pricing. -->
     </div>
   <!-- </div> See line 40. -->
 </template>
@@ -19,7 +17,7 @@
     export default {
       name: 'ApartmentItem',
       props: {
-          apartment: {
+          propertyData: {
             type: Object,
             required: true,
             default: () => ({})
@@ -37,9 +35,6 @@
         },
         sqft() {
           return this.propertyData.squareFootage || 'N/A';
-        },
-        price() {
-          return 'TBA'; // Find a way to fetch the price of a given rental.
         },
         // YGL might have images, but RentCast does not.
         // backgroundStyle() {
