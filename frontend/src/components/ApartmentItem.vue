@@ -1,5 +1,5 @@
 <template>
-  <!-- <div class="apartments" :style="backgroundStyle"> See line 40. -->
+  <div class="apartments"> <!-- :style="backgroundStyle" See line 40. -->
     <div class="border-left"></div>
     <div class="border-right"></div>
     <div class="content">
@@ -10,7 +10,7 @@
         <span>{{ sqft }} sqft</span>
       </div>
     </div>
-  <!-- </div> See line 40. -->
+  </div>
 </template>
 
 <script>
@@ -74,8 +74,8 @@
   /* Initial state for the top border */
   .apartments::before {
     top: 0;
-    left: 50%; 
-    right: 50%; 
+    left: 0; 
+    right: 100%; 
     height: 6px;
     width: 0;
   }
@@ -83,8 +83,8 @@
   /* Initial state for the bottom border */
   .apartments::after {
     bottom: 0;
-    left: 50%;
-    right: 50%;
+    left: 100%;
+    right: 0;
     height: 6px;
     width: 0;
   }
@@ -99,8 +99,8 @@
 
   /* Initial state for the left border */
   .apartments > .border-left::before {
-    top: 50%;
-    bottom: 50%;
+    top: 0;
+    bottom: 100%;
     left: 0;
     width: 6px;
     height: 0;
@@ -108,8 +108,8 @@
 
   /* Initial state for the right border */
   .apartments > .border-right::before {
-    top: 50%;
-    bottom: 50%;
+    top: 100%;
+    bottom: 0;
     right: 0;
     width: 6px;
     height: 0;
