@@ -36,20 +36,21 @@ export default {
       const locationData = response.data;
       this.location = `${locationData.city}, ${locationData.region}`;
 
-      await this.fetchApartmentNearLocation(locationData.latitude, locationData.longitude);
+      await this.fetchApartmentNearLocation(locationData.lat, locationData.lon);
     } catch (error) {
       console.error("Failed to fetch user location:", error.message);
     }
   },
   methods: {
-    async fetchApartmentNearLocation(latitude, longitude) {
+    async fetchApartmentNearLocation(lat, lon) {
       try {
         const response = await axios.get('/api/apartments', {
           params: {
-            lat: latitude,
-            lon: longitude
+            latitude: lat,
+            longitude: lon
           }
         });
+        console.log("App.vue Coordinates: ", lat, lon);
         this.apartments = response.data; // I dont know what the API would return. Guessing it's an array.
       } catch (error) {
         console.error('Failed to fetch apartments.', error.message);

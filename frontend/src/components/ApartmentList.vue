@@ -41,7 +41,7 @@ export default {
         // Using Axios
         const { data } = await axios.get('/api/location');
         if (data && data.lat && data.lon) {
-          this.userCoords = { lat: data.lat, long: data.lon };
+          this.userCoords = { latitude: data.lat, longitude: data.lon };
           this.location = `${data.city}, ${data.regionName}`;
         } else {
           console.error('Location data is incomplete.');
@@ -57,7 +57,7 @@ export default {
       // Ensures userCoords are available before sorting.
       if (this.userCoords) {
         const sortedApartments = sortApartments(this.apartments, this.userCoords);
-      return sortedApartments.slice(0, this.limit);
+        return sortedApartments.slice(0, this.limit);
       }
       // If coordinates are not available, return empty array.
       return [];

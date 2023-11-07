@@ -5,11 +5,27 @@
  */
 
 function calculateDistance(coord1, coord2) {
-    if (!coord1 || !coord2) {
+    console.log("Coordinates: ", coord1, coord2);
+
+    if (!coord1 || !coord2 || typeof coord1.lat !== 'number' || typeof coord1.lon !== 'number' || typeof coord2.lat !== 'number' || typeof coord2.lon !== 'number') {
         console.error('Invalid coordinates for distance calculation.');
         return Infinity;
     }
-    return Math.sqrt(Math.pow(coord1.lat - coord2.lat, 2) + Math.pow(coord1.lon - coord2.lon, 2));
+    const R = 6371; // Earth's radius in kilometers
+    const dLat = degreesToRadians(coord2.lat - coord1.lat);
+    const dLon = degreesToRadians(coord2.lon - coord1.lon);
+    const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(degreesToRadians(coord1.lat)) * Math.cos(degreesToRadians(coord2.lat)) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c; // Distance in kilometers
+
+    return distance;
+}
+
+function degreesToRadians(degrees) {
+    return degrees * (Math.PI / 180);
 }
 
 /**

@@ -30,7 +30,7 @@ app.get('/properties', async (req, res) => {
                 limit
             },
             headers: {
-                'Accept': 'application.json',
+                'Accept': 'application/json',
                 'X-Api-Key': apiKey
             }
         });
@@ -80,5 +80,5 @@ app.get('/api/apartments', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`)
+    console.log(`Server running on http://localhost:${PORT}`);
 });
