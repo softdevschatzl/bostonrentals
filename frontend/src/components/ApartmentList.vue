@@ -4,65 +4,22 @@
       <h1>Find Rentals Near {{ location }}</h1>
     </div>
     <div class="apartments-wrapper">
-      <ApartmentItem v-for="property in featuredApartmentLimit" :key="property.id" :propertyData="property" />
+      <ApartmentItem v-for="apartment in apartments" :key="apartment.id" :propertyData="apartment" />
     </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
 import ApartmentItem from './ApartmentItem.vue';
-import { sortApartments } from '@/utils/featuredApartmentAlgorithm';
 
 export default {
   components: {
-    ApartmentItem
+    ApartmentItem,
   },
   props: {
     apartments: Array,
+    location: String,
   },
-  data() {
-    return {
-      location: '',
-      limit: 3,
-      userCoords: null,
-    };
-  },
-  mounted() {
-    this.fetchUserLocation();
-  },
-  methods: {
-    async fetchUserLocation() {
-      try {
-        // Using fetch API
-        // const respsonse = await fetch('/api/location');
-        // const data = await response.json();
-
-        // Using Axios
-        const { data } = await axios.get('/api/location');
-        if (data && data.lat && data.lon) {
-          this.userCoords = { latitude: data.lat, longitude: data.lon };
-          this.location = `${data.city}, ${data.regionName}`;
-        } else {
-          console.error('Location data is incomplete.');
-        }
-      } catch(error) {
-        console.error('Error fetching user location:', error.message);
-      }
-    }
-  },
-  computed: {
-    featuredApartmentLimit() {
-      // Returns only { limit } sorted apartments to be featured.
-      // Ensures userCoords are available before sorting.
-      if (this.userCoords) {
-        const sortedApartments = sortApartments(this.apartments, this.userCoords);
-        return sortedApartments.slice(0, this.limit);
-      }
-      // If coordinates are not available, return empty array.
-      return [];
-    }
-  }
 };
 </script>
 
