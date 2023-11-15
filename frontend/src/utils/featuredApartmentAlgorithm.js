@@ -4,19 +4,21 @@
  * gathered from the user's IP.
  */
 
+import { toRaw } from 'vue'; // To destructure the coordinates received from ip-api.
+
 function calculateDistance(coord1, coord2) {
     console.log("Coordinates: ", coord1, coord2);
 
-    if (!coord1 || !coord2 || typeof coord1.lat !== 'number' || typeof coord1.lon !== 'number' || typeof coord2.lat !== 'number' || typeof coord2.lon !== 'number') {
-        console.error('Invalid coordinates for distance calculation.');
+    if (!coord1 || !coord2 || typeof coord1.latitude !== 'number' || typeof coord1.longitude !== 'number' || typeof coord2.latitude !== 'number' || typeof coord2.longitude !== 'number') {
+        console.error('Invalid coordinates for distance calculation. Types: ', typeof coord1.latitude, typeof coord1.longitude, typeof coord2.latitude, typeof coord2.longitude);
         return Infinity;
     }
     const R = 6371; // Earth's radius in kilometers
-    const dLat = degreesToRadians(coord2.lat - coord1.lat);
-    const dLon = degreesToRadians(coord2.lon - coord1.lon);
+    const dLat = degreesToRadians(coord2.latitude - coord1.latitude);
+    const dLon = degreesToRadians(coord2.longitude - coord1.longitude);
     const a =
         Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(degreesToRadians(coord1.lat)) * Math.cos(degreesToRadians(coord2.lat)) *
+        Math.cos(degreesToRadians(coord1.latitude)) * Math.cos(degreesToRadians(coord2.latitude)) *
         Math.sin(dLon / 2) * Math.sin(dLon / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = R * c; // Distance in kilometers
@@ -50,9 +52,10 @@ function calculateCompletenessScore(apartment) {
  */
 
 export function sortApartments(apartments, userCoords) {
+    const rawUserCoords = toRaw(userCoords) || userCoords; // Converts ProxyObject to values in case that's causing the issue. Otherwise, revert to userCoords if toRaw returns undefined.
     return apartments.sort((a, b) => {
-        const distanceA = calculateDistance(userCoords, a.coords);
-        const distanceB = calculateDistance(userCoords, b.coords);
+        const distanceA = calculateDistance(rawUserCoords, { latitude: a.latitude, longitude: a.longitude });
+        const distanceB = calculateDistance(rawUserCoords, { latitude: b.latitude, longitude: b.longitude });
         const completenessA = calculateCompletenessScore(a);
         const completenessB = calculateCompletenessScore(b);
 

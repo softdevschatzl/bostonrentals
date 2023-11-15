@@ -3,6 +3,7 @@
     <NavBar />
     <SearchBar />
     <ApartmentList :apartments="sortedApartments" :location="location" />
+    <router-view />
     <RentalTools />
   </div>
 </template>
@@ -20,7 +21,7 @@ export default {
     NavBar,
     SearchBar,
     ApartmentList,
-    RentalTools
+    RentalTools,
   },
   data() {
     return {
@@ -55,18 +56,9 @@ export default {
             params: this.userCoords
           });
           this.apartments = response.data; // Assuming this is an array.
-          this.sortApartments(); // Call the sort method after fetching apartments.
         } catch (error) {
           console.error('Failed to fetch apartments:', error.message);
         }
-      }
-    },
-    sortApartments() {
-      // Use the sorting algorithm to sort apartments based on user location and relevant data.
-      if (this.userCoords) {
-        this.sortedApartments = sortApartments(this.apartments, this.userCoords);
-      } else {
-        this.sortedApartments = [];
       }
     },
   },
@@ -75,7 +67,7 @@ export default {
       // Returns only sorted apartments to be featured.
       // Ensures userCoords are available, same as above.
       // Also limits featured apartments to three.
-      if (this.userCoords) {
+      if (this.userCoords && this.apartments.length > 0) {
         return sortApartments(this.apartments, this.userCoords).slice(0, 3);
       } 
       return [];
