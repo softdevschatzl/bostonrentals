@@ -1,27 +1,18 @@
 <template>
   <div>
     <NavBar />
-    <SearchBar />
-    <ApartmentList :apartments="sortedApartments" :location="location" />
     <router-view />
-    <RentalTools />
   </div>
 </template>
 
 <script>
 import axios from 'axios'
 import NavBar from './components/NavBar.vue'
-import ApartmentList from './components/ApartmentList.vue'
-import SearchBar from './components/SearchBar.vue'
-import RentalTools from './components/RentalTools.vue'
 import { sortApartments } from '@/utils/featuredApartmentAlgorithm';
 
 export default {
   components: {
     NavBar,
-    SearchBar,
-    ApartmentList,
-    RentalTools,
   },
   data() {
     return {

@@ -2,10 +2,10 @@
     <div class="search-container">
       <!-- Search Filters -->
       <div class="filters">
-        <input type="text" v-model="searchCriteria.streetName" placeholder="Street Name" />
-        <input type="text" v-model="searchCriteria.zipCode" placeholder="Zip Code" />
+        <input type="text" v-model="searchCriteria.streetName" placeholder="Street Name..." />
+        <input type="text" v-model="searchCriteria.zipCode" placeholder="Zip Code..." />
         <select v-model="searchCriteria.beds">
-          <option disabled value="">Beds</option>
+          <option value="" disabled selected>Beds</option>
           <option>Studio</option>
           <option>1</option>
           <option>2</option>
@@ -65,6 +65,26 @@ export default {
 </script>
 
 <style scoped>
+select {
+  color: #aaa; /* Default color, similar to a placeholder */
+}
+
+select option {
+  color: black; /* Color for options */
+}
+
+select option[value=""][disabled] {
+  display: none; /* Hide the placeholder from the dropdown list */
+}
+
+select:not(:valid) {
+  color: #aaa;
+}
+
+select:valid {
+  color: black;
+}
+
 .search-container {
   background: #ECF0F3; /* Neumorphic background */
   border-radius: 25px;
