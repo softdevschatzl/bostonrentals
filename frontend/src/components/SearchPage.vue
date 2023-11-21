@@ -2,27 +2,45 @@
     <div class="search-container">
       <!-- Search Filters -->
       <div class="filters">
-        <input type="text" v-model="searchCriteria.streetName" placeholder="Street Name..." />
-        <input type="text" v-model="searchCriteria.zipCode" placeholder="Zip Code..." />
-        <select v-model="searchCriteria.beds">
-          <option value="" disabled selected>Beds</option>
-          <option>Studio</option>
-          <option>1</option>
-          <option>2</option>
-          <option>3</option>
-          <option>4</option>
-        </select>
-        <select v-model="searchCriteria.baths">
-          <option disabled value="">Baths</option>
-          <option>1</option>
-          <option>1.5</option>
-          <option>2</option>
-          <option>2.5</option>
-          <option>3</option>
-          <option>3.5</option>
-          <option>4</option>
-        </select>
-        <button @click="searchListings">Search</button>
+        <div class="info-group location-input">
+          <input class="value" type="text" v-model="searchCriteria.streetName" placeholder="Street Name..." />
+          <input class="value" type="text" v-model="searchCriteria.zipCode" placeholder="Zip Code..." />
+          <input class="value" type="text" v-model="searchCriteria.citiesNeighborhoods" placeholder="Cities / Neighborhoods..." />
+        </div>
+        <div class="info-group values">
+          <select v-model="searchCriteria.beds" class="value">
+            <option value="" disabled> Select Beds</option>
+            <option>Studio</option>
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+          </select>
+          <select v-model="searchCriteria.baths" class="value">
+            <option value="" disabled>Select Baths</option>
+            <option>1</option>
+            <option>1.5</option>
+            <option>2</option>
+            <option>2.5</option>
+            <option>3</option>
+            <option>3.5</option>
+            <option>4</option>
+          </select>
+          <input class="value" type="text" v-model="searchCriteria.unit" placeholder="Unit" />
+        </div>
+        <div class="info-group">
+          <div class="avail-dates">
+            <Datepicker class="value" v-model="searchCriteria.startDate" placeholder="Start Date"></Datepicker> 
+            <Datepicker class="value" v-model="searchCriteria.endDate" placeholder="End Date"></Datepicker>
+          </div>
+          <div class="min-max-rent">
+            <input type="text" v-model="searchCriteria.minRent" placeholder="Min Rent" />
+            <input type="text" v-model="searchCriteria.maxRent" placeholder="Max Rent" />
+          </div>
+        </div>
+      </div>
+      <div class="search-btn-container">
+        <button class="search-btn" @click="searchListings">Search</button>
       </div>
       
       <!-- Search Results -->
@@ -33,7 +51,6 @@
           <p>Rent: ${{ listing.rent }}</p>
           <p>Beds: {{ listing.bed }}</p>
           <p>Baths: {{ listing.bath }}</p>
-          <p>Available: {{ listing.availDate }}</p>
         </div>
       </div>
     </div>
@@ -41,12 +58,29 @@
   
 
 <script>
+import Datepicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
+
 export default {
+  components: {
+    Datepicker
+  },
   data() {
     return {
       searchCriteria: {
-        streetName: '',
-        // Other criteria
+        streetName: '', // Street names, No Addresses!!!
+        beds: '', // How many beds.
+        baths: '', // How many baths.
+        citiesNeighborhoods: '', // Specific cities/neighborhoods.
+        minRent: '', // Minimum rent.
+        maxRent: '', // Maximum rent.
+        unit: '', // Not sure what this means ngl.
+        startDate: null, // Available from.
+        endDate: null, // Available to.
+        pet: '', // Pet friendly, or not.
+        status: '', // Whether it's on market or not.
+        media: '', // Photos or virtual tours.
+        // Add more criteria.
       },
       listings: []
     };
@@ -85,13 +119,27 @@ select:valid {
   color: black;
 }
 
+.info-group {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 5px;
+  margin: 0 15px 0 15px;
+  width: 180px;
+  height: 200px;
+}
+
 .search-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* align-items: center; */
   background: #ECF0F3; /* Neumorphic background */
   border-radius: 25px;
   box-shadow: 20px 20px 60px #bebebe,
               -20px -20px 60px #ffffff;
   padding: 2rem;
-  max-width: 800px;
+  max-width: 1000px;
   margin: 2rem auto;
 }
 
@@ -116,7 +164,15 @@ select:valid {
   color: #333;
 }
 
-.filters button {
+.min-max-rent {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.search-btn {
+  max-width: 250px;
+  min-width: 100px;
   border: none;
   outline: none;
   padding: 0.8rem 1rem;
@@ -131,10 +187,16 @@ select:valid {
   transition: all 0.2s ease;
 }
 
-.filters button:hover {
+.search-btn:hover {
   background: #DFE0E2;
   box-shadow: 2px 2px 5px #bebebe,
               -2px -2px 5px #ffffff;
+}
+.search-btn-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 
 .listings {
