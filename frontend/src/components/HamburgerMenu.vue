@@ -9,7 +9,8 @@
         <nav v-show="navOpen">
             <div class="sidemenu__wrapper">
             <ul class="sidemenu__list">
-                <li class="sidemenu__item"><a href="">Home</a></li>
+                <li class="sidemenu__item"><router-link to="/">Home</router-link></li>
+                <li class="sidemenu__item"><router-link to="/search">Search</router-link></li>
                 <li class="sidemenu__item"><a href="">Renter Tools</a></li>
                 <li class="sidemenu__item"><a href="">Lessor Tools</a></li>
                 <li class="sidemenu__item"><a href="">Apartments For Rent</a></li>

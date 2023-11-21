@@ -45,21 +45,25 @@
   
 <style scoped>
   nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: #668d5e;
-      height: 10vh;
-      width: 100%;
-      margin: 0;
-      padding: 0;
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #668d5e;
+    height: 10vh;
+    width: 100%;
+    margin: 0;
+    padding: 0;
   }
 
   h1 {
-      color: #ffffff;
-      display: flex;
-      justify-content: center;
-      width: 100%;
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    width: 100%;
   }
 
   .title {

@@ -42,16 +42,15 @@
       <div class="search-btn-container">
         <button class="search-btn" @click="searchListings">Search</button>
       </div>
-      
+    </div>
       <!-- Search Results -->
-      <div class="listings">
-        <div class="listing" v-for="listing in listings" :key="listing.id">
-          <h3>{{ listing.address }}</h3>
-          <p>Unit: {{ listing.unit }}</p>
-          <p>Rent: ${{ listing.rent }}</p>
-          <p>Beds: {{ listing.bed }}</p>
-          <p>Baths: {{ listing.bath }}</p>
-        </div>
+    <div class="listings">
+      <div class="listing" v-for="listing in listings" :key="listing.id">
+        <h3>{{ listing.address }}</h3>
+        <p>Unit: {{ listing.unit }}</p>
+        <p>Rent: ${{ listing.rent }}</p>
+        <p>Beds: {{ listing.bed }}</p>
+        <p>Baths: {{ listing.bath }}</p>
       </div>
     </div>
   </template>
@@ -82,7 +81,32 @@ export default {
         media: '', // Photos or virtual tours.
         // Add more criteria.
       },
-      listings: []
+      listings: [
+        {
+          id: 1,
+          address: '123 Maple Street',
+          unit: 'Unit A',
+          rent: 1200,
+          bed: '2',
+          bath: '1.5',
+        },
+        {
+          id: 2,
+          address: '456 Oak Avenue',
+          unit: 'Unit B',
+          rent: 1500,
+          bed: '3',
+          bath: '2',
+        },
+        {
+          id: 3,
+          address: '789 Pine Road',
+          unit: 'Unit C',
+          rent: 1000,
+          bed: '1',
+          bath: '1',
+        },
+      ]
     };
   },
   methods: {
@@ -178,17 +202,17 @@ select:valid {
   padding: 0.8rem 1rem;
   margin: 0.2rem;
   border-radius: 15px;
-  background: #ECF0F3;
+  background: #668d5e;
   box-shadow: 5px 5px 10px #bebebe,
               -5px -5px 10px #ffffff;
   font-size: 1rem;
-  color: #333;
+  color: #ebebeb;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .search-btn:hover {
-  background: #DFE0E2;
+  background: #93ca88;
   box-shadow: 2px 2px 5px #bebebe,
               -2px -2px 5px #ffffff;
 }
@@ -200,18 +224,25 @@ select:valid {
 }
 
 .listings {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
 }
 
 .listing {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
   padding: 1rem;
   background: #ECF0F3;
   border-radius: 15px;
   box-shadow: 5px 5px 10px #bebebe,
               -5px -5px 10px #ffffff;
   transition: all 0.2s ease;
+  max-width: 350px;
+  min-width: 200px;
 }
 
 .listing:hover {
