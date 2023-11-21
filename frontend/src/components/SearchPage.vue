@@ -9,7 +9,7 @@
         </div>
         <div class="info-group values">
           <select v-model="searchCriteria.beds" class="value">
-            <option value="" disabled> Select Beds</option>
+            <option value="" disabled>Select Beds</option>
             <option>Studio</option>
             <option>1</option>
             <option>2</option>
@@ -45,8 +45,17 @@
     </div>
       <!-- Search Results -->
     <div class="listings">
+      <div class="listing-header">
+        <h4>Address</h4>
+        <h4>Neighborhood</h4>
+        <h4>Unit</h4>
+        <h4>Rent</h4>
+        <h4>Beds</h4>
+        <h4>Baths</h4>
+      </div>
       <div class="listing" v-for="listing in listings" :key="listing.id">
         <h3>{{ listing.address }}</h3>
+        <p>{{ listing.neighborhood }}</p>
         <p>Unit: {{ listing.unit }}</p>
         <p>Rent: ${{ listing.rent }}</p>
         <p>Beds: {{ listing.bed }}</p>
@@ -85,6 +94,7 @@ export default {
         {
           id: 1,
           address: '123 Maple Street',
+          neighborhood: 'Seaport',
           unit: 'Unit A',
           rent: 1200,
           bed: '2',
@@ -93,6 +103,7 @@ export default {
         {
           id: 2,
           address: '456 Oak Avenue',
+          neighborhood: 'Seaport',
           unit: 'Unit B',
           rent: 1500,
           bed: '3',
@@ -101,6 +112,7 @@ export default {
         {
           id: 3,
           address: '789 Pine Road',
+          neighborhood: 'Seaport',
           unit: 'Unit C',
           rent: 1000,
           bed: '1',
@@ -223,18 +235,39 @@ select:valid {
   width: 100%;
 }
 
-.listings {
+.listing-header {
   display: flex;
   flex-direction: row;
+  justify-content: space-around;
+  padding: 1rem;
+  background: #ECF0F3;
+  border-radius: 15px;
+  box-shadow: 5px 5px 10px #bebebe,
+              -5px -5px 10px #ffffff;
+  max-width: 350px;
+  min-width: 200px;
+}
+
+.listing-header h4 {
+  margin-left: 7px;
+  margin-right: 7px;
+  /* Additional styling as needed */
+}
+
+.listings {
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 30px;
+  gap: 10px;
+  width: 100vw;
 }
 
 .listing {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   text-align: center;
+  align-items: center;
   padding: 1rem;
   background: #ECF0F3;
   border-radius: 15px;
@@ -251,6 +284,3 @@ select:valid {
               -2px -2px 5px #ffffff;
 }
 </style>
-
-
-

@@ -11,15 +11,13 @@
       </div>
       <div class="right">
         <div class="user-sign">
-          <a class="user-sign-in" @click="signIn">Sign In</a>
-          <span> / </span>
-          <a class="user-sign-in" @click="signUp">Sign Up</a>
+          <button class="user-sign-in">Login</button>
         </div>
-        <div class="house-image">
+        <!-- <div class="house-image">
           <button class="new-listing-btn">
             Add A New Listing
           </button>
-        </div>
+        </div> -->
       </div>
     </nav>
 </template>
@@ -105,14 +103,28 @@
     display: flex;
     gap: 1vw;
     flex-wrap: nowrap;
+    margin-left: 18vw;
   }
   .user-sign-in {
-    padding: 0;
-    margin-left: 5px;
+    display: flex;
+    align-items: flex-end;
+    border: none;
+    outline: none;
+    padding: 0.8rem 1rem;
+    margin: 0.2rem;
+    border-radius: 15px;
+    background: #ECF0F3;
+    box-shadow: 5px 5px 10px #496644,
+                -5px -5px 10px #7dad74;
+    font-size: 1rem;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.2s ease;
   }
   .user-sign-in:hover {
-    color: #adadad;
-    transition: .3s ease-in-out;
+    background: #dadada;
+    box-shadow: 2px 2px 5px #496644,
+                -2px -2px 5px #7dad74;
   }
 
   .hamburger {
