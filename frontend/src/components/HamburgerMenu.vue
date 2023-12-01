@@ -13,8 +13,6 @@
                 <li class="sidemenu__item"><router-link to="/search">Search</router-link></li>
                 <li class="sidemenu__item"><a href="">Renter Tools</a></li>
                 <li class="sidemenu__item"><a href="">Lessor Tools</a></li>
-                <li class="sidemenu__item"><a href="">Apartments For Rent</a></li>
-                <li class="sidemenu__item"><a href="">Homes For Rent</a></li>
             </ul>
             </div>
         </nav>
@@ -35,7 +33,7 @@
 <style lang="scss" scoped>
     #sidemenu {
         nav {
-            width: 200px;
+            width: 125px;
             // height: calc(100% - #{$headerHeight} - #{$footerHeight});
             background: #668d5e;
             position: fixed;

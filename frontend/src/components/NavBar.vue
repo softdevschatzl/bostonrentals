@@ -6,7 +6,7 @@
         </div>
       </div>
       <div class="title">
-        <img src="../assets/logo.png" />
+        <img class="brand-image" src="../assets/logo.png" />
         <h1>Boston<br>Rentals</h1>
       </div>
       <div class="right">
@@ -61,22 +61,29 @@
     color: #ffffff;
     display: flex;
     justify-content: center;
-    width: 100%;
+    /* width: 100%; */
   }
 
   .title {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 2px;
+    width: 150px;
+    /* gap: 2px; */
   }
   .title h1 {
     display: flex;
     flex-direction: column;
-    margin: 0;
+    margin-top: 4px;
+    padding: 0;
     white-space: pre-wrap;
     text-align: center;
     word-break: break-all;
+    font-size: 14px;
+    
+  }
+  .brand-image {
+    transform: scale(0.75);
   }
 
   .right {
@@ -99,11 +106,9 @@
 
   .user-sign {
     color: #ffffff;
-    width: 25%;
+    width: 50%;
     display: flex;
-    gap: 1vw;
     flex-wrap: nowrap;
-    margin-left: 18vw;
   }
   .user-sign-in {
     display: flex;
@@ -171,6 +176,12 @@
     background: #dadada;
     box-shadow: 2px 2px 5px #496644,
                 -2px -2px 5px #7dad74;
+  }
+
+  @media only screen and (min-width: 768px) {
+    .user-sign {
+      margin-left: 18vw;
+    }
   }
 </style>
   
