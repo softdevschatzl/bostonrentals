@@ -45,7 +45,7 @@
       </div>
     </div>
     <div class="search-btn-container">
-      <button class="search-btn" @click="localSearchListings">Search</button>
+      <button class="search-btn" @click="searchListings">Search</button>
     </div>
   </div>
 </template>
@@ -67,11 +67,11 @@ export default {
     computed: {
         localSearchCriteria: {
             get() {
-                return this.searchCriteria;
+              return this.searchCriteria;
             },
             set(value) {
-                // Sends the event with updated criteria.
-                this.$emit('update-criteria', value);
+              // Sends the event with updated criteria.
+              this.$emit('update-criteria', value);
             },
         },
         groupedNeighborhoods() {
@@ -94,7 +94,19 @@ export default {
     },
     data() {
       return {
-        allNeighborhoods: ['Back Bay', 'Beacon Hill', 'Charlestown', /** Get more neighborhoods. */],
+        allNeighborhoods: ['Allston', 
+        'Back Bay', 'Bay Village', 'Beacon Hill', 'Brighton', 
+        'Charlestown', 'Chinatown-Leather District', 'Cambridge',
+        'Dorchester', 'Downtown', 
+        'East Boston', 
+        'Fenway-Kenmore',
+        'Jamaica Plain',
+        'Mid-Dorchester', 'Mission Hill', 'Medford',
+        'North End', 
+        'Roslindale',
+        'Roxbury',
+        'South Boston', 'South End', 'Somerville',
+        'West End', 'West Roxbury', 'Wharf District', /** Get more neighborhoods. */],
       };
     },
 }
@@ -105,9 +117,8 @@ export default {
 .search-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
-  gap: 1rem;
   /** Neumorphic styling */
   background: #ECF0F3; /* Neumorphic background */
   border-radius: 25px;
@@ -121,6 +132,7 @@ export default {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  margin-left: 2.5vw;
 }
 .value {
   display: flex;
@@ -195,19 +207,24 @@ select:valid {
 
 /** Desktop view */
 @media only screen and (min-width: 768px) {
+  .search-container {
+    display: flex;
+    justify-content: space-evenly;
+  }
   .info-group {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     margin-bottom: 0.5rem;
   }
   .avail-dates {
     display: flex;
     flex-direction: row;
     width: 250px;
+    margin-bottom: 1vh;
   }
   .filters {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
   }
   .value {
     width: 200px;

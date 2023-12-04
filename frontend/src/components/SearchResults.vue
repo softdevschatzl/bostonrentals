@@ -1,38 +1,30 @@
 <template>
 <div class="listings">
-      <table>
-        <thead>
-          <tr class="listing-header">
-            <th><!-- Left empty, or maybe a select all box. --></th>
-            <th>Address</th>
-            <th>Neighborhood</th>
-            <th>Unit</th>
-            <th>Rent</th>
-            <th>Beds</th>
-            <th>Baths</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="listing" v-for="listing in listings" :key="listing.id">
-            <td><input type="checkbox" v-model="listing.selected" /></td>
-            <td>{{ listing.address }}</td>
-            <td>{{ listing.neighborhood }}</td>
-            <td>{{ listing.unit }}</td>
-            <td>{{ listing.rent }}</td>
-            <td>{{ listing.bed }}</td>
-            <td>{{ listing.bath }}</td>
-          </tr>
-        </tbody>
-      </table>
-      <!-- <div class="listing" v-for="listing in listings" :key="listing.id">
-        <h3>{{ listing.address }}</h3>
-        <p>{{ listing.neighborhood }}</p>
-        <p>Unit: {{ listing.unit }}</p>
-        <p>Rent: ${{ listing.rent }}</p>
-        <p>Beds: {{ listing.bed }}</p>
-        <p>Baths: {{ listing.bath }}</p>
-      </div> -->
-    </div>
+  <table>
+    <thead>
+      <tr class="listing-header">
+        <th></th>
+        <th>Address</th>
+        <th>Neighborhood</th>
+        <th>Unit</th>
+        <th>Rent</th>
+        <th>Beds</th>
+        <th>Baths</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="listing" v-for="listing in listings" :key="listing.id">
+        <td><input type="checkbox" v-model="listing.selected" /></td>
+        <td>{{ listing.address }}</td>
+        <td>{{ listing.neighborhood }}</td>
+        <td>{{ listing.unit }}</td>
+        <td>{{ listing.rent }}</td>
+        <td>{{ listing.bed }}</td>
+        <td>{{ listing.bath }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 </template>
 
 <script>
@@ -43,6 +35,9 @@ export default {
             required: true
         }
     },
+    mounted() {
+      console.log('Listings: ', this.listings);
+    }
 }
 </script>
 

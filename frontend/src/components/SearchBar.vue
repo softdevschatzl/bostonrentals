@@ -30,9 +30,9 @@ export default {
 </script>
 
 <style scoped>
-h1 {
-  color: #ffffff;
-}
+  h1 {
+    color: #ffffff;
+  }
   .search-section {
     display: flex;
     justify-content: center;
@@ -89,6 +89,17 @@ h1 {
     align-items: center;
     justify-content: center;
     text-align: center;
+  }
+
+  @media only screen and (max-width: 768px) {
+    .search-header {
+      font-size: 1.2rem;
+    }
+    .search-button {
+      padding: 5px;
+      color: black;
+      border: none;
+    }
   }
 </style>
   

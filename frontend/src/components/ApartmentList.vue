@@ -74,5 +74,11 @@ export default {
     justify-content: flex-start;
     top: 0;
   }
+
+  @media only screen and (max-width: 768px) {
+    h1 {
+      font-size: 25px;
+    }
+  }
 </style>
   

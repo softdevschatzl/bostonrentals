@@ -7,7 +7,7 @@
       </div>
       <div class="title">
         <img class="brand-image" src="../assets/logo.png" />
-        <h1>Boston<br>Rentals</h1>
+        <h1>Alexander's Rentals</h1>
       </div>
       <div class="right">
         <div class="user-sign">
@@ -68,7 +68,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 150px;
+    width: 400px;
     /* gap: 2px; */
   }
   .title h1 {
@@ -109,6 +109,7 @@
     width: 50%;
     display: flex;
     flex-wrap: nowrap;
+    margin-left: 18vw;
   }
   .user-sign-in {
     display: flex;
@@ -178,10 +179,34 @@
                 -2px -2px 5px #7dad74;
   }
 
-  @media only screen and (min-width: 768px) {
-    .user-sign {
-      margin-left: 18vw;
-    }
+  /** iPhone 13 apparently */
+@media only screen and (max-width: 400px) {
+  .user-sign {
+    margin-right: 3vw;
   }
+  .title {
+    width: auto;
+  }
+}
+ 
+/** Desktop styles */
+@media only screen and (min-width: 768px) {
+  .user-sign {
+    margin-left: 30vw;
+  }
+
+  .brand-image {
+    transform: scale(1);
+  }
+  .title h1 {
+    font-size: 24px;
+  }
+}
+/** Larger desktop screens. */
+@media only screen and (min-width: 1100px) {
+  .user-sign {
+    margin-left: 33vw;
+  }
+}
 </style>
   

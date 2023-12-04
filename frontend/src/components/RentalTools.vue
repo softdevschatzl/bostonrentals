@@ -7,7 +7,7 @@
             <div class="tool-section">
                 <div class="tool-content">
                     <h3>For Renters</h3>
-                    <p>Access tools and resources specially designed for renters to enhance their renting experience.</p>
+                    <p>Access tools and resources specially designed for renters to cut out the clutter with renting.</p>
                     <a class="tools-btn" href="/renter-tools">Renter Tools</a>
                 </div>
                 <img src="../assets/renterstockimage.jpg" alt="Renter Image" class="tool-image">
@@ -18,7 +18,7 @@
                 <img src="../assets/lessorstockimage2.jpeg" alt="Lessor Image" class="tool-image">
                 <div class="tool-content">
                     <h3>For Managers</h3>
-                    <p>Manage properties, connect with potential renters, and streamline your leasing process.</p>
+                    <p>Manage properties, input information, and streamline your leasing process.</p>
                     <a class="tools-btn" href="/lessor-tools">Manage Rentals</a>
                 </div>
             </div>
@@ -94,5 +94,31 @@
     }
     .tools-btn:hover {
         transform: scale(1.1);
+    }
+
+    @media only screen and (max-width: 768px) {
+        h2 {
+            font-size: 30px;
+        }
+        .content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .tool-section {
+            width: 400px;
+        }
+        .tool-image {
+            width: 175px;
+            height: 270px;
+        }
+        .tool-content {
+            font-size: 0.9em;
+            height: 230px;
+        }
+        .tools-btn {
+            width: 75px;
+        }
     }
 </style>
