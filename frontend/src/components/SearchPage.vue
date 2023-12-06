@@ -1,3 +1,4 @@
+<!-- SearchPage.vue -->
 <template>
   <!-- Search Filters -->
   <SearchFilters :searchCriteria="searchCriteria" @update-criteria="updateCriteria" @search="searchListings"/>
@@ -5,7 +6,6 @@
   <SearchResults :listings="listings"/>
 </template>
   
-
 <script>
 import axios from 'axios';
 import SearchFilters from './SearchFilters.vue';
@@ -21,20 +21,24 @@ export default {
       searchCriteria: {
         selected: false,
         address: '', // Street names, No Addresses!!!
-        beds: '', // How many beds.
-        baths: '', // How many baths.
-        citiesNeighborhoods: '', // Specific cities/neighborhoods.
-        minRent: '', // Minimum rent.
-        maxRent: '', // Maximum rent.
-        unit: '', // Not sure what this means ngl.
-        startDate: null, // Available from.
-        endDate: null, // Available to.
-        pet: '', // Pet friendly, or not.
-        status: '', // Whether it's on market or not.
-        media: '', // Photos or virtual tours.
-        laundry: '',
-        parking: '',
-        fee: '', // no co-broke
+        bedrooms: '', // How many beds.
+        bathrooms: '', // How many baths.
+        cities: '', // Specific cities/neighborhoods.
+        state: 'MA', // State.
+        zipCode: '', // Zip code.
+        propertyType: '',
+        limit: 5, // Apartment, condo, house, etc.
+        // minRent: '', // Minimum rent.
+        // maxRent: '', // Maximum rent.
+        // unit: '', // Not sure what this means ngl.
+        // startDate: null, // Available from.
+        // endDate: null, // Available to.
+        // pet: '', // Pet friendly, or not.
+        // status: '', // Whether it's on market or not.
+        // media: '', // Photos or virtual tours.
+        // laundry: '',
+        // parking: '',
+        // fee: '', // no co-broke
         // Add more criteria.
       },
       // listings: [
@@ -76,16 +80,17 @@ export default {
       try {
         const response = await axios.get('http://localhost:3000/properties', {
           params: {
-            city: this.citiesNeighborhoods, 
-            address: this.address,
-            bedrooms: this.beds,
-            bathrooms: this.baths,
-            minRent: this.minRent,
-            maxRent: this.maxRent,
-            unit: this.unit,
-            state: 'Massachusetts',
-            zipCode: this.zipCode,
-            limit: 5,
+            city: this.searchCriteria.cities, 
+            address: this.searchCriteria.address,
+            bedrooms: this.searchCriteria.bedrooms,
+            bathrooms: this.searchCriteria.bathrooms,
+            // minRent: this.minRent,
+            // maxRent: this.maxRent,
+            // unit: this.unit,
+            state: this.searchCriteria.state,
+            zipCode: this.searchCriteria.zipCode,
+            limit: this.searchCriteria.limit,
+            propertyType: this.searchCriteria.propertyType,
           }
         });
         console.log('API Response: ', response.data);
@@ -101,7 +106,7 @@ export default {
   },
   mounted() {
     // Perform an initial search when the component mounts
-    this.searchListings();
+    // this.searchListings();
   }
 };
 </script>

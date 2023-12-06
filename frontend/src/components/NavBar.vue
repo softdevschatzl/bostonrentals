@@ -203,10 +203,10 @@
   }
 }
 /** Larger desktop screens. */
-@media only screen and (min-width: 1100px) {
+/* @media only screen and (min-width: 1100px) {
   .user-sign {
-    margin-left: 33vw;
+    margin-left: 30vw;
   }
-}
+} */
 </style>
   

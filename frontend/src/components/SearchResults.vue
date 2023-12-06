@@ -1,3 +1,4 @@
+<!-- SearchResults.vue -->
 <template>
 <div class="listings">
   <table>
@@ -37,7 +38,7 @@ export default {
     },
     mounted() {
       console.log('Listings: ', this.listings);
-    }
+    },
 }
 </script>
 

@@ -1,11 +1,12 @@
+<!-- SearchFilters.vue  -->
 <template>
   <div class="search-container">
     <!-- Search Filters -->
     <div class="filters">
       <div class="info-group location-input">
-        <input class="value" type="text" v-model="localSearchCriteria.streetName" placeholder="Street Name..." />
+        <input class="value" type="text" v-model="localSearchCriteria.address" placeholder="Street Name..." />
         <input class="value" type="text" v-model="localSearchCriteria.zipCode" placeholder="Zip Code..." />
-        <select class="value" v-model="localSearchCriteria.citiesNeighborhoods">
+        <select class="value" v-model="localSearchCriteria.cities">
           <option value="" disabled>City/Neighborhood</option>
           <optgroup v-for="(group, letter) in groupedNeighborhoods" :label="letter" :key="letter">
             <option v-for="neighborhood in group" :key="neighborhood" :value="neighborhood">{{ neighborhood }}</option>
@@ -13,15 +14,15 @@
         </select>
       </div>
       <div class="info-group">
-        <select class="value" v-model="localSearchCriteria.beds">
+        <select class="value" v-model="localSearchCriteria.bedrooms">
           <option value="" disabled>Beds</option>
-          <option>Studio</option>
+          <option>0 (Studio)</option>
           <option>1</option>
           <option>2</option>
           <option>3</option>
           <option>4</option>
         </select>
-        <select class="value" v-model="localSearchCriteria.baths">
+        <select class="value" v-model="localSearchCriteria.bathrooms">
           <option value="" disabled>Baths</option>
           <option>1</option>
           <option>1.5</option>
@@ -31,7 +32,7 @@
           <option>3.5</option>
           <option>4</option>
         </select>
-        <input class="value" type="text" v-model="localSearchCriteria.unit" placeholder="Unit..." />
+        <!-- <input class="value" type="text" v-model="localSearchCriteria.unit" placeholder="Unit..." /> -->
       </div>
       <div class="info-group bottom">
         <div class="avail-dates">
@@ -69,9 +70,9 @@ export default {
             get() {
               return this.searchCriteria;
             },
-            set(value) {
+            set() {
               // Sends the event with updated criteria.
-              this.$emit('update-criteria', value);
+              this.$emit('update-criteria', this.searchCriteria);
             },
         },
         groupedNeighborhoods() {
