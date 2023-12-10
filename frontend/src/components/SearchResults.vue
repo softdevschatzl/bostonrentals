@@ -6,22 +6,22 @@
       <tr class="listing-header">
         <th></th>
         <th>Address</th>
-        <th>Neighborhood</th>
-        <th>Unit</th>
-        <th>Rent</th>
+        <th>City/State</th>
+        <th>County</th>
         <th>Beds</th>
         <th>Baths</th>
+        <th>Rent</th>
       </tr>
     </thead>
     <tbody>
       <tr class="listing" v-for="listing in listings" :key="listing.id">
         <td><input type="checkbox" v-model="listing.selected" /></td>
-        <td>{{ listing.address }}</td>
-        <td>{{ listing.neighborhood }}</td>
-        <td>{{ listing.unit }}</td>
+        <td>{{ listing.addressLine1 }}</td>
+        <td>{{ listing.city }}, {{ listing.state }}</td>
+        <td>{{ listing.county }}</td>
+        <td>{{ listing.bedrooms }}</td>
+        <td>{{ listing.bathrooms }}</td>
         <td>{{ listing.rent }}</td>
-        <td>{{ listing.bed }}</td>
-        <td>{{ listing.bath }}</td>
       </tr>
     </tbody>
   </table>

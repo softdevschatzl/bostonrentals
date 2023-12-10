@@ -41,38 +41,7 @@ export default {
         // fee: '', // no co-broke
         // Add more criteria.
       },
-      // listings: [
-      //   {
-      //     id: 1,
-      //     selected: false,
-      //     address: '123 Maple Street',
-      //     neighborhood: 'Seaport',
-      //     unit: 'Unit A',
-      //     rent: 1200,
-      //     bed: '2',
-      //     bath: '1.5',
-      //   },
-      //   {
-      //     id: 2,
-      //     selected: false,
-      //     address: '456 Oak Avenue',
-      //     neighborhood: 'Seaport',
-      //     unit: 'Unit B',
-      //     rent: 1500,
-      //     bed: '3',
-      //     bath: '2',
-      //   },
-      //   {
-      //     id: 3,
-      //     selected: false,
-      //     address: '789 Pine Road',
-      //     neighborhood: 'Seaport',
-      //     unit: 'Unit C',
-      //     rent: 1000,
-      //     bed: '1',
-      //     bath: '1',
-      //   },
-      // ]
+      listings: []
     };
   },
   methods: {
