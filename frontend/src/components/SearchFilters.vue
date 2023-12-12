@@ -5,86 +5,104 @@
     <div class="filters">
       <div class="top">
         <div class="info-group location-input">
-          <input class="value" type="text" v-model="localSearchCriteria.address" placeholder="Street Name..." />
-          <input class="value" type="text" v-model="localSearchCriteria.zipCode" placeholder="Zip Code..." />
-          <select class="value" v-model="localSearchCriteria.cities">
-            <option value="" disabled>City/Neighborhood</option>
-            <optgroup v-for="(group, letter) in groupedNeighborhoods" :label="letter" :key="letter">
-              <option v-for="neighborhood in group" :key="neighborhood" :value="neighborhood">{{ neighborhood }}</option>
-            </optgroup>
-          </select>
+          <button class="toggle-btn" data-group="locationInput" @click="toggleGroup('locationInput')">Location Filters </button>
+          <div v-show="openGroups.locationInput" class="location-input-group"> <!-- v-show="openGroups.locationInput" -->
+            <input class="value" type="text" v-model="localSearchCriteria.address" placeholder="Street Name..." />
+            <input class="value" type="text" v-model="localSearchCriteria.zipCode" placeholder="Zip Code..." />
+            <select class="value" v-model="localSearchCriteria.cities">
+              <option value="" disabled>City/Neighborhood</option>
+              <optgroup v-for="(group, letter) in groupedNeighborhoods" :label="letter" :key="letter">
+                <option v-for="neighborhood in group" :key="neighborhood" :value="neighborhood">{{ neighborhood }}</option>
+              </optgroup>
+            </select>
+          </div>
         </div>
         <div class="info-group">
-          <select class="value" v-model="localSearchCriteria.bedrooms">
-            <option value="" disabled>Beds</option>
-            <option>0 (Studio)</option>
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-          </select>
-          <select class="value" v-model="localSearchCriteria.bathrooms">
-            <option value="" disabled>Baths</option>
-            <option>1</option>
-            <option>1.5</option>
-            <option>2</option>
-            <option>2.5</option>
-            <option>3</option>
-            <option>3.5</option>
-            <option>4</option>
-          </select>
-          <input class="value" type="text" v-model="localSearchCriteria.unit" placeholder="Unit...(N/A)" />
+          <button class="toggle-btn" data-group="bedroomsBathrooms" @click="toggleGroup('bedroomsBathrooms')">Bedrooms/Bathrooms Filters</button>
+          <div v-show="openGroups.bedroomsBathrooms" class="bedrooms-bathrooms-group">
+            <select class="value" v-model="localSearchCriteria.bedrooms">
+              <option value="" disabled>Beds</option>
+              <option>0 (Studio)</option>
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+            </select>
+            <select class="value" v-model="localSearchCriteria.bathrooms">
+              <option value="" disabled>Baths</option>
+              <option>1</option>
+              <option>1.5</option>
+              <option>2</option>
+              <option>2.5</option>
+              <option>3</option>
+              <option>3.5</option>
+              <option>4</option>
+            </select>
+            <input class="value" type="text" v-model="localSearchCriteria.unit" placeholder="Unit...(N/A)" />
+          </div>
         </div>
         <div class="info-group min-max-rent">
-          <input class="value" type="text" v-model="localSearchCriteria.minRent" placeholder="Min Rent...(N/A)" />
-          <input class="value" type="text" v-model="localSearchCriteria.maxRent" placeholder="Max Rent...(N/A)" />
-          <input class="value" type="text" v-model="localSearchCriteria.fee" placeholder="Fee... (N/A)" />
+          <button class="toggle-btn" @click="toggleGroup('minMaxRent')">Min/Max Rent Filters</button>
+          <div v-show="openGroups.minMaxRent" class="min-max-rent-group"> <!-- v-show="openGroups.minMaxRent" -->
+            <input class="value" type="text" v-model="localSearchCriteria.minRent" placeholder="Min Rent...(N/A)" />
+            <input class="value" type="text" v-model="localSearchCriteria.maxRent" placeholder="Max Rent...(N/A)" />
+            <input class="value" type="text" v-model="localSearchCriteria.fee" placeholder="Fee... (N/A)" />
+          </div>
         </div>
         <div class="info-group">
-          <select class="value" v-model="localSearchCriteria.propertyType">
-            <option value="" disabled>Property Type (N/A)</option>
-            <option>Apartment</option>
-            <option>Condo</option>
-            <option>House</option>
-            <option>Multi-Family</option>
-            <option>Townhouse</option>
-          </select>
-          <select class="value" v-model="localSearchCriteria.status">
-            <option value="" disabled>Status (N/A)</option>
-            <option>On Market</option>
-            <option>Off Market</option>
-          </select>
-          <select class="value" v-model="localSearchCriteria.media">
-            <option value="" disabled>Media (N/A)</option>
-            <option>Photos</option>
-            <option>Virtual Tour</option>
-          </select>
+          <button class="toggle-btn" @click="toggleGroup('propertyStatusMedia')">Property Status/Media Filters</button>
+          <div v-show="openGroups.propertyStatusMedia" class="property-status-media-group">
+            <select class="value" v-model="localSearchCriteria.propertyType">
+              <option value="" disabled>Property Type (N/A)</option>
+              <option>Apartment</option>
+              <option>Condo</option>
+              <option>House</option>
+              <option>Multi-Family</option>
+              <option>Townhouse</option>
+            </select>
+            <select class="value" v-model="localSearchCriteria.status">
+              <option value="" disabled>Status (N/A)</option>
+              <option>On Market</option>
+              <option>Off Market</option>
+            </select>
+            <select class="value" v-model="localSearchCriteria.media">
+              <option value="" disabled>Media (N/A)</option>
+              <option>Photos</option>
+              <option>Virtual Tour</option>
+            </select>
+          </div>
         </div>
         <div class="info-group">
-          <select class="value" v-model="localSearchCriteria.laundry">
-            <option value="" disabled>Laundry (N/A)</option>
-            <option>In Unit</option>
-            <option>In Building</option>
-            <option>None</option>
-          </select>
-          <select class="value" v-model="localSearchCriteria.parking">
-            <option value="" disabled>Parking (N/A)</option>
-            <option>Garage</option>
-            <option>Driveway</option>
-            <option>Street</option>
-            <option>None</option>
-          </select>
-          <select class="value" v-model="localSearchCriteria.pet">
-            <option value="" disabled>Pet Friendly (N/A)</option>
-            <option>Yes</option>
-            <option>No</option>
-          </select>
+          <button class="toggle-btn" @click="toggleGroup('laundryParkingPet')">Laundry/Parking/Pet Filters</button>
+          <div v-show="openGroups.laundryParkingPet" class="laundry-parking-pet-group"> <!-- v-show="openGroups.laundryParkingPet" -->
+            <select class="value" v-model="localSearchCriteria.laundry">
+              <option value="" disabled>Laundry (N/A)</option>
+              <option>In Unit</option>
+              <option>In Building</option>
+              <option>None</option>
+            </select>
+            <select class="value" v-model="localSearchCriteria.parking">
+              <option value="" disabled>Parking (N/A)</option>
+              <option>Garage</option>
+              <option>Driveway</option>
+              <option>Street</option>
+              <option>None</option>
+            </select>
+            <select class="value" v-model="localSearchCriteria.pet">
+              <option value="" disabled>Pet Friendly (N/A)</option>
+              <option>Yes</option>
+              <option>No</option>
+            </select>
+          </div>
         </div>
       </div>
       <div class="info-group bottom">
-        <div class="avail-dates">
-          <Datepicker class="value datepicker" v-model="localSearchCriteria.startDate" placeholder="From (N/A)"></Datepicker> 
-          <Datepicker class="value datepicker" v-model="localSearchCriteria.endDate" placeholder="To (N/A)"></Datepicker>
+        <button class="toggle-btn" @click="toggleGroup('availDates')">Available Dates Filters</button>
+        <div v-show="openGroups.availDates" class="avail-dates-group"> <!-- v-show="openGroups.availDates" -->
+          <div class="avail-dates">
+            <Datepicker class="value datepicker" v-model="localSearchCriteria.startDate" placeholder="From (N/A)"></Datepicker> 
+            <Datepicker class="value datepicker" v-model="localSearchCriteria.endDate" placeholder="To (N/A)"></Datepicker>
+          </div>
         </div>
       </div>
     </div>
@@ -143,11 +161,21 @@ export default {
         searchListings() {
             // Sends the event to the parent component.
             this.$emit('search');
-        }
+        },
+        toggleGroup(groupName) {
+          this.openGroups[groupName] = !this.openGroups[groupName];
+          // Find the button element and update its aria-expanded attribute.
+          const button = this.$el.querySelector(`.toggle-btn[data-group="${groupName}"]`);
+          if (button) {
+            button.setAttribute('aria-expanded', this.openGroups[groupName]);
+          }
+        },
     },
     data() {
+      const isMobile = window.innerWidth < 768;
       return {
-        allNeighborhoods: ['Allston', 
+        allNeighborhoods: [
+        'Allston', 
         'Back Bay', 'Bay Village', 'Beacon Hill', 'Brighton', 
         'Charlestown', 'Chinatown-Leather District', 'Cambridge',
         'Dorchester', 'Downtown', 
@@ -160,6 +188,14 @@ export default {
         'Roxbury',
         'South Boston', 'South End', 'Somerville',
         'West End', 'West Roxbury', 'Wharf District', /** Get more neighborhoods. */],
+        openGroups: { 
+          locaitonInput: !isMobile,
+          bedroomsBathrooms: !isMobile,
+          minMaxRent: !isMobile,
+          propertyStatusMedia: !isMobile,
+          laundryParkingPet: !isMobile,
+          availDates: !isMobile,
+        },
       };
     },
 }
@@ -180,13 +216,50 @@ export default {
   padding: 2rem;
 }
 
-/* .info-group {
+.info-group {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  margin-left: 2.5vw;
-} */
+}
+
+.toggle-btn {
+  max-width: 250px;
+  min-width: 100px;
+  border: none;
+  outline: none;
+  padding: 0.8rem 1rem;
+  margin: 0.2rem;
+  border-radius: 15px;
+  background: #888888;
+  box-shadow: 5px 5px 10px #bebebe,
+              -5px -5px 10px #ffffff;
+  font-size: 1rem;
+  color: #ebebeb;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.toggle-btn::after {
+  content: '';
+  display: inline-block;
+  margin-left: 5px;
+  vertical-align: middle;
+  border-top: 5px solid #ebebeb; /* Triangle pointing downwards */
+  border-right: 5px solid transparent;
+  border-left: 5px solid transparent;
+  border-bottom: none;
+  transition: transform 0.3s ease;
+}
+/* When group is open, rotate the caret to point upwards */
+.toggle-btn[aria-expanded="true"]::after {
+  transform: rotate(180deg);
+}
+.toggle-btn::hover {
+  background: #93ca88;
+  box-shadow: 2px 2px 5px #bebebe,
+              -2px -2px 5px #ffffff;
+
+}
 .value {
   display: flex;
   align-items: center;
@@ -276,6 +349,9 @@ select:valid {
 
 /** Desktop view */
 @media only screen and (min-width: 768px) {
+  /* .toggle-btn {
+    display: none;
+  } */
   .search-container {
     display: flex;
     justify-content: space-evenly;
