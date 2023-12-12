@@ -27,18 +27,18 @@ export default {
         state: 'MA', // State.
         zipCode: '', // Zip code.
         propertyType: '',
-        limit: 5, // Apartment, condo, house, etc.
-        // minRent: '', // Minimum rent.
-        // maxRent: '', // Maximum rent.
-        // unit: '', // Not sure what this means ngl.
-        // startDate: null, // Available from.
-        // endDate: null, // Available to.
-        // pet: '', // Pet friendly, or not.
-        // status: '', // Whether it's on market or not.
-        // media: '', // Photos or virtual tours.
-        // laundry: '',
-        // parking: '',
-        // fee: '', // no co-broke
+        limit: 20, // Apartment, condo, house, etc.
+        minRent: '', // Minimum rent.
+        maxRent: '', // Maximum rent.
+        unit: '', // Not sure what this means ngl.
+        startDate: null, // Available from.
+        endDate: null, // Available to.
+        pet: '', // Pet friendly, or not.
+        status: '', // Whether it's on market or not.
+        media: '', // Photos or virtual tours.
+        laundry: '',
+        parking: '',
+        fee: '', // no co-broke
         // Add more criteria.
       },
       listings: []

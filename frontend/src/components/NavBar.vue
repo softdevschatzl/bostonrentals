@@ -79,8 +79,7 @@
     white-space: pre-wrap;
     text-align: center;
     word-break: break-all;
-    font-size: 14px;
-    
+    font-size: 20px;
   }
   .brand-image {
     transform: scale(0.75);
@@ -182,10 +181,16 @@
   /** iPhone 13 apparently */
 @media only screen and (max-width: 400px) {
   .user-sign {
-    margin-right: 3vw;
+    margin-right: 18vw;
   }
   .title {
-    width: auto;
+    width: 160px;
+    white-space: normal;
+    word-break: break-all;
+    margin-right: 5vw;
+  }
+  .right {
+    width: 100px;
   }
 }
  

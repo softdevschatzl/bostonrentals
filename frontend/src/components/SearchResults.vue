@@ -4,21 +4,21 @@
   <table>
     <thead>
       <tr class="listing-header">
-        <th></th>
+        <th></th>  <!-- Checkbox -->
         <th>Address</th>
         <th>City/State</th>
-        <th>County</th>
+        <th>Property Type</th>
         <th>Beds</th>
         <th>Baths</th>
         <th>Rent</th>
       </tr>
     </thead>
     <tbody>
-      <tr class="listing" v-for="listing in listings" :key="listing.id">
+      <tr class="listing" v-for="listing in numberlessAddresses" :key="listing.id">
         <td><input type="checkbox" v-model="listing.selected" /></td>
         <td>{{ listing.addressLine1 }}</td>
         <td>{{ listing.city }}, {{ listing.state }}</td>
-        <td>{{ listing.county }}</td>
+        <td>{{ listing.propertyType }}</td>
         <td>{{ listing.bedrooms }}</td>
         <td>{{ listing.bathrooms }}</td>
         <td>{{ listing.rent }}</td>
@@ -29,6 +29,11 @@
 </template>
 
 <script>
+/**
+ * This component is responsible for displaying the search results.
+ * It receives the listings from the SearchPage component, and displays them in a table.
+ * It also allows the user to select listings, and add them to their favorites.
+ */
 export default {
     props: {
         listings: {
@@ -37,8 +42,20 @@ export default {
         }
     },
     mounted() {
-      console.log('Listings: ', this.listings);
+      // console.log('Listings: ', this.listings); use if having issues with listing data.
     },
+    computed: { // this is where we can do the address manipulation.
+      numberlessAddresses() {
+        return this.listings.map(listing => {
+          // no address numbers!!!!
+          const onlyAlphaAddresses = listing.addressLine1.replace(/[0-9-.]/g, ''); // what if it's a hyphenated street name? i dont know what id do.
+          return {
+            ...listing,
+            addressLine1: onlyAlphaAddresses
+          };
+        });
+      }
+    }
 }
 </script>
 

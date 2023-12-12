@@ -31,7 +31,7 @@ app.use('/properties', limiter);
 // Creating route to fetch data (RentCast API)
 app.get('/properties', async (req, res) => {
     try {
-        const { address, city, state, zipCode, propertyType, bedrooms, bathrooms, limit = 5 } = req.query;
+        const { address, city, state, zipCode, propertyType, bedrooms, bathrooms, limit = 20 } = req.query;
         console.log("Query params:", req.query)
 
         // Needed a workaround for the API to work with blank query params.
