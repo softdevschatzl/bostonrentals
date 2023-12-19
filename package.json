@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "aws-sdk": "^2.1522.0",
     "vue-router": "4"
   }
 }
