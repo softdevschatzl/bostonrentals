@@ -1,3 +1,5 @@
+<!-- NavBar.vue -->
+
 <template>
     <nav>
       <div class="left">
@@ -11,7 +13,7 @@
       </div>
       <div class="right">
         <div class="user-sign">
-          <button class="user-sign-in">Login</button>
+          <SignIn />
         </div>
         <!-- <div class="house-image">
           <button class="new-listing-btn">
@@ -24,7 +26,7 @@
 
 <script>
   import Hamburger from './HamburgerMenu.vue'
-  // import HomeImage from '../assets/icons8-house-100.png'
+  import SignIn from './SignIn.vue'
 
   export default {
     methods: {
@@ -36,7 +38,8 @@
       }
     },
     components: {
-      Hamburger
+      Hamburger,
+      SignIn
     }
   }
 </script>
@@ -109,27 +112,6 @@
     display: flex;
     flex-wrap: nowrap;
     margin-left: 18vw;
-  }
-  .user-sign-in {
-    display: flex;
-    align-items: flex-end;
-    border: none;
-    outline: none;
-    padding: 0.8rem 1rem;
-    margin: 0.2rem;
-    border-radius: 15px;
-    background: #ECF0F3;
-    box-shadow: 5px 5px 10px #496644,
-                -5px -5px 10px #7dad74;
-    font-size: 1rem;
-    color: #333;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  .user-sign-in:hover {
-    background: #dadada;
-    box-shadow: 2px 2px 5px #496644,
-                -2px -2px 5px #7dad74;
   }
 
   .hamburger {

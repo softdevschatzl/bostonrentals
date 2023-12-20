@@ -1,37 +1,41 @@
+<!-- SignIn.vue -->
+
 <template>
-  <div>
-    <form @submit.prevent="handleLogin">
-      <input v-model="username" type="text" placeholder="Username" />
-      <input v-model="password" type="password" placeholder="Password" />
-      <button type="submit">Login</button>
-      <p v-if="errorMessage">{{ errorMessage }}</p>
-    </form>
-  </div>
+  <button @click="handleLogin" class="user-sign-in">Login</button>
 </template>
 
 <script>
-import signIn from '../cognito';
+import { redirectToCognitoUI } from '../cognito.js';
 
 export default {
-  data() {
-    return {
-      username: '',
-      password: '',
-      errorMessage: '',
-    };
-  },
   methods: {
-    async handleLogin() {
-      try {
-        const session = await signIn(this.username, this.password);
-        // handles successful login, redirects/stores session.
-      } catch (error) {
-        this.errorMessage = error.message;
-      }
+    handleLogin() {
+      redirectToCognitoUI();
     }
   }
 }
 </script>
 
 <style scoped>
+  .user-sign-in {
+    display: flex;
+    align-items: flex-end;
+    border: none;
+    outline: none;
+    padding: 0.8rem 1rem;
+    margin: 0.2rem;
+    border-radius: 15px;
+    background: #ECF0F3;
+    box-shadow: 5px 5px 10px #496644,
+                -5px -5px 10px #7dad74;
+    font-size: 1rem;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .user-sign-in:hover {
+    background: #dadada;
+    box-shadow: 2px 2px 5px #496644,
+                -2px -2px 5px #7dad74;
+  }
 </style>
