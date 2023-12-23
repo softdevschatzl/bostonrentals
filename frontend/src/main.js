@@ -7,7 +7,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router';
 import axios from 'axios';
-import { getUserPool } from './cognito';
+import { getUserPool } from '../cognito';
 
 axios.defaults.baseURL = 'http://localhost:3000';
 

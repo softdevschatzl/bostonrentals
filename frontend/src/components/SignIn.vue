@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { redirectToCognitoUI } from '../cognito.js';
+import { redirectToCognitoUI } from '../../cognito';
 
 export default {
   methods: {
