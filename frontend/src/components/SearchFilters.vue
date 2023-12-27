@@ -189,7 +189,7 @@ export default {
         'South Boston', 'South End', 'Somerville',
         'West End', 'West Roxbury', 'Wharf District', /** Get more neighborhoods. */],
         openGroups: { 
-          locaitonInput: !isMobile,
+          locationInput: !isMobile,
           bedroomsBathrooms: !isMobile,
           minMaxRent: !isMobile,
           propertyStatusMedia: !isMobile,
@@ -198,6 +198,19 @@ export default {
         },
       };
     },
+    mounted() {
+      const isMobile = window.innerWidth < 768;
+      const defaultState = !isMobile;
+
+      this.openGroups = {
+        locationInput: defaultState,
+        bedroomsBathrooms: defaultState,
+        minMaxRent: defaultState,
+        propertyStatusMedia: defaultState,
+        laundryParkingPet: defaultState,
+        availDates: defaultState,
+      };
+    }
 }
 
 </script>
@@ -359,6 +372,9 @@ select:valid {
   .filters input 
   .filters select {
     max-height: 100px;
+  }
+  .toggle-btn {
+    display: none;
   }
 }
 
