@@ -41,9 +41,9 @@ export function signIn(username, password) {
 }
 
 export function redirectToCognitoUI() {
-  const cognitoDomain = 'https://alexanderrentals-login.auth.us-east-2.amazoncognito.com/login?response_type=TYPE&client_id=22gbg0ei7ieq779d8pp04qq9m&redirect_uri=https://alexandersrentals.com';
+  const cognitoDomain = 'https://alexanderrentals-login.auth.us-east-2.amazoncognito.com';
   const clientId = config.APP_CLIENT_ID;
-  const callbackUrl = encodeURIComponent('http://localhost:8080/callback'); // change to alexandersrentals.com.
+  const callbackUrl = encodeURIComponent('http://alexandersrentals.com'); // change to alexandersrentals.com.
   const responseType = 'token';
 
   const loginUrl = `${cognitoDomain}/login?response_type=${responseType}&client_id=${clientId}&redirect_uri=${callbackUrl}`;

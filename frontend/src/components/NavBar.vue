@@ -53,7 +53,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #668d5e;
+    background-color: #2e4f96;
     height: 10vh;
     width: 100%;
     margin: 0;
@@ -71,7 +71,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 400px;
     /* gap: 2px; */
   }
   .title h1 {
@@ -82,6 +81,8 @@
     white-space: pre-wrap;
     text-align: center;
     word-break: break-all;
+    text-overflow: ellipsis;
+    overflow: hidden;
     font-size: 20px;
   }
   .brand-image {
@@ -145,8 +146,8 @@
     margin: 0.2rem;
     border-radius: 15px;
     background: #ECF0F3;
-    box-shadow: 5px 5px 10px #496644,
-                -5px -5px 10px #7dad74;
+    box-shadow: 5px 5px 10px #205aa5,
+                -5px -5px 10px #274fa7;
     font-size: 1rem;
     color: #333;
     cursor: pointer;
@@ -179,7 +180,7 @@
 /** Desktop styles */
 @media only screen and (min-width: 768px) {
   .user-sign {
-    margin-left: 30vw;
+    margin-left: 35vw;
   }
 
   .brand-image {
