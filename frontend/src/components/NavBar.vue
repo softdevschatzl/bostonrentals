@@ -8,7 +8,7 @@
         </div>
       </div>
       <div class="title">
-        <img class="brand-image" src="../assets/logo.png" />
+        <img class="brand-image" src="../assets/logo-light.png" />
         <div class="desktop-h1">
           <h1>Alexander's Rentals</h1> <!-- This is for desktop. -->
         </div>
@@ -57,9 +57,9 @@
     left: 0;
     z-index: 1000;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
     align-items: center;
-    background-color: #2e4f96;
+    background-color: #050833;
     height: 10vh;
     width: 100%;
     margin: 0;
@@ -77,6 +77,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 33%;
     /* gap: 2px; */
   }
   .title h1 {
@@ -98,12 +99,12 @@
   .right {
     display: flex;
     align-items: center;
-    justify-content: space-evenly;
-    width: 50%;
+    justify-content: flex-end;
+    width: 33%;
   }
 
   .left {
-    width: 70vw;
+    width: 33%;
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -115,10 +116,11 @@
 
   .user-sign {
     color: #ffffff;
-    width: 50%;
+    width: 100%;
+    margin-right: 10px;
     display: flex;
     flex-wrap: nowrap;
-    margin-left: 18vw;
+    /* margin-left: 18vw; */
   }
 
   .hamburger {
@@ -129,14 +131,14 @@
 
   /** iPhone 13 apparently */
 @media only screen and (max-width: 400px) {
-  .user-sign {
-    margin-right: 26vw;
-  }
   .title {
     width: 160px;
     white-space: normal;
     word-break: break-all;
     margin-right: 5vw;
+  }
+  .title h1 {
+    font-size: 16px;
   }
   .right {
     width: 100px;
@@ -152,6 +154,11 @@
 @media only screen and (max-width: 768px) {
   .desktop-h1 {
     display: none;
+  }
+  .mobile-h1 {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .user-sign {

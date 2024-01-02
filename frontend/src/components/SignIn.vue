@@ -26,16 +26,16 @@ export default {
     margin: 0.2rem;
     border-radius: 15px;
     background: #ECF0F3;
-    box-shadow: 5px 5px 10px #1d3563,
-                -5px -5px 10px #3d74ec;
+    box-shadow: 5px 5px 10px #050833,
+                -5px -5px 10px #305baa;
     font-size: 1rem;
     color: #333;
     cursor: pointer;
     transition: all 0.2s ease;
   }
   .user-sign-in:hover {
-    background: #dadada;
-    box-shadow: 2px 2px 5px #496644,
-                -2px -2px 5px #7dad74;
+    opacity: 0.75;
+    box-shadow: 2px 2px 5px #111ba8,
+                -2px -2px 5px #4787ff;
   }
 </style>

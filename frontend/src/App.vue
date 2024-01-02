@@ -71,6 +71,7 @@ export default {
   html {
     height: 100%;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    background: #050833;
   }
 
   * {

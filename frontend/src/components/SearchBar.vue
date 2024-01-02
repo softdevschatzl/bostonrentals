@@ -74,7 +74,7 @@ export default {
     transition: .3s ease-in-out;
   }
   .search-button:hover {
-    background-color: #456140;
+    background-color: #416fd3;
   }
   .search-bar {
     margin: 50px;
@@ -98,8 +98,12 @@ export default {
       font-size: 1.2rem;
     }
     .search-button {
-      padding: 5px;
+      padding: 10px;
       border: none;
+      font-size: 16px;
+    }
+    .search-input {
+      font-size: 18px;
     }
   }
 </style>

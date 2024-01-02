@@ -124,6 +124,7 @@
  */
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
+import downArrow from '@/assets/down-arrow.png';
 
 export default {
     components: {
@@ -174,6 +175,7 @@ export default {
     data() {
       const isMobile = window.innerWidth < 768;
       return {
+        downArrow,
         allNeighborhoods: [
         'Allston', 
         'Back Bay', 'Bay Village', 'Beacon Hill', 'Brighton', 
@@ -223,7 +225,6 @@ export default {
   align-items: center;
   /** Neumorphic styling */
   background: #ECF0F3; /* Neumorphic background */
-  border-radius: 25px;
   box-shadow: 20px 20px 60px #bebebe,
               -20px -20px 60px #ffffff;
   padding: 2rem;
@@ -324,8 +325,7 @@ select:not(:valid) {
 select:valid {
   color: black;
 }
-.filters input,
-.filters select {
+.filters input {
   border: none;
   outline: none;
   padding: 0.8rem 1rem;
@@ -337,6 +337,17 @@ select:valid {
   font-size: 1rem;
   color: #333;
 }
+.filters select {
+  border: none;
+  outline: none;
+  padding: 0.8rem 1rem;
+  margin: 0.2rem;
+  border-radius: 15px;box-shadow: 5px 5px 10px #bebebe,
+              -5px -5px 10px #ffffff;
+  font-size: 1rem;
+  color: #333;
+}
+
 .search-btn {
   max-width: 250px;
   min-width: 100px;
@@ -345,7 +356,7 @@ select:valid {
   padding: 0.8rem 1rem;
   margin: 0.2rem;
   border-radius: 15px;
-  background: #668d5e;
+  background: #2e4f96;
   box-shadow: 5px 5px 10px #bebebe,
               -5px -5px 10px #ffffff;
   font-size: 1rem;
@@ -354,7 +365,7 @@ select:valid {
   transition: all 0.2s ease;
 }
 .search-btn:hover {
-  background: #93ca88;
+  background: #406ed1;
   box-shadow: 2px 2px 5px #bebebe,
               -2px -2px 5px #ffffff;
 }
@@ -369,12 +380,24 @@ select:valid {
     display: flex;
     justify-content: space-evenly;
   }
-  .filters input 
+  .filters input, 
   .filters select {
     max-height: 100px;
+    background: #ECF0F3;
   }
   .toggle-btn {
     display: none;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: #ECF0F3 url('../assets/down-arrow.png') no-repeat right center; /* 10px is the width of the arrow image */
+    background-size: 12px 12px;
+    padding-right: 50px;
   }
 }
 

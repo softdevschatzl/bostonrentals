@@ -9,10 +9,10 @@
         <nav v-show="navOpen">
             <div class="sidemenu__wrapper">
             <ul class="sidemenu__list">
-                <li class="sidemenu__item"><router-link to="/">Home</router-link></li>
-                <li class="sidemenu__item"><router-link to="/search">Search</router-link></li>
-                <li class="sidemenu__item"><a href="">Renter Tools</a></li>
-                <li class="sidemenu__item"><a href="">Lessor Tools</a></li>
+                <li class="sidemenu__item" @click.prevent="navigateAndClose('#home')"><router-link to="/">Home</router-link></li>
+                <li class="sidemenu__item" @click.prevent="navigateAndClose('#search')"><router-link to="/search">Search</router-link></li>
+                <li class="sidemenu__item" @click.prevent="navigateAndClose('#home')"><a href="">Renter Tools</a></li>
+                <li class="sidemenu__item" @click.prevent="navigateAndClose('#home')"><a href="">Lessor Tools</a></li>
             </ul>
             </div>
         </nav>
@@ -27,15 +27,33 @@
                 navOpen: false,
             };
         },
+        methods: {
+            navigateAndClose(target) {
+			const element = document.querySelector(target);
+
+			if (element) {
+					const elementTopPosition = element.getBoundingClientRect().top;
+					const navbarHeight = 75; // adjust as needed
+					const offsetPosition = window.scrollY + elementTopPosition - navbarHeight;
+
+					window.scrollTo({
+							top: offsetPosition,
+							behavior: "smooth"
+					});
+			}
+			
+			this.navOpen = false;
+		}
+        }
     };
 </script>
 
 <style lang="scss" scoped>
     #sidemenu {
         nav {
-            width: 125px;
+            width: auto;
             // height: calc(100% - #{$headerHeight} - #{$footerHeight});
-            background: #668d5e;
+            background: #050833;
             position: fixed;
             top: 1vh;
             left: 0;

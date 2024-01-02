@@ -34,6 +34,7 @@
 
 <style scoped>
     h2 {
+        color: #ffffff;
         font-size: 40px;
         margin-bottom: 5vh;
     }
@@ -44,7 +45,7 @@
     }
 
     .rental-tools-section {
-        background-color: #a3a3a3;
+        background-color: #050833;
         display: flex;
         flex-direction: column;
         text-align: center;
@@ -63,7 +64,7 @@
 
     .tool-image {
         width: 300px;  /* Adjust as needed */
-        height: 194px;  /* Adjust as needed */
+        height: 100%;  /* Adjust as needed */
         object-fit: cover;
     }
 
@@ -73,9 +74,8 @@
         justify-content: center;
         align-items: center;
         background: #cccccc;
-        flex: 1;
         padding: 20px;
-        height: 17vh;
+        height: 100%;
     }
 
     .tools-btn {
@@ -108,7 +108,7 @@
             justify-content: center;
         }
         .tool-section {
-            width: 100%;
+            width: 90vw;
         }
         .tool-image {
             width: 50%;
