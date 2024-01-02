@@ -69,7 +69,8 @@ export default {
     border-radius: 20px;
     width: 25%;
     font-size: 20px;
-    background-color: #668d5e;
+    background-color: #2e4f96;
+    color: #ececec;
     transition: .3s ease-in-out;
   }
   .search-button:hover {
@@ -91,13 +92,13 @@ export default {
     text-align: center;
   }
 
+  /* Mobile */
   @media only screen and (max-width: 768px) {
     .search-header {
       font-size: 1.2rem;
     }
     .search-button {
       padding: 5px;
-      color: black;
       border: none;
     }
   }

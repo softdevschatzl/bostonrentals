@@ -86,8 +86,8 @@
         height: 5vh;
         margin-top: 20px;
         text-decoration: none;
-        color: black;
-        background-color: rgb(162, 211, 160);
+        color: #ececec;
+        background-color: #2e4f96;
         border-radius: 20px;
         border: 2px solid black;
         transition: transform .2s ease-in-out;
@@ -96,6 +96,7 @@
         transform: scale(1.1);
     }
 
+    /* Mobile */
     @media only screen and (max-width: 768px) {
         h2 {
             font-size: 30px;
@@ -107,10 +108,10 @@
             justify-content: center;
         }
         .tool-section {
-            width: 400px;
+            width: 100%;
         }
         .tool-image {
-            width: 175px;
+            width: 50%;
             height: 270px;
         }
         .tool-content {

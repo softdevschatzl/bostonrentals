@@ -7,7 +7,7 @@
  */
 import { CognitoUserPool } from 'amazon-cognito-identity-js';
 import { AuthenticationDetails, CognitoUser } from 'amazon-cognito-identity-js';
-import config from '../cognitoconfig.js';
+import config from './cognitoconfig';
 
 const poolData = {
   UserPoolId: config.USER_POOL_ID,

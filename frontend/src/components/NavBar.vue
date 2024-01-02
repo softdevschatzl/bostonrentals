@@ -9,7 +9,13 @@
       </div>
       <div class="title">
         <img class="brand-image" src="../assets/logo.png" />
-        <h1>Alexander's Rentals</h1>
+        <div class="desktop-h1">
+          <h1>Alexander's Rentals</h1> <!-- This is for desktop. -->
+        </div>
+        <div class="mobile-h1"> <!-- This is for mobile. -->
+          <h1>Alexander's</h1>
+          <h1>Rentals</h1>
+        </div>
       </div>
       <div class="right">
         <div class="user-sign">
@@ -121,50 +127,10 @@
     margin-left: 2vw;
   }
 
-  /* .new-listing-btn {
-    background-color: #adadad;
-    padding: 15px;
-    border: none;
-    width: 12vw;
-    height: 100%;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    margin-right: -20vw;
-    margin-left: 3vw;
-  }
-  .new-listing-btn:hover {
-    background-color: #8b8b8b;
-    transition: .2s ease-in-out;
-    text-decoration: underline;
-  } */
-
-  .new-listing-btn {
-    display: flex;
-    align-items: flex-end;
-    border: none;
-    outline: none;
-    padding: 0.8rem 1rem;
-    margin: 0.2rem;
-    border-radius: 15px;
-    background: #ECF0F3;
-    box-shadow: 5px 5px 10px #205aa5,
-                -5px -5px 10px #274fa7;
-    font-size: 1rem;
-    color: #333;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    /* Background-color: #668d5e */
-  }
-
-  .new-listing-btn:hover {
-    background: #dadada;
-    box-shadow: 2px 2px 5px #496644,
-                -2px -2px 5px #7dad74;
-  }
-
   /** iPhone 13 apparently */
 @media only screen and (max-width: 400px) {
   .user-sign {
-    margin-right: 18vw;
+    margin-right: 26vw;
   }
   .title {
     width: 160px;
@@ -175,9 +141,25 @@
   .right {
     width: 100px;
   }
+
+  .desktop-h1 {
+    display: none;
+  }
+
+}
+
+/* Mobile */
+@media only screen and (max-width: 768px) {
+  .desktop-h1 {
+    display: none;
+  }
+
+  .user-sign {
+    margin-left: 24vw
+  }
 }
  
-/** Desktop styles */
+/* Desktop styles */
 @media only screen and (min-width: 768px) {
   .user-sign {
     margin-left: 35vw;
@@ -188,6 +170,9 @@
   }
   .title h1 {
     font-size: 24px;
+  }
+  .mobile-h1 {
+    display: none;
   }
 }
 /** Larger desktop screens. */
