@@ -5,12 +5,11 @@
 </template>
 
 <script>
-import { redirectToCognitoUI } from '../../cognito';
 
 export default {
   methods: {
     handleLogin() {
-      redirectToCognitoUI();
+      alert('Sorry buddy, frontend only. I am saving the backend for when this gets fully deployed.')
     }
   }
 }

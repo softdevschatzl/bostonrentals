@@ -18,8 +18,12 @@ export default {
     return {
       // TODO: Get API access to turn GeoData Coordinates 
       // into actual locations to feed the RentCastAPI.
-      apartments: [],
-      location: '',
+      apartments: [
+        { id: 23, selected: false, addressLine1: '654 Oak Blvd', city: 'San Francisco', state: 'CA', propertyType: 'House', bedrooms: 3, bathrooms: 2, rent: 3000 },
+        { id: 24, selected: false, addressLine1: '987 Elm St', city: 'Los Angeles', state: 'CA', propertyType: 'Townhouse', bedrooms: 4, bathrooms: 3, rent: 2800 },
+        { id: 25, selected: false, addressLine1: '123 Birch Lane', city: 'San Diego', state: 'CA', propertyType: 'Multi-Family', bedrooms: 5, bathrooms: 3.5, rent: 3500 }
+      ],
+      location: 'Alewife, MA',
       userCoords: null,
     };
   },

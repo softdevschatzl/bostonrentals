@@ -17,7 +17,7 @@
     export default {
       name: 'ApartmentItem',
       props: {
-          propertyData: {
+          apartments: {
             type: Object,
             required: true,
             default: () => ({})
@@ -25,16 +25,16 @@
       },
       computed: {
         address() {
-          return this.propertyData.formattedAddress;
+          return this.apartments.formattedAddress;
         },
         bedrooms() {
-          return this.propertyData.bedrooms || 'N/A';
+          return this.apartments.bedrooms || 'N/A';
         },
         bathrooms() {
-          return this.propertyData.bathrooms || 'N/A';
+          return this.apartments.bathrooms || 'N/A';
         },
         sqft() {
-          return this.propertyData.squareFootage || 'N/A';
+          return this.apartments.squareFootage || 'N/A';
         },
         // YGL might have images, but RentCast does not.
         // backgroundStyle() {

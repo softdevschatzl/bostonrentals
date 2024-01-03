@@ -96,6 +96,52 @@
         transform: scale(1.1);
     }
 
+    @media only screen and (max-width: 1149px) {
+        .content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .tool-section {
+            width: 90vw;
+        }
+        .tool-image {
+            width: 50%;
+            height: 270px;
+        }
+        .tool-content {
+            font-size: 0.9em;
+            height: 230px;
+        }
+        .tools-btn {
+            width: 75px;
+        }
+    }
+
+    @media only screen and (min-width: 1150px) {
+        .content {
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            width: 100%;
+        }
+        .tool-section {
+            width: 40vw;
+        }
+        .tool-image {
+            width: 300px;
+            height: 340px;
+        }
+        .tool-content {
+            font-size: 1.2em;
+            height: 300px;
+        }
+        .tools-btn {
+            width: 150px;
+        }
+    }
+
     /* Mobile */
     @media only screen and (max-width: 768px) {
         h2 {
