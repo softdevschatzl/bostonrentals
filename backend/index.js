@@ -4,10 +4,12 @@ const axios = require('axios');
 const rateLimit = require('express-rate-limit');
 const apiKey = process.env.RENTCAST_API_KEY;
 const cors = require('cors');
+const { redirectToCognitoUI } = require('./cognito');
 
 const app = express();
 const PORT = 3000;
 
+// Only allowing access from certain origin points.
 const allowedOrigins = ['http://localhost:8080', 'http://localhost:3000', 'https://softdevschatzl.github.io', 'https://alexandersrentals.com']
 app.use(cors({
     origin: function (origin, callback) {
@@ -97,6 +99,12 @@ app.get('/api/apartments', async (req, res) => {
         return res.status(500).json({ error: "Failed to fetch data." });
     }
 });
+
+// Creates endpoint for Cognito login.
+app.get('/api/login', (req, res) => {
+    const url = redirectToCognitoUI();
+    res.json({ url });
+})
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);

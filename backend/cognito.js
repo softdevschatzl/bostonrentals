@@ -5,21 +5,22 @@
  * Implements Cognito authentication.
  * 
  */
-import { CognitoUserPool } from 'amazon-cognito-identity-js';
-import { AuthenticationDetails, CognitoUser } from 'amazon-cognito-identity-js';
-import config from './cognitoconfig';
+require('dotenv').config();
+const { CognitoUserPool, CognitoUser, AuthenticationDetails } = require('amazon-cognito-identity-js');
+const userPoolId = process.env.USER_POOL_ID;
+const appClientId = process.env.APP_CLIENT_ID;
 
 const poolData = {
-  UserPoolId: config.USER_POOL_ID,
-  ClientId: config.APP_CLIENT_ID
+  UserPoolId: userPoolId,
+  ClientId: appClientId
 };
 
-export function getUserPool() {
+function getUserPool() {
   return new CognitoUserPool(poolData);
 }
 
 // Implements Cognito authentication.
-export function signIn(username, password) {
+function signIn(username, password) {
   const authenticationData = {
     Username: username,
     Password: password,
@@ -40,13 +41,19 @@ export function signIn(username, password) {
   });
 }
 
-export function redirectToCognitoUI() {
+function redirectToCognitoUI() {
   const cognitoDomain = 'https://alexanderrentals-login.auth.us-east-2.amazoncognito.com';
-  const clientId = config.APP_CLIENT_ID;
-  const callbackUrl = encodeURIComponent('http://alexandersrentals.com'); // change to alexandersrentals.com.
+  const clientId = process.env.APP_CLIENT_ID;
+  const callbackUrl = encodeURIComponent('localhost:8080'); // change to alexandersrentals.com.
   const responseType = 'token';
 
   const loginUrl = `${cognitoDomain}/login?response_type=${responseType}&client_id=${clientId}&redirect_uri=${callbackUrl}`;
 
-  window.location.href = loginUrl;
+  return loginUrl;
 }
+
+module.exports = {
+  getUserPool,
+  signIn,
+  redirectToCognitoUI,
+};

@@ -5,12 +5,20 @@
 </template>
 
 <script>
-import { redirectToCognitoUI } from '../../cognito';
-
 export default {
   methods: {
-    handleLogin() {
-      redirectToCognitoUI();
+    async handleLogin() {
+      try {
+        const response = await fetch('http://localhost:3000/api/login');
+        if (response.ok) {
+          const data = await response.json();
+          window.location.href = data.url;
+        } else {
+          console.error('Login failed.');
+        }
+      } catch (error) {
+        console.error('Login failed:', error.message);
+      }
     }
   }
 }
