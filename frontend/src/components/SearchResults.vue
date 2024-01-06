@@ -60,10 +60,26 @@ export default {
     numberlessAddresses() {
       return this.listings.map(listing => {
         // no address numbers!!!!
-        const onlyAlphaAddresses = listing.addressLine1.replace(/[0-9-.]/g, ''); // what if it's a hyphenated street name? i dont know what id do.
+        // Split the address into parts, by spaces.
+        let addressParts = listing.addressLine1.split(' ');
+
+        // Covering the case where there are hyphenated address numbers.
+        const hyphenatedNumberRegex = /^[0-9]+-[0-9]+/;
+
+        // Check if the first part is a number and if the next part is not 'St'.
+        if (hyphenatedNumberRegex.test(addressParts[0])) {
+          // If so, remove the first part.
+          addressParts.shift();
+        } else if (!isNaN(addressParts[0]) && addressParts[1].toLowerCase() !== 'st') {
+          // If the first part is a number and the next part is not 'St', remove the first part.
+          addressParts = addressParts.slice(1);
+        }
+
+        const modifiedAddress = addressParts.join(' ');
+
         return {
           ...listing,
-          addressLine1: onlyAlphaAddresses
+          addressLine1: modifiedAddress
         };
       });
     }
