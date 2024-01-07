@@ -15,7 +15,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr class="listing" v-for="listing in numberlessAddresses" :key="listing.id">
+      <tr class="listing" v-for="listing in numberlessAddresses" :key="listing.id" @click="showListingDetails(listing)">
         <td><input type="checkbox" v-model="listing.selected" /></td>
         <td>
           <img :src="listing.image || defaultImage" alt="Listing Image" class="listing-image" />
@@ -29,6 +29,7 @@
       </tr>
     </tbody>
   </table>
+  <ListingInfo :listing="selectedListing" :visible="showListingInfo" @close="showListingInfo = false" />
 </div>
 </template>
 
@@ -38,13 +39,19 @@
  * It receives the listings from the SearchPage component, and displays them in a table.
  * It also allows the user to select listings, and add them to their favorites.
  */
+import ListingInfo from './ListingInfo.vue';
 import defaultImage from '../assets/no-image-found.jpg';
 
 export default {
+  components: {
+    ListingInfo
+  },
   data() {
     return {
       selectAll: false,
       defaultImage,
+      selectedListing: null,
+      showListingInfo: false
     }
   },
   props: {
@@ -89,6 +96,10 @@ export default {
       this.numberlessAddresses.forEach(listing => {
         listing.selected = !this.selectAll;
       });
+    },
+    showListingDetails(listing) {
+      this.selectedListing = listing;
+      this.showListingInfo = true;
     }
   }
 }
