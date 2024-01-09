@@ -53,7 +53,7 @@
         nav {
             width: auto;
             // height: calc(100% - #{$headerHeight} - #{$footerHeight});
-            background: #050833;
+            background: #46465e;
             position: fixed;
             top: 1vh;
             left: 0;

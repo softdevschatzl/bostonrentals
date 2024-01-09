@@ -21,15 +21,29 @@
           <button class="toggle-btn" data-group="bedroomsBathrooms" @click="toggleGroup('bedroomsBathrooms')">Bedrooms/Bathrooms Filters</button>
           <div v-show="openGroups.bedroomsBathrooms" class="bedrooms-bathrooms-group">
             <select class="value" v-model="localSearchCriteria.bedrooms">
-              <option value="" disabled>Beds</option>
-              <option>0 (Studio)</option>
+              <option value="" disabled>Min Beds</option>
+              <option>Studio</option>
               <option>1</option>
+              <option>1.5</option>
+              <option>1 split</option>
               <option>2</option>
+              <option>2.5</option>
+              <option>2 split</option>
               <option>3</option>
+              <option>3.5</option>
+              <option>3 split</option>
               <option>4</option>
+              <option>4.5</option>
+              <option>4 split</option>
+              <option>5</option>
+              <option>6</option>
+              <option>7</option>
+              <option>8</option>
+              <option>9</option>
+              <option>10+</option>
             </select>
             <select class="value" v-model="localSearchCriteria.bathrooms">
-              <option value="" disabled>Baths</option>
+              <option value="" disabled>Min Baths</option>
               <option>1</option>
               <option>1.5</option>
               <option>2</option>
@@ -37,38 +51,34 @@
               <option>3</option>
               <option>3.5</option>
               <option>4</option>
+              <option>4.5</option>
+              <option>5</option>
+              <option>5.5</option>
+              <option>6</option>
+              <option>7</option>
+              <option>8</option>
+              <option>9</option>
+              <option>10+</option>
             </select>
-            <input class="value" type="text" v-model="localSearchCriteria.unit" placeholder="Unit...(N/A)" />
+            <input class="value" type="text" v-model="localSearchCriteria.unit" placeholder="Unit..." />
           </div>
         </div>
         <div class="info-group min-max-rent">
           <button class="toggle-btn" @click="toggleGroup('minMaxRent')">Min/Max Rent Filters</button>
           <div v-show="openGroups.minMaxRent" class="min-max-rent-group"> <!-- v-show="openGroups.minMaxRent" -->
-            <input class="value" type="text" v-model="localSearchCriteria.minRent" placeholder="Min Rent...(N/A)" />
-            <input class="value" type="text" v-model="localSearchCriteria.maxRent" placeholder="Max Rent...(N/A)" />
-            <input class="value" type="text" v-model="localSearchCriteria.fee" placeholder="Fee... (N/A)" />
-          </div>
-        </div>
-        <div class="info-group">
-          <button class="toggle-btn" @click="toggleGroup('propertyStatusMedia')">Property Status/Media Filters</button>
-          <div v-show="openGroups.propertyStatusMedia" class="property-status-media-group">
-            <select class="value" v-model="localSearchCriteria.propertyType">
-              <option value="" disabled>Property Type (N/A)</option>
-              <option>Apartment</option>
-              <option>Condo</option>
-              <option>House</option>
-              <option>Multi-Family</option>
-              <option>Townhouse</option>
-            </select>
-            <select class="value" v-model="localSearchCriteria.status">
-              <option value="" disabled>Status (N/A)</option>
-              <option>On Market</option>
-              <option>Off Market</option>
-            </select>
-            <select class="value" v-model="localSearchCriteria.media">
-              <option value="" disabled>Media (N/A)</option>
-              <option>Photos</option>
-              <option>Virtual Tour</option>
+            <input class="value" type="text" v-model="localSearchCriteria.minRent" placeholder="Min Rent..." />
+            <input class="value" type="text" v-model="localSearchCriteria.maxRent" placeholder="Max Rent..." />
+            <select class="value" v-model="localSearchCriteria.fee">
+              <option value="" disabled>Fee</option>
+              <option>No Fee</option>
+              <option>25% Month Fee</option>
+              <option>50% Month Fee</option>
+              <option>75% Month Fee</option>
+              <option>1 Month Fee</option>
+              <option>1.5 Month Fee</option>
+              <option>2 Month Fee</option>
+              <option>Co-Broke</option>
+              <option>Other</option>
             </select>
           </div>
         </div>
@@ -76,22 +86,46 @@
           <button class="toggle-btn" @click="toggleGroup('laundryParkingPet')">Laundry/Parking/Pet Filters</button>
           <div v-show="openGroups.laundryParkingPet" class="laundry-parking-pet-group"> <!-- v-show="openGroups.laundryParkingPet" -->
             <select class="value" v-model="localSearchCriteria.laundry">
-              <option value="" disabled>Laundry (N/A)</option>
-              <option>In Unit</option>
-              <option>In Building</option>
+              <option value="" disabled>Laundry</option>
+              <option>Washer/Dryer In Unit</option>
+              <option>Laundry In Building</option>
+              <option>Laundry On Site</option>
+              <option>Washer/Dryer Hookups</option>
+              <option>Laundry Services</option>
               <option>None</option>
             </select>
             <select class="value" v-model="localSearchCriteria.parking">
-              <option value="" disabled>Parking (N/A)</option>
-              <option>Garage</option>
-              <option>Driveway</option>
-              <option>Street</option>
+              <option value="" disabled>Parking</option>
+              <option>Available</option>
+              <option>For Rent</option>
+              <option>Included</option>
               <option>None</option>
             </select>
             <select class="value" v-model="localSearchCriteria.pet">
-              <option value="" disabled>Pet Friendly (N/A)</option>
-              <option>Yes</option>
-              <option>No</option>
+              <option value="" disabled>Pet Friendly</option>
+              <option>Cat</option>
+              <option>Dog</option>
+              <option>Friendly</option>
+            </select>
+          </div>
+        </div>
+        <div class="info-group">
+          <button class="toggle-btn" @click="toggleGroup('propertyStatusMedia')">Property Status/Media Filters</button>
+          <div v-show="openGroups.propertyStatusMedia" class="property-status-media-group">
+            <select class="value" v-model="localSearchCriteria.status">
+              <option value="" disabled>Status</option>
+              <option>On Market</option>
+              <option>Pending</option>
+              <option>Off Market</option>
+            </select>
+            <select class="value" v-model="localSearchCriteria.media">
+              <option value="" disabled>Media</option>
+              <option>Only Listings With Photos</option>
+              <option>Any</option>
+            </select>
+            <select class="value">
+              <option value="" disabled>Advanced Options</option>
+              <option>FIX THIS</option>
             </select>
           </div>
         </div>
@@ -356,16 +390,16 @@ select:valid {
   padding: 0.8rem 1rem;
   margin: 0.2rem;
   border-radius: 15px;
-  background: #2e4f96;
+  background: #afc6d2;
   box-shadow: 5px 5px 10px #bebebe,
               -5px -5px 10px #ffffff;
   font-size: 1rem;
-  color: #ebebeb;
+  color: #252525;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 .search-btn:hover {
-  background: #406ed1;
+  background: #788792;
   box-shadow: 2px 2px 5px #bebebe,
               -2px -2px 5px #ffffff;
 }

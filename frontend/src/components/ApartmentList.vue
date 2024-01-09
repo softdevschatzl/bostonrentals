@@ -27,7 +27,7 @@ export default {
   .double-color-background {
     height: 100%;
 
-    background: linear-gradient(to bottom, #050833 15%, #161616 25%, #161616 75%);
+    background: linear-gradient(to bottom, #46465e 15%, #161616 25%, #161616 75%);
   }
 
   .apartments-section {

@@ -34,8 +34,8 @@ export default {
     margin: 0.2rem;
     border-radius: 15px;
     background: #ECF0F3;
-    box-shadow: 5px 5px 10px #050833,
-                -5px -5px 10px #305baa;
+    box-shadow: 5px 5px 10px #313142,
+                -5px -5px 10px #727299;
     font-size: 1rem;
     color: #333;
     cursor: pointer;
@@ -43,7 +43,7 @@ export default {
   }
   .user-sign-in:hover {
     opacity: 0.75;
-    box-shadow: 2px 2px 5px #111ba8,
-                -2px -2px 5px #4787ff;
+    box-shadow: 2px 2px 5px #3b3b50,
+                -2px -2px 5px #5c5c7c;
   }
 </style>

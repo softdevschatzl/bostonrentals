@@ -69,12 +69,12 @@ export default {
     border-radius: 20px;
     width: 25%;
     font-size: 20px;
-    background-color: #2e4f96;
-    color: #ececec;
+    background-color: #afc6d2;
+    color: #252525;
     transition: .3s ease-in-out;
   }
   .search-button:hover {
-    background-color: #416fd3;
+    background-color: #788792;
   }
   .search-bar {
     margin: 50px;

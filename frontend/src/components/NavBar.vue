@@ -59,7 +59,7 @@
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    background-color: #050833;
+    background-color: #46465e;
     height: 10vh;
     width: 100%;
     margin: 0;

@@ -53,13 +53,14 @@ export default {
             address: this.searchCriteria.address,
             bedrooms: this.searchCriteria.bedrooms,
             bathrooms: this.searchCriteria.bathrooms,
-            // minRent: this.minRent,
-            // maxRent: this.maxRent,
-            // unit: this.unit,
+            minRent: this.minRent,
+            maxRent: this.maxRent,
+            unit: this.unit,
             state: this.searchCriteria.state,
             zipCode: this.searchCriteria.zipCode,
+            availFrom: this.searchCriteria.startDate,
+            availTo: this.searchCriteria.endDate,
             limit: this.searchCriteria.limit,
-            propertyType: this.searchCriteria.propertyType,
           }
         });
         console.log('API Response: ', response.data);

@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
 const rateLimit = require('express-rate-limit');
-const apiKey = process.env.RENTCAST_API_KEY;
+const apiKey = process.env.YGL_API_KEY;
 const cors = require('cors');
 const { redirectToCognitoUI } = require('./cognito');
 
@@ -21,16 +21,16 @@ app.use(cors({
     }
 }));
 
-// Limits API queries. Remove when upgrading API.
-const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 30 days in milliseconds.
-    max: 50, // Limiting API calls to 50 every month.
-    message: "Too many requests from this IP."
-});
+// // Limits API queries. Remove when upgrading API.
+// const limiter = rateLimit({
+//     windowMs: 15 * 60 * 1000, // 30 days in milliseconds.
+//     max: 50, // Limiting API calls to 50 every month.
+//     message: "Too many requests from this IP."
+// });
 
 app.use('/properties', limiter);
 
-// Creating route to fetch data (RentCast API)
+// Creating route to fetch data (YGL API)
 app.get('/properties', async (req, res) => {
     try {
         const { address, city, state, zipCode, propertyType, bedrooms, bathrooms, limit = 20 } = req.query;
@@ -41,14 +41,18 @@ app.get('/properties', async (req, res) => {
         let params = { state, limit };
 
         // Add parameters to the request if they are not blank.
-        if (address) params.address = address;
-        if (city) params.city = city;
-        if (zipCode) params.zipCode = zipCode;
-        if (propertyType) params.propertyType = propertyType;
-        if (bedrooms) params.bedrooms = bedrooms;
-        if (bathrooms) params.bathrooms = bathrooms;
+        if (address) params.street_name = address;
+        if (city) params.city_neighborhood = city;
+        if (zipCode) params.zip = zipCode;
+        if (bedrooms) params.min_bed = bedrooms;
+        if (bathrooms) params.min_bath = bathrooms;
+        if (maxRent) params.max_rent = maxRent;
+        if (minRent) params.min_rent = minRent;
+        if (fee) params.listing_fee = fee;
+        if (availFrom) params.avail_from = availFrom;
+        if (availTo) params.avail_to = availTo;
 
-        const response = await axios.get('https://api.rentcast.io/v1/properties', {
+        const response = await axios.get('https://www.yougotlistings.com/api/rentals/search.php', {
             params: params,
             headers: {
                 'Accept': 'application/json',
