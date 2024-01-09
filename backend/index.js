@@ -46,11 +46,13 @@ app.get('/properties', async (req, res) => {
         if (zipCode) params.zip = zipCode;
         if (bedrooms) params.min_bed = bedrooms;
         if (bathrooms) params.min_bath = bathrooms;
+        if (sqft) params.square_footage_min = sqft;
         if (maxRent) params.max_rent = maxRent;
         if (minRent) params.min_rent = minRent;
         if (fee) params.listing_fee = fee;
         if (availFrom) params.avail_from = availFrom;
         if (availTo) params.avail_to = availTo;
+
 
         const response = await axios.get('https://www.yougotlistings.com/api/rentals/search.php', {
             params: params,
@@ -68,18 +70,18 @@ app.get('/properties', async (req, res) => {
 });
 
 // Fetch user's IP to show featured apartments closest to them.
-app.get('/api/location', async (req, res) => {
-    console.log("Location route hit.")
-    try {
-        const userIp = '43.225.189.77';
-        // const userIp = req.ip; Use this after testing locally.
-        const response = await axios.get(`http://ip-api.com/json/${userIp}`);
-        return res.json(response.data);
-    } catch (error) {
-        console.error("Failed to fetch user location:", error.message);
-        return res.status(500).json({ error: "Failed to fetch user location." });
-    }
-});
+// app.get('/api/location', async (req, res) => {
+//     console.log("Location route hit.")
+//     try {
+//         const userIp = '43.225.189.77';
+//         // const userIp = req.ip; Use this after testing locally.
+//         const response = await axios.get(`http://ip-api.com/json/${userIp}`);
+//         return res.json(response.data);
+//     } catch (error) {
+//         console.error("Failed to fetch user location:", error.message);
+//         return res.status(500).json({ error: "Failed to fetch user location." });
+//     }
+// });
 
 // Fetch properties based on latitude and longitude.
 // app.get('/api/apartments', async (req, res) => {

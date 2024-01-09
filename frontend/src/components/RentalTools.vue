@@ -44,8 +44,17 @@
         font-size: 2em;
     }
 
+    .content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 75%;
+        height: 80vh;
+    }
+
     .rental-tools-section {
-        background-color: #050833;
+        background-color: #46465e;
         display: flex;
         flex-direction: column;
         text-align: center;
@@ -57,14 +66,19 @@
 
     .tool-section {
         display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 20px 0;
+        align-items: stretch;
+        justify-content: space-between;
+        margin: 20px 20px;
+        height: 35%;
+        width: 100%;
+    }
+
+    .tool-image, .tool-content {
+        flex: 1;
+        object-fit: cover;
     }
 
     .tool-image {
-        width: 300px;  /* Adjust as needed */
-        height: 100%;  /* Adjust as needed */
         object-fit: cover;
     }
 
@@ -75,7 +89,6 @@
         align-items: center;
         background: #cccccc;
         padding: 20px;
-        height: 100%;
     }
 
     .tools-btn {
@@ -86,14 +99,26 @@
         height: 5vh;
         margin-top: 20px;
         text-decoration: none;
-        color: #ececec;
-        background-color: #2e4f96;
+        color: #252525;
+        background-color: #afc6d2;
         border-radius: 20px;
         border: 2px solid black;
         transition: transform .2s ease-in-out;
     }
     .tools-btn:hover {
         transform: scale(1.1);
+    }
+
+
+    @media only screen and (min-width: 768px) {
+        .content {
+            width: 85%;
+        }
+    }
+    @media only screen and (min-width: 1120px) {
+        .content {
+            width: 70%;
+        }
     }
 
     /* Mobile */

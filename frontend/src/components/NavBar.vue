@@ -8,14 +8,7 @@
         </div>
       </div>
       <div class="title">
-        <img class="brand-image" src="../assets/logo-light.png" />
-        <div class="desktop-h1">
-          <h1>Alexander's Rentals</h1> <!-- This is for desktop. -->
-        </div>
-        <div class="mobile-h1"> <!-- This is for mobile. -->
-          <h1>Alexander's</h1>
-          <h1>Rentals</h1>
-        </div>
+          <img class="logo" src="../assets/AlexandersRentals_Logo1-01.png" />
       </div>
       <div class="right">
         <div class="user-sign">
@@ -73,27 +66,18 @@
     /* width: 100%; */
   }
 
+  .logo {
+    width: 100%;
+    height: auto;
+  }
+
   .title {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 33%;
+    width: 30%;
+    height: 100px;
     /* gap: 2px; */
-  }
-  .title h1 {
-    display: flex;
-    flex-direction: column;
-    margin-top: 4px;
-    padding: 0;
-    white-space: pre-wrap;
-    text-align: center;
-    word-break: break-all;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    font-size: 20px;
-  }
-  .brand-image {
-    transform: scale(0.75);
   }
 
   .right {

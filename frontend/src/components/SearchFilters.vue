@@ -21,7 +21,7 @@
           <button class="toggle-btn" data-group="bedroomsBathrooms" @click="toggleGroup('bedroomsBathrooms')">Bedrooms/Bathrooms Filters</button>
           <div v-show="openGroups.bedroomsBathrooms" class="bedrooms-bathrooms-group">
             <select class="value" v-model="localSearchCriteria.bedrooms">
-              <option value="" disabled>Min Beds</option>
+              <option value="" disabled>Minimum Beds</option>
               <option>Studio</option>
               <option>1</option>
               <option>1.5</option>
@@ -43,7 +43,7 @@
               <option>10+</option>
             </select>
             <select class="value" v-model="localSearchCriteria.bathrooms">
-              <option value="" disabled>Min Baths</option>
+              <option value="" disabled>Minimum Baths</option>
               <option>1</option>
               <option>1.5</option>
               <option>2</option>
@@ -60,7 +60,7 @@
               <option>9</option>
               <option>10+</option>
             </select>
-            <input class="value" type="text" v-model="localSearchCriteria.unit" placeholder="Unit..." />
+            <input class="value" type="text" v-model="localSearchCriteria.sqft" placeholder="Minimum Square Feet..." />
           </div>
         </div>
         <div class="info-group min-max-rent">
@@ -71,14 +71,10 @@
             <select class="value" v-model="localSearchCriteria.fee">
               <option value="" disabled>Fee</option>
               <option>No Fee</option>
-              <option>25% Month Fee</option>
-              <option>50% Month Fee</option>
+              <option>25% Month Fee</option> 
+              <option>50% Off Month Fee</option>
               <option>75% Month Fee</option>
               <option>1 Month Fee</option>
-              <option>1.5 Month Fee</option>
-              <option>2 Month Fee</option>
-              <option>Co-Broke</option>
-              <option>Other</option>
             </select>
           </div>
         </div>

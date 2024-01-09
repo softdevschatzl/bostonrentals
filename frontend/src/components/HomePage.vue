@@ -3,6 +3,7 @@
       <SearchBar />
       <ApartmentList :apartments="sortedApartments" :location="location" />
       <RentalTools />
+      <FooterPage />
     </div>
   </template>
   
@@ -10,12 +11,14 @@
   import SearchBar from './SearchBar.vue';
   import ApartmentList from './ApartmentList.vue';
   import RentalTools from './RentalTools.vue';
+  import FooterPage from './FooterPage.vue';
   
   export default {
     components: {
       SearchBar,
       ApartmentList,
       RentalTools,
+      FooterPage,
     }
   };
   </script>

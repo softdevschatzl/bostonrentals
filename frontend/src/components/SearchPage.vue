@@ -55,7 +55,7 @@ export default {
             bathrooms: this.searchCriteria.bathrooms,
             minRent: this.minRent,
             maxRent: this.maxRent,
-            unit: this.unit,
+            sqft: this.sqft,
             state: this.searchCriteria.state,
             zipCode: this.searchCriteria.zipCode,
             availFrom: this.searchCriteria.startDate,
