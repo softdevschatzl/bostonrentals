@@ -18,7 +18,7 @@
       <tr class="listing" v-for="listing in numberlessAddresses" :key="listing.id" @click="showListingDetails(listing)">
         <td><input type="checkbox" v-model="listing.selected" /></td>
         <td>
-          <img :src="listing.image || defaultImage" alt="Listing Image" class="listing-image" />
+          <img :src="defaultImage" alt="Listing Image" class="listing-image" />
         </td>
         <td>{{ listing.addressLine1 }}</td>
         <td>{{ listing.city }}, {{ listing.state }}</td>
@@ -135,7 +135,7 @@ export default {
 }
 .listing td {
   padding: 15px;
-  border-bottom: 1px solid #bebebe;
+  border-bottom: 2px solid #aaaaaa;
 }
 
 .listing {
@@ -154,5 +154,12 @@ export default {
   height: 100px;
   object-fit: cover;
   border-radius: 5px;
+}
+
+@media only screen and (max-width: 768px) {
+  .listing-image {
+    width: 50px;
+    height: 50px;
+  }
 }
 </style>
