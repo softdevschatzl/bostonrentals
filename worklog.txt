@@ -19,3 +19,8 @@ APIs:
 Upon Deployment: 
     - Switch userIp from hardcoded to req.ip in index.js.
     - Neumorphism design scheme????
+
+
+
+1/8/24:
+    - Finish integrating YGL API, in index.jsm App.vue, SearchPage.vue
