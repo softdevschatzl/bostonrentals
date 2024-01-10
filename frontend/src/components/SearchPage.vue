@@ -26,11 +26,9 @@ export default {
         cities: '', // Specific cities/neighborhoods.
         state: 'MA', // State.
         zipCode: '', // Zip code.
-        propertyType: '',
         limit: 20, // Apartment, condo, house, etc.
         minRent: '', // Minimum rent.
         maxRent: '', // Maximum rent.
-        unit: '', // Not sure what this means ngl.
         startDate: null, // Available from.
         endDate: null, // Available to.
         pet: '', // Pet friendly, or not.

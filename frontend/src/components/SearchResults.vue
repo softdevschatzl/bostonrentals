@@ -1,6 +1,6 @@
 <!-- SearchResults.vue -->
 <template>
-<div class="listings">
+<div class="listings" v-if="Array.isArray(listings)">
   <table>
     <thead>
       <tr class="listing-header">
@@ -31,6 +31,11 @@
   </table>
   <ListingInfo :listing="selectedListing" :visible="showListingInfo" @close="showListingInfo = false" />
 </div>
+<div class="no-listings-container" v-else>
+  <div class="no-listings">
+    <p>No listings found.</p>
+  </div>
+</div>
 </template>
 
 <script>
@@ -57,11 +62,13 @@ export default {
   props: {
       listings: {
           type: Array,
-          required: true
+          required: true,
+          default: () => []
       },
   },
   mounted() {
-    // console.log('Listings: ', this.listings); use if having issues with listing data.
+    console.log('Listings: ', this.listings);
+    console.log('Listings Type: ', typeof this.listings);
   },
   computed: { // this is where we can do the address manipulation.
     numberlessAddresses() {
@@ -156,10 +163,32 @@ export default {
   border-radius: 5px;
 }
 
+.no-listings-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.no-listings {
+  margin-top: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  height: 100px;
+  background: #afc6d2;
+  text-align: center;
+  border: 5px solid #7e7e7e;
+}
+
 @media only screen and (max-width: 768px) {
   .listing-image {
     width: 50px;
     height: 50px;
+  }
+  .no-listings {
+    margin-top: 50px;
+    margin-bottom: 50px;
   }
 }
 </style>

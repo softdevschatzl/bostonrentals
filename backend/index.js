@@ -28,12 +28,10 @@ app.use(cors({
 //     message: "Too many requests from this IP."
 // });
 
-app.use('/properties', limiter);
-
 // Creating route to fetch data (YGL API)
 app.get('/properties', async (req, res) => {
     try {
-        const { address, city, state, zipCode, propertyType, bedrooms, bathrooms, limit = 20 } = req.query;
+        const { address, city, zipCode, state, bedrooms, bathrooms, sqft, maxRent, minRent, fee, availFrom, availTo, limit = 20 } = req.query;
         console.log("Query params:", req.query)
 
         // Needed a workaround for the API to work with blank query params.
@@ -70,41 +68,41 @@ app.get('/properties', async (req, res) => {
 });
 
 // Fetch user's IP to show featured apartments closest to them.
-// app.get('/api/location', async (req, res) => {
-//     console.log("Location route hit.")
-//     try {
-//         const userIp = '43.225.189.77';
-//         // const userIp = req.ip; Use this after testing locally.
-//         const response = await axios.get(`http://ip-api.com/json/${userIp}`);
-//         return res.json(response.data);
-//     } catch (error) {
-//         console.error("Failed to fetch user location:", error.message);
-//         return res.status(500).json({ error: "Failed to fetch user location." });
-//     }
-// });
+app.get('/api/location', async (req, res) => {
+    console.log("Location route hit.")
+    try {
+        const userIp = '43.225.189.77';
+        // const userIp = req.ip; Use this after testing locally.
+        const response = await axios.get(`http://ip-api.com/json/${userIp}`);
+        return res.json(response.data);
+    } catch (error) {
+        console.error("Failed to fetch user location:", error.message);
+        return res.status(500).json({ error: "Failed to fetch user location." });
+    }
+});
 
 // Fetch properties based on latitude and longitude.
-// app.get('/api/apartments', async (req, res) => {
-//     try {
-//         const { lat, lon } = req.query;
+app.get('/api/apartments', async (req, res) => {
+    try {
+        const { lat, lon } = req.query;
 
-//         const response = await axios.get('https://api.rentcast.io/v1/properties', {
-//             params: {
-//                 lat,
-//                 lon
-//             },
-//             headers: {
-//                 'Accept': 'application.json',
-//                 'X-Api-Key': apiKey
-//             }
-//         });
+        const response = await axios.get('https://www.yougotlistings.com/api/rentals/search.php', {
+            params: {
+                latitude_start,
+                longitude_start
+            },
+            headers: {
+                'Accept': 'application.json',
+                'X-Api-Key': apiKey
+            }
+        });
 
-//         return res.json(response.data);
-//     } catch (error) {
-//         console.error("API call failed:", error.message);
-//         return res.status(500).json({ error: "Failed to fetch data." });
-//     }
-// });
+        return res.json(response.data);
+    } catch (error) {
+        console.error("API call failed:", error.message);
+        return res.status(500).json({ error: "Failed to fetch data." });
+    }
+});
 
 // Creates endpoint for Cognito login.
 app.get('/api/login', (req, res) => {
