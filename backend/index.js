@@ -86,7 +86,7 @@ app.get('/api/apartments', async (req, res) => {
     try {
         const { lat, lon } = req.query;
 
-        const response = await axios.get('https://www.yougotlistings.com/api/rentals/search.php', {
+        const response = await axios.get('https://www.yougotlistings.com/api/rentals/search.php?key={`apiKey`}', {
             params: {
                 latitude_start,
                 longitude_start
