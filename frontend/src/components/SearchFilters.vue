@@ -7,9 +7,9 @@
         <div class="info-group location-input">
           <button class="toggle-btn" data-group="locationInput" @click="toggleGroup('locationInput')">Location Filters </button>
           <div v-show="openGroups.locationInput" class="location-input-group"> <!-- v-show="openGroups.locationInput" -->
-            <input class="value" type="text" v-model="localSearchCriteria.address" placeholder="Street Name..." />
-            <input class="value" type="text" v-model="localSearchCriteria.zipCode" placeholder="Zip Code..." />
-            <select class="value" v-model="localSearchCriteria.cities">
+            <input class="value" type="text" v-model="localSearchCriteria.street_name" placeholder="Street Name..." />
+            <input class="value" type="text" v-model="localSearchCriteria.zip" placeholder="Zip Code..." />
+            <select class="value" v-model="localSearchCriteria.city_neighborhood">
               <option value="" disabled>City/Neighborhood</option>
               <optgroup v-for="(group, letter) in groupedNeighborhoods" :label="letter" :key="letter">
                 <option v-for="neighborhood in group" :key="neighborhood" :value="neighborhood">{{ neighborhood }}</option>
@@ -20,7 +20,7 @@
         <div class="info-group">
           <button class="toggle-btn" data-group="bedroomsBathrooms" @click="toggleGroup('bedroomsBathrooms')">Bedrooms/Bathrooms Filters</button>
           <div v-show="openGroups.bedroomsBathrooms" class="bedrooms-bathrooms-group">
-            <select class="value" v-model="localSearchCriteria.bedrooms">
+            <select class="value" v-model="localSearchCriteria.beds">
               <option value="" disabled>Minimum Beds</option>
               <option>Studio</option>
               <option>1</option>
@@ -42,7 +42,7 @@
               <option>9</option>
               <option>10+</option>
             </select>
-            <select class="value" v-model="localSearchCriteria.bathrooms">
+            <select class="value" v-model="localSearchCriteria.baths">
               <option value="" disabled>Minimum Baths</option>
               <option>1</option>
               <option>1.5</option>
@@ -66,9 +66,9 @@
         <div class="info-group min-max-rent">
           <button class="toggle-btn" @click="toggleGroup('minMaxRent')">Min/Max Rent Filters</button>
           <div v-show="openGroups.minMaxRent" class="min-max-rent-group"> <!-- v-show="openGroups.minMaxRent" -->
-            <input class="value" type="text" v-model="localSearchCriteria.minRent" placeholder="Min Rent..." />
-            <input class="value" type="text" v-model="localSearchCriteria.maxRent" placeholder="Max Rent..." />
-            <select class="value" v-model="localSearchCriteria.fee">
+            <input class="value" type="text" v-model="localSearchCriteria.min_rent" placeholder="Min Rent..." />
+            <input class="value" type="text" v-model="localSearchCriteria.max_rent" placeholder="Max Rent..." />
+            <select class="value" v-model="localSearchCriteria.listing_fee">
               <option value="" disabled>Fee</option>
               <option>No Fee</option>
               <option>25% Month Fee</option> 
@@ -157,56 +157,69 @@ import '@vuepic/vue-datepicker/dist/main.css'
 import downArrow from '@/assets/down-arrow.png';
 
 export default {
-    components: {
-        Datepicker,
-    },
-    props: {
-        searchCriteria: {
-            type: Object,
-            required: true
-        }
-    },
-    computed: {
-        localSearchCriteria: {
-            get() {
-              return this.searchCriteria;
-            },
-            set() {
-              // Sends the event with updated criteria.
-              this.$emit('update-criteria', this.searchCriteria);
-            },
-        },
-        groupedNeighborhoods() {
-          const groups = {};
-          for (const neighborhood of this.allNeighborhoods) {
-            const letter = neighborhood[0];
-            if (!groups[letter]) {
-              groups[letter] = [];
-            }
-            groups[letter].push(neighborhood);
+  components: {
+      Datepicker,
+  },
+  props: {
+      searchCriteria: {
+          type: Object,
+          required: true
+      }
+  },
+  computed: {
+      localSearchCriteria: {
+          get() {
+            return this.searchCriteria;
+          },
+          set() {
+            // Sends the event with updated criteria.
+            this.$emit('update-criteria', this.searchCriteria);
+          },
+      },
+      groupedNeighborhoods() {
+        const groups = {};
+        for (const neighborhood of this.allNeighborhoods) {
+          const letter = neighborhood[0];
+          if (!groups[letter]) {
+            groups[letter] = [];
           }
-          return groups;
+          groups[letter].push(neighborhood);
         }
+        return groups;
+      }
+  },
+  methods: {
+    // Searches for listings using the search criteria.
+    searchListings() {
+      const criteriaForApi = this.prepareSearchCriteriaForApi();
+      // Sends the event to the parent component.
+      this.$emit('search', criteriaForApi);
     },
-    methods: {
-        searchListings() {
-            // Sends the event to the parent component.
-            this.$emit('search');
-        },
-        toggleGroup(groupName) {
-          this.openGroups[groupName] = !this.openGroups[groupName];
-          // Find the button element and update its aria-expanded attribute.
-          const button = this.$el.querySelector(`.toggle-btn[data-group="${groupName}"]`);
-          if (button) {
-            button.setAttribute('aria-expanded', this.openGroups[groupName]);
-          }
-        },
+    // Toggles the group with the given name (mobile dropdowns).
+    toggleGroup(groupName) {
+      this.openGroups[groupName] = !this.openGroups[groupName];
+      // Find the button element and update its aria-expanded attribute.
+      const button = this.$el.querySelector(`.toggle-btn[data-group="${groupName}"]`);
+      if (button) {
+        button.setAttribute('aria-expanded', this.openGroups[groupName]);
+      }
     },
-    data() {
-      const isMobile = window.innerWidth < 768;
-      return {
-        downArrow,
-        allNeighborhoods: [
+    // Transforms the search criteria to match the API's format.
+    prepareSearchCriteriaForApi() {
+      const apiCriteria = { ...this.searchCriteria };
+      if (apiCriteria.city_neighborhood in this.neighborhoodMapping) {
+        apiCriteria.city_neighborhood = this.neighborhoodMapping[apiCriteria.city_neighborhood];
+      }
+      // Other transformations as necessary.
+      return apiCriteria;
+    }
+  },
+  data() {
+    const isMobile = window.innerWidth < 768;
+    return {
+      downArrow,
+      allNeighborhoods: [
+        // Boston neighborhoods.
         'Allston', 
         'Back Bay', 'Bay Village', 'Beacon Hill', 'Brighton', 
         'Charlestown', 'Chinatown-Leather District', 'Cambridge',
@@ -218,31 +231,71 @@ export default {
         'North End', 
         'Roslindale',
         'Roxbury',
-        'South Boston', 'South End', 'Somerville',
-        'West End', 'West Roxbury', 'Wharf District', /** Get more neighborhoods. */],
-        openGroups: { 
-          locationInput: !isMobile,
-          bedroomsBathrooms: !isMobile,
-          minMaxRent: !isMobile,
-          propertyStatusMedia: !isMobile,
-          laundryParkingPet: !isMobile,
-          availDates: !isMobile,
-        },
-      };
-    },
-    mounted() {
-      const isMobile = window.innerWidth < 768;
-      const defaultState = !isMobile;
+        'South Boston', 'South End',
+        'West End', 'West Roxbury', 'Wharf District', 
+        // Other.
+        'Somerville',
+      ],
+      openGroups: { 
+        locationInput: !isMobile,
+        bedroomsBathrooms: !isMobile,
+        minMaxRent: !isMobile,
+        propertyStatusMedia: !isMobile,
+        laundryParkingPet: !isMobile,
+        availDates: !isMobile,
+      },
+      neighborhoodMapping: {
+        'Allston': 'Allston,Boston',
+        'Back Bay': 'Back Bay,Boston',
+        'Bay Village': 'Bay Village,Boston',
+        'Beacon Hill': 'Beacon Hill,Boston',
+        'Brighton': 'Brighton,Boston',
+        'Charlestown': 'Charlestown,Boston',
+        'Chinatown-Leather District': 'Chinatown,Boston',
+        'Cambridge': 'Cambridge,MA',
+        'Dorchester': 'Dorchester,Boston',
+        'Downtown': 'Downtown,Boston',
+        'East Boston': 'East Boston,Boston',
+        'Fenway-Kenmore': 'Fenway,Boston',
+        'Jamaica Plain': 'Jamaica Plain,Boston',
+        'Mid-Dorchester': 'Dorchester,Boston',
+        'Mission Hill': 'Mission Hill,Boston',
+        'Medford': 'Medford,MA',
+        'North End': 'North End,Boston',
+        'Roslindale': 'Roslindale,Boston',
+        'Roxbury': 'Roxbury,Boston',
+        'South Boston': 'South Boston,Boston',
+        'South End': 'South End,Boston',
+        'Somerville': 'Somerville,MA',
+        'West End': 'West End,Boston',
+        'West Roxbury': 'West Roxbury,Boston',
+        'Wharf District': 'Wharf District,Boston',
+      },
+      feeMapping: {
+        'No Fee': '1', // Fee paid by landlord
+        '25% Month Fee': '.75',
+        '50% Off Month Fee': '.5',
+        '75% Month Fee': '.25',
+        '1 Month Fee': '0', // Fee paid by tenant
+      },
+      bedMapping: {
+        'Studio': 0,
+      }
+    };
+  },
+  mounted() {
+    const isMobile = window.innerWidth < 768;
+    const defaultState = !isMobile;
 
-      this.openGroups = {
-        locationInput: defaultState,
-        bedroomsBathrooms: defaultState,
-        minMaxRent: defaultState,
-        propertyStatusMedia: defaultState,
-        laundryParkingPet: defaultState,
-        availDates: defaultState,
-      };
-    }
+    this.openGroups = {
+      locationInput: defaultState,
+      bedroomsBathrooms: defaultState,
+      minMaxRent: defaultState,
+      propertyStatusMedia: defaultState,
+      laundryParkingPet: defaultState,
+      availDates: defaultState,
+    };
+  },
 }
 
 </script>

@@ -19,24 +19,23 @@ export default {
   data() {
     return {
       searchCriteria: {
-        selected: false,
-        address: '', // Street names, No Addresses!!!
-        bedrooms: '', // How many beds.
-        bathrooms: '', // How many baths.
-        cities: '', // Specific cities/neighborhoods.
+        street_name: '', // Street names, No Addresses!!!
+        beds: '', // How many beds.
+        baths: '', // How many baths.
+        city_neighborhood: '', // Specific cities/neighborhoods.
         state: 'MA', // State.
-        zipCode: '', // Zip code.
-        limit: 20, // Apartment, condo, house, etc.
-        minRent: '', // Minimum rent.
-        maxRent: '', // Maximum rent.
-        startDate: null, // Available from.
-        endDate: null, // Available to.
+        zip: '', // Zip code.
+        limit: 30, // Limits results for bandwidth purposes.
+        min_rent: '', // Minimum rent.
+        max_rent: '', // Maximum rent.
+        avail_from: null, // Available from.
+        avail_to: null, // Available to.
         pet: '', // Pet friendly, or not.
-        status: '', // Whether it's on market or not.
-        media: '', // Photos or virtual tours.
+        photo: '', // Photos or virtual tours.
         laundry: '',
         parking: '',
-        fee: '', // no co-broke
+        listing_fee: '', // no co-broke
+        square_footage_minimum: '',
         // Add more criteria.
       },
       listings: []
@@ -45,25 +44,26 @@ export default {
   methods: {
     async searchListings() {
       try {
-        const response = await axios.get('http://localhost:3000/properties', {
-          params: {
-            city: this.searchCriteria.cities, 
-            address: this.searchCriteria.address,
-            bedrooms: this.searchCriteria.bedrooms,
-            bathrooms: this.searchCriteria.bathrooms,
-            minRent: this.minRent,
-            maxRent: this.maxRent,
-            sqft: this.sqft,
-            state: this.searchCriteria.state,
-            zipCode: this.searchCriteria.zipCode,
-            availFrom: this.searchCriteria.startDate,
-            availTo: this.searchCriteria.endDate,
-            limit: this.searchCriteria.limit,
-          }
-        });
-        console.log('API Response: ', response.data);
+        const response = await axios.post('http://localhost:3000/properties', this.searchCriteria);
+          // params: {
+          //   city: this.searchCriteria.cities, 
+          //   address: this.searchCriteria.address,
+          //   bedrooms: this.searchCriteria.bedrooms,
+          //   bathrooms: this.searchCriteria.bathrooms,
+          //   minRent: this.minRent,
+          //   maxRent: this.maxRent,
+          //   sqft: this.sqft,
+          //   state: this.searchCriteria.state,
+          //   zipCode: this.searchCriteria.zipCode,
+          //   availFrom: this.searchCriteria.startDate,
+          //   availTo: this.searchCriteria.endDate,
+          //   limit: this.searchCriteria.limit,
+          // }
+        
+        console.log('API Query: ', this.searchCriteria);
+        console.log('API Response: ', response.data.listings);
 
-        this.listings = response.data;
+        this.listings = response.data.listings;
       } catch (error) {
         console.error('Error fetching listings:', error);
       }

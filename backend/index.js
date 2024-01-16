@@ -1,7 +1,6 @@
 require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
-const rateLimit = require('express-rate-limit');
 const apiKey = process.env.YGL_API_KEY;
 const cors = require('cors');
 const { redirectToCognitoUI } = require('./cognito');
@@ -21,6 +20,8 @@ app.use(cors({
     }
 }));
 
+app.use(express.json());
+
 // // Limits API queries. Remove when upgrading API.
 // const limiter = rateLimit({
 //     windowMs: 15 * 60 * 1000, // 30 days in milliseconds.
@@ -29,38 +30,38 @@ app.use(cors({
 // });
 
 // Creating route to fetch data (YGL API)
-app.get('/properties', async (req, res) => {
+app.post('/properties', async (req, res) => {
     try {
-        const { address, city, zipCode, state, bedrooms, bathrooms, sqft, maxRent, minRent, fee, availFrom, availTo, limit = 20 } = req.query;
-        console.log("Query params:", req.query)
+        const { street_name, city_neighborhood, zip, state, beds, baths, square_footage_min, max_rent, min_rent, listing_fee, avail_from, avail_to, limit = 30 } = req.body;
+        console.log("Query body:", req.body)
 
         // Needed a workaround for the API to work with blank query params.
         // If the query param is blank, it will not be included in the API call.
-        let params = { state, limit };
+        let params = { 
+            key: apiKey, 
+            state, 
+            limit,
+            request_type: 'JSON', 
+        };
 
         // Add parameters to the request if they are not blank.
-        if (address) params.street_name = address;
-        if (city) params.city_neighborhood = city;
-        if (zipCode) params.zip = zipCode;
-        if (bedrooms) params.min_bed = bedrooms;
-        if (bathrooms) params.min_bath = bathrooms;
-        if (sqft) params.square_footage_min = sqft;
-        if (maxRent) params.max_rent = maxRent;
-        if (minRent) params.min_rent = minRent;
-        if (fee) params.listing_fee = fee;
-        if (availFrom) params.avail_from = availFrom;
-        if (availTo) params.avail_to = availTo;
+        if (street_name) params.street_name = street_name;
+        if (city_neighborhood) params.city_neighborhood = city_neighborhood;
+        if (zip) params.zip = zip;
+        if (beds) params.min_bed = beds;
+        if (baths) params.min_bath = baths;
+        if (square_footage_min) params.square_footage_min = square_footage_min;
+        if (max_rent) params.max_rent = max_rent;
+        if (min_rent) params.min_rent = min_rent;
+        if (listing_fee) params.listing_fee = listing_fee;
+        if (avail_from) params.avail_from = avail_from;
+        if (avail_to) params.avail_to = avail_to;
 
 
-        const response = await axios.get('https://www.yougotlistings.com/api/rentals/search.php', {
-            params: params,
-            headers: {
-                'Accept': 'application/json',
-                'X-Api-Key': apiKey
-            }
-        });
-
+        const response = await axios.post(`https://www.yougotlistings.com/api/rentals/search.php?key=${apiKey}`, params);
+        
         return res.json(response.data);
+
     } catch (error) {
         console.error("API call failed:", error);
         return res.status(500).json({ error: "Failed to fetch data" });
@@ -86,7 +87,7 @@ app.get('/api/apartments', async (req, res) => {
     try {
         const { lat, lon } = req.query;
 
-        const response = await axios.get('https://www.yougotlistings.com/api/rentals/search.php?key={`apiKey`}', {
+        const response = await axios.get(`https://www.yougotlistings.com/api/rentals/search.php?key=${apiKey}`, {
             params: {
                 latitude_start,
                 longitude_start

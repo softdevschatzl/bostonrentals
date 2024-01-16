@@ -5,27 +5,27 @@
     <thead>
       <tr class="listing-header">
         <th><input type="checkbox" @change="selectAllListings" v-model="selectAll"></th>  <!-- Checkbox -->
-        <th>Image</th>
+        <th>Photo</th>
         <th>Address</th>
         <th>City/State</th>
-        <th>Property Type</th>
+        <th>Neighborhood</th>
         <th>Beds</th>
         <th>Baths</th>
         <th>Rent</th>
       </tr>
     </thead>
     <tbody>
-      <tr class="listing" v-for="listing in numberlessAddresses" :key="listing.id" @click="showListingDetails(listing)">
+      <tr class="listing" v-for="listing in listings" :key="listing.id" @click="showListingDetails(listing)">
         <td><input type="checkbox" v-model="listing.selected" /></td>
         <td>
-          <img :src="defaultImage" alt="Listing Image" class="listing-image" />
+          <img :src="listing.photos[0] || defaultImage" alt="Listing Image" class="listing-image" />
         </td>
-        <td>{{ listing.addressLine1 }}</td>
+        <td>{{ listing.streetName }}</td>
         <td>{{ listing.city }}, {{ listing.state }}</td>
-        <td>{{ listing.propertyType }}</td>
-        <td>{{ listing.bedrooms }}</td>
-        <td>{{ listing.bathrooms }}</td>
-        <td>{{ listing.rent }}</td>
+        <td>{{ listing.neighborhood }}</td>
+        <td>{{ listing.beds }}</td>
+        <td>{{ listing.baths }}</td>
+        <td>{{ listing.price }}</td>
       </tr>
     </tbody>
   </table>
@@ -71,36 +71,36 @@ export default {
     console.log('Listings Type: ', typeof this.listings);
   },
   computed: { // this is where we can do the address manipulation.
-    numberlessAddresses() {
-      return this.listings.map(listing => {
-        // no address numbers!!!!
-        // Split the address into parts, by spaces.
-        let addressParts = listing.addressLine1.split(' ');
+    // numberlessAddresses() {
+    //   return this.listings.map(listing => {
+    //     // no address numbers!!!!
+    //     // Split the address into parts, by spaces.
+    //     let addressParts = listing.addressLine1.split(' ');
 
-        // Covering the case where there are hyphenated address numbers.
-        const hyphenatedNumberRegex = /^[0-9]+-[0-9]+/;
+    //     // Covering the case where there are hyphenated address numbers.
+    //     const hyphenatedNumberRegex = /^[0-9]+-[0-9]+/;
 
-        // Check if the first part is a number and if the next part is not 'St'.
-        if (hyphenatedNumberRegex.test(addressParts[0])) {
-          // If so, remove the first part.
-          addressParts.shift();
-        } else if (!isNaN(addressParts[0]) && addressParts[1].toLowerCase() !== 'st') {
-          // If the first part is a number and the next part is not 'St', remove the first part.
-          addressParts = addressParts.slice(1);
-        }
+    //     // Check if the first part is a number and if the next part is not 'St'.
+    //     if (hyphenatedNumberRegex.test(addressParts[0])) {
+    //       // If so, remove the first part.
+    //       addressParts.shift();
+    //     } else if (!isNaN(addressParts[0]) && addressParts[1].toLowerCase() !== 'st') {
+    //       // If the first part is a number and the next part is not 'St', remove the first part.
+    //       addressParts = addressParts.slice(1);
+    //     }
 
-        const modifiedAddress = addressParts.join(' ');
+    //     const modifiedAddress = addressParts.join(' ');
 
-        return {
-          ...listing,
-          addressLine1: modifiedAddress
-        };
-      });
-    }
+    //     return {
+    //       ...listing,
+    //       addressLine1: modifiedAddress
+    //     };
+    //   });
+    // }
   },
   methods: {
     selectAllListings() {
-      this.numberlessAddresses.forEach(listing => {
+      this.streetName.forEach(listing => {
         listing.selected = !this.selectAll;
       });
     },
