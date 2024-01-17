@@ -6,12 +6,12 @@
       <tr class="listing-header">
         <th><input type="checkbox" @change="selectAllListings" v-model="selectAll"></th>  <!-- Checkbox -->
         <th>Photo</th>
-        <th>Address</th>
+        <th>Street Name</th>
         <th>City/State</th>
         <th>Neighborhood</th>
         <th>Beds</th>
         <th>Baths</th>
-        <th>Rent</th>
+        <th>Price</th>
       </tr>
     </thead>
     <tbody>

@@ -19,32 +19,32 @@ export default {
   data() {
     return {
       searchCriteria: {
-        street_name: '', // Street names, No Addresses!!!
-        beds: '', // How many beds.
-        baths: '', // How many baths.
-        city_neighborhood: '', // Specific cities/neighborhoods.
+        street_name: null, // Street names, No Addresses!!!
+        min_bed: "", // How many beds.
+        min_bath: "", // How many baths.
+        city_neighborhood: "", // Specific cities/neighborhoods.
         state: 'MA', // State.
-        zip: '', // Zip code.
-        limit: 30, // Limits results for bandwidth purposes.
-        min_rent: '', // Minimum rent.
-        max_rent: '', // Maximum rent.
+        zip: null, // Zip code.
+        min_rent: null, // Minimum rent.
+        max_rent: null, // Maximum rent.
         avail_from: null, // Available from.
         avail_to: null, // Available to.
-        pet: '', // Pet friendly, or not.
-        photo: '', // Photos or virtual tours.
-        laundry: '',
-        parking: '',
-        listing_fee: '', // no co-broke
-        square_footage_minimum: '',
+        pet: "", // Pet friendly, or not.
+        photo: "", // Photos or virtual tours.
+        laundry: "", // Laundry in unit.
+        parking: "", // Parking available.
+        listing_fee: "", // no co-broke
+        status: "", // Active, or not.
+        square_footage_minimum: "", // Minimum square footage.
         // Add more criteria.
       },
       listings: []
     };
   },
   methods: {
-    async searchListings() {
+    async searchListings(criteria) {
       try {
-        const response = await axios.post('http://localhost:3000/properties', this.searchCriteria);
+        const response = await axios.post('/properties', criteria);
           // params: {
           //   city: this.searchCriteria.cities, 
           //   address: this.searchCriteria.address,
@@ -60,7 +60,7 @@ export default {
           //   limit: this.searchCriteria.limit,
           // }
         
-        console.log('API Query: ', this.searchCriteria);
+        console.log('API Query: ', criteria);
         console.log('API Response: ', response.data.listings);
 
         this.listings = response.data.listings;
@@ -69,12 +69,12 @@ export default {
       }
     },
     updateCriteria(newCriteria) {
-      this.searchCriteria = newCriteria;
+      this.searchCriteria = { ...newCriteria };
     },
   },
   mounted() {
     // Perform an initial search when the component mounts
-    // this.searchListings();
+    this.searchListings();
   }
 };
 </script>

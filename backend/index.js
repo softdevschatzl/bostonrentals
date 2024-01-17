@@ -32,7 +32,7 @@ app.use(express.json());
 // Creating route to fetch data (YGL API)
 app.post('/properties', async (req, res) => {
     try {
-        const { street_name, city_neighborhood, zip, state, beds, baths, square_footage_min, max_rent, min_rent, listing_fee, avail_from, avail_to, limit = 30 } = req.body;
+        const { street_name, city_neighborhood, zip, state, beds, baths, square_footage_min, max_rent, min_rent, listing_fee, avail_from, avail_to } = req.body;
         console.log("Query body:", req.body)
 
         // Needed a workaround for the API to work with blank query params.
@@ -40,7 +40,6 @@ app.post('/properties', async (req, res) => {
         let params = { 
             key: apiKey, 
             state, 
-            limit,
             request_type: 'JSON', 
         };
 
@@ -89,8 +88,8 @@ app.get('/api/apartments', async (req, res) => {
 
         const response = await axios.get(`https://www.yougotlistings.com/api/rentals/search.php?key=${apiKey}`, {
             params: {
-                latitude_start,
-                longitude_start
+                lat,
+                lon
             },
             headers: {
                 'Accept': 'application.json',

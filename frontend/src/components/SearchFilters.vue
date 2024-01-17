@@ -10,7 +10,7 @@
             <input class="value" type="text" v-model="localSearchCriteria.street_name" placeholder="Street Name..." />
             <input class="value" type="text" v-model="localSearchCriteria.zip" placeholder="Zip Code..." />
             <select class="value" v-model="localSearchCriteria.city_neighborhood">
-              <option value="" disabled>City/Neighborhood</option>
+              <option value="" selected><strong>City/Neighborhood</strong></option>
               <optgroup v-for="(group, letter) in groupedNeighborhoods" :label="letter" :key="letter">
                 <option v-for="neighborhood in group" :key="neighborhood" :value="neighborhood">{{ neighborhood }}</option>
               </optgroup>
@@ -20,7 +20,7 @@
         <div class="info-group">
           <button class="toggle-btn" data-group="bedroomsBathrooms" @click="toggleGroup('bedroomsBathrooms')">Bedrooms/Bathrooms Filters</button>
           <div v-show="openGroups.bedroomsBathrooms" class="bedrooms-bathrooms-group">
-            <select class="value" v-model="localSearchCriteria.beds">
+            <select class="value" v-model="localSearchCriteria.min_bed">
               <option value="" disabled>Minimum Beds</option>
               <option>Studio</option>
               <option>1</option>
@@ -42,7 +42,7 @@
               <option>9</option>
               <option>10+</option>
             </select>
-            <select class="value" v-model="localSearchCriteria.baths">
+            <select class="value" v-model="localSearchCriteria.min_bath">
               <option value="" disabled>Minimum Baths</option>
               <option>1</option>
               <option>1.5</option>
@@ -193,6 +193,7 @@ export default {
     searchListings() {
       const criteriaForApi = this.prepareSearchCriteriaForApi();
       // Sends the event to the parent component.
+      console.log("Criteria for API: ", criteriaForApi);
       this.$emit('search', criteriaForApi);
     },
     // Toggles the group with the given name (mobile dropdowns).
@@ -207,10 +208,25 @@ export default {
     // Transforms the search criteria to match the API's format.
     prepareSearchCriteriaForApi() {
       const apiCriteria = { ...this.searchCriteria };
+      // Neighborhoods
       if (apiCriteria.city_neighborhood in this.neighborhoodMapping) {
         apiCriteria.city_neighborhood = this.neighborhoodMapping[apiCriteria.city_neighborhood];
       }
-      // Other transformations as necessary.
+      // Fee
+      if (apiCriteria.listing_fee in this.feeMapping) {
+        apiCriteria.listing_fee = this.feeMapping[apiCriteria.listing_fee];
+      }
+      // Beds
+      if (apiCriteria.beds in this.bedMapping) {
+        apiCriteria.beds = this.bedMapping[apiCriteria.beds];
+      }
+      // Baths
+      if (apiCriteria.baths in this.bedMapping) {
+        apiCriteria.baths = this.bedMapping[apiCriteria.baths];
+      }
+
+      console.log("API Criteria: ", apiCriteria);
+
       return apiCriteria;
     }
   },
@@ -219,22 +235,132 @@ export default {
     return {
       downArrow,
       allNeighborhoods: [
-        // Boston neighborhoods.
-        'Allston', 
-        'Back Bay', 'Bay Village', 'Beacon Hill', 'Brighton', 
-        'Charlestown', 'Chinatown-Leather District', 'Cambridge',
-        'Dorchester', 'Downtown', 
-        'East Boston', 
-        'Fenway-Kenmore',
-        'Jamaica Plain',
-        'Mid-Dorchester', 'Mission Hill', 'Medford',
-        'North End', 
-        'Roslindale',
-        'Roxbury',
-        'South Boston', 'South End',
-        'West End', 'West Roxbury', 'Wharf District', 
-        // Other.
+        // Boston
+        'Boston',
+        'Boston - Allston',
+        'Boston - Back Bay',
+        'Boston - Bay Village',
+        'Boston - Beacon Hill',
+        'Boston - Brighton',
+        'Boston - Charlestown',
+        'Boston - Chinatown',
+        'Boston - Dorchester',
+        'Boston - East Boston',
+        'Boston - Fenway',
+        'Boston - Financial District',
+        'Boston - Fort Hill',
+        'Boston - Hyde Park',
+        'Boston - Jamaica Plain',
+        'Boston - Kenmore',
+        'Boston - Leather District',
+        'Boston - Mattapan',
+        'Boston - Midtown',
+        'Boston - Mission Hill',
+        'Boston - North End',
+        'Boston - Roslindale',
+        'Boston - Roxbury',
+        'Boston - Seaport District',
+        'Boston - South Boston',
+        'Boston - South End',
+        'Boston - Theatre District',
+        'Boston - Waterfront',
+        'Boston - West End',
+        'Boston - West Roxbury',
+
+        // Braintree
+        'Braintree',
+        'Braintree - Braintree Highlands',
+        'Braintree - East Braintree',
+        'Braintree - Five Corners',
+        'Braintree - South Braintree',
+        // Brookline
+        'Brookline',
+        'Brookline - Beaconsfield',
+        'Brookline - Brookline Hills',
+        'Brookline - Brookline Village',
+        'Brookline - Chestnut Hill',
+        'Brookline - Coolidge Corner',
+        'Brookline - Longwood',
+        'Brookline - Reservoir',
+        'Brookline - Washington Square',
+        // Cambridge
+        'Cambridge',
+        'Cambridge - Agassiz',
+        'Cambridge - Cambridge Highlands',
+        'Cambridge - Cambridgeport',
+        'Cambridge - Central Square',
+        'Cambridge - East Cambridge',
+        'Cambridge - Harvard Square',
+        'Cambridge - Huron Square',
+        'Cambridge - Inman Square',
+        'Cambridge - Kendall Square',
+        'Cambridge - Mid Cambridge',
+        'Cambridge - Neighborhood Nine',
+        'Cambridge - North Cambridge',
+        'Cambridge - Porter Square',
+        'Cambridge - Riverside',
+        'Cambridge - Wellington-Harrington',
+        'Cambridge - West Cambridge',
+        // Medford
+        'Medford',
+        'Medford - College Hill',
+        'Medford - Medford Hillside',
+        'Medford - North Medford',
+        'Medford - Tufts University',
+        'Medford - Wellington',
+        'Medford - West Medford',
+        // Quincy
+        'Quincy',
+        'Quincy - Adams Shore',
+        'Quincy - Atlantic',
+        'Quincy - Germantown',
+        'Quincy - Houghs Neck',
+        'Quincy - Marina Bay',
+        'Quincy - Merrymount',
+        'Quincy - Montclair',
+        'Quincy - Norfolk Downs',
+        'Quincy - North Quincy',
+        'Quincy - Quincy Center',
+        'Quincy - Quincy Neck',
+        'Quincy - Quincy Point',
+        'Quincy - Rock Island',
+        'Quincy - South Quincy',
+        'Quincy - Squantum',
+        'Quincy - West Quincy',
+        'Quincy - Wollaston',
+        'Quincy - Wollaston Heights',
+        // Somerville
         'Somerville',
+        'Somerville - Assembly Square',
+        'Somerville - Ball Square',
+        'Somerville - Davis Square',
+        'Somerville - East Somerville',
+        'Somerville - Inman Square',
+        'Somerville - Magoun Square',
+        'Somerville - Powderhouse Square',
+        'Somerville - Prospect Hill',
+        'Somerville - Spring Hill',
+        'Somerville - Teele Square',
+        'Somerville - Ten Hills',
+        'Somerville - Union Square',
+        'Somerville - West Somerville',
+        'Somerville - Winter Hill',
+        // Weymouth
+        'Weymouth',
+        'Weymouth - Bicknell Square',
+        'Weymouth - Columbian Square',
+        'Weymouth - East Weymouth',
+        'Weymouth - Fort Hill',
+        'Weymouth - Great Hill',
+        'Weymouth - Jackson Square',
+        'Weymouth - Lincoln Heights',
+        'Weymouth - Lovell Corners',
+        'Weymouth - North Weymouth',
+        'Weymouth - Old Spain',
+        'Weymouth - Rose Cliff',
+        'Weymouth - South Weymouth',
+        'Weymouth - Weymouth Heights',
+        'Weymouth - Weymouth Landing',
       ],
       openGroups: { 
         locationInput: !isMobile,
@@ -245,42 +371,140 @@ export default {
         availDates: !isMobile,
       },
       neighborhoodMapping: {
-        'Allston': 'Allston,Boston',
-        'Back Bay': 'Back Bay,Boston',
-        'Bay Village': 'Bay Village,Boston',
-        'Beacon Hill': 'Beacon Hill,Boston',
-        'Brighton': 'Brighton,Boston',
-        'Charlestown': 'Charlestown,Boston',
-        'Chinatown-Leather District': 'Chinatown,Boston',
-        'Cambridge': 'Cambridge,MA',
-        'Dorchester': 'Dorchester,Boston',
-        'Downtown': 'Downtown,Boston',
-        'East Boston': 'East Boston,Boston',
-        'Fenway-Kenmore': 'Fenway,Boston',
-        'Jamaica Plain': 'Jamaica Plain,Boston',
-        'Mid-Dorchester': 'Dorchester,Boston',
-        'Mission Hill': 'Mission Hill,Boston',
-        'Medford': 'Medford,MA',
-        'North End': 'North End,Boston',
-        'Roslindale': 'Roslindale,Boston',
-        'Roxbury': 'Roxbury,Boston',
-        'South Boston': 'South Boston,Boston',
-        'South End': 'South End,Boston',
-        'Somerville': 'Somerville,MA',
-        'West End': 'West End,Boston',
-        'West Roxbury': 'West Roxbury,Boston',
-        'Wharf District': 'Wharf District,Boston',
+        'Boston - Allston': 'Boston:Allston',
+        'Boston - Back Bay': 'Boston:Back Bay',
+        'Boston - Bay Village': 'Boston:Bay Village',
+        'Boston - Beacon Hill': 'Boston:Beacon Hill',
+        'Boston - Brighton': 'Boston:Brighton',
+        'Boston - Charlestown': 'Boston:Charlestown',
+        'Boston - Chinatown': 'Boston:Chinatown',
+        'Boston - Dorchester': 'Boston:Dorchester',
+        'Boston - East Boston': 'Boston:East Boston',
+        'Boston - Fenway': 'Boston:Fenway',
+        'Boston - Financial District': 'Boston:Financial District',
+        'Boston - Fort Hill': 'Boston:Fort Hill',
+        'Boston - Hyde Park': 'Boston:Hyde Park',
+        'Boston - Jamaica Plain': 'Boston:Jamaica Plain',
+        'Boston - Kenmore': 'Boston:Kenmore',
+        'Boston - Leather District': 'Boston:Leather District',
+        'Boston - Mattapan': 'Boston:Mattapan',
+        'Boston - Midtown': 'Boston:Midtown',
+        'Boston - Mission Hill': 'Boston:Mission Hill',
+        'Boston - North End': 'Boston:North End',
+        'Boston - Roslindale': 'Boston:Roslindale',
+        'Boston - Roxbury': 'Boston:Roxbury',
+        'Boston - Seaport District': 'Boston:Seaport District',
+        'Boston - South Boston': 'Boston:South Boston',
+        'Boston - South End': 'Boston:South End',
+        'Boston - Theatre District': 'Boston:Theatre District',
+        'Boston - Waterfront': 'Boston:Waterfront',
+        'Boston - West End': 'Boston:West End',
+        'Boston - West Roxbury': 'Boston:West Roxbury',
+
+        // Braintree
+        'Braintree - Braintree Highlands': 'Braintree:Braintree Highlands',
+        'Braintree - East Braintree': 'Braintree:East Braintree',
+        'Braintree - Five Corners': 'Braintree:Five Corners',
+        'Braintree - South Braintree': 'Braintree:South Braintree',
+        
+        // Brookline
+        'Brookline - Beaconsfield': 'Brookline:Beaconsfield',
+        'Brookline - Brookline Hills': 'Brookline:Brookline Hills',
+        'Brookline - Brookline Village': 'Brookline:Brookline Village',
+        'Brookline - Chestnut Hill': 'Brookline:Chestnut Hill',
+        'Brookline - Coolidge Corner': 'Brookline:Coolidge Corner',
+        'Brookline - Longwood': 'Brookline:Longwood',
+        'Brookline - Reservoir': 'Brookline:Reservoir',
+        'Brookline - Washington Square': 'Brookline:Washington Square',
+
+        // Cambridge
+        'Cambridge - Agassiz': 'Cambridge:Agassiz',
+        'Cambridge - Cambridge Highlands': 'Cambridge:Cambridge Highlands',
+        'Cambridge - Cambridgeport': 'Cambridge:Cambridgeport',
+        'Cambridge - Central Square': 'Cambridge:Central Square',
+        'Cambridge - East Cambridge': 'Cambridge:East Cambridge',
+        'Cambridge - Harvard Square': 'Cambridge:Harvard Square',
+        'Cambridge - Huron Square': 'Cambridge:Huron Square',
+        'Cambridge - Inman Square': 'Cambridge:Inman Square',
+        'Cambridge - Kendall Square': 'Cambridge:Kendall Square',
+        'Cambridge - Mid Cambridge': 'Cambridge:Mid Cambridge',
+        'Cambridge - Neighborhood Nine': 'Cambridge:Neighborhood Nine',
+        'Cambridge - North Cambridge': 'Cambridge:North Cambridge',
+        'Cambridge - Porter Square': 'Cambridge:Porter Square',
+        'Cambridge - Riverside': 'Cambridge:Riverside',
+        'Cambridge - Wellington-Harrington': 'Cambridge:Wellington-Harrington',
+        'Cambridge - West Cambridge': 'Cambridge:West Cambridge',
+
+        // Medford
+        'Medford - College Hill': 'Medford:College Hill',
+        'Medford - Medford Hillside': 'Medford:Medford Hillside',
+        'Medford - North Medford': 'Medford:North Medford',
+        'Medford - Tufts University': 'Medford:Tufts University',
+        'Medford - Wellington': 'Medford:Wellington',
+        'Medford - West Medford': 'Medford:West Medford',
+
+        // Quincy
+        'Quincy - Adams Shore': 'Quincy:Adams Shore',
+        'Quincy - Atlantic': 'Quincy:Atlantic',
+        'Quincy - Germantown': 'Quincy:Germantown',
+        'Quincy - Houghs Neck': 'Quincy:Houghs Neck',
+        'Quincy - Marina Bay': 'Quincy:Marina Bay',
+        'Quincy - Merrymount': 'Quincy:Merrymount',
+        'Quincy - Montclair': 'Quincy:Montclair',
+        'Quincy - Norfolk Downs': 'Quincy:Norfolk Downs',
+        'Quincy - North Quincy': 'Quincy:North Quincy',
+        'Quincy - Quincy Center': 'Quincy:Quincy Center',
+        'Quincy - Quincy Neck': 'Quincy:Quincy Neck',
+        'Quincy - Quincy Point': 'Quincy:Quincy Point',
+        'Quincy - Rock Island': 'Quincy:Rock Island',
+        'Quincy - South Quincy': 'Quincy:South Quincy',
+        'Quincy - Squantum': 'Quincy:Squantum',
+        'Quincy - West Quincy': 'Quincy:West Quincy',
+        'Quincy - Wollaston': 'Quincy:Wollaston',
+        'Quincy - Wollaston Heights': 'Quincy:Wollaston Heights',
+
+        // Somerville
+        'Somerville - Assembly Square': 'Somerville:Assembly Square',
+        'Somerville - Ball Square': 'Somerville:Ball Square',
+        'Somerville - Davis Square': 'Somerville:Davis Square',
+        'Somerville - East Somerville': 'Somerville:East Somerville',
+        'Somerville - Inman Square': 'Somerville:Inman Square',
+        'Somerville - Magoun Square': 'Somerville:Magoun Square',
+        'Somerville - Powderhouse Square': 'Somerville:Powderhouse Square',
+        'Somerville - Prospect Hill': 'Somerville:Prospect Hill',
+        'Somerville - Spring Hill': 'Somerville:Spring Hill',
+        'Somerville - Teele Square': 'Somerville:Teele Square',
+        'Somerville - Ten Hills': 'Somerville:Ten Hills',
+        'Somerville - Union Square': 'Somerville:Union Square',
+        'Somerville - West Somerville': 'Somerville:West Somerville',
+        'Somerville - Winter Hill': 'Somerville:Winter Hill',
+
+        // Weymouth
+        'Weymouth - Bicknell Square': 'Weymouth:Bicknell Square',
+        'Weymouth - Columbian Square': 'Weymouth:Columbian Square',
+        'Weymouth - East Weymouth': 'Weymouth:East Weymouth',
+        'Weymouth - Fort Hill': 'Weymouth:Fort Hill',
+        'Weymouth - Great Hill': 'Weymouth:Great Hill',
+        'Weymouth - Jackson Square': 'Weymouth:Jackson Square',
+        'Weymouth - Lincoln Heights': 'Weymouth:Lincoln Heights',
+        'Weymouth - Lovell Corners': 'Weymouth:Lovell Corners',
+        'Weymouth - North Weymouth': 'Weymouth:North Weymouth',
+        'Weymouth - Old Spain': 'Weymouth:Old Spain',
+        'Weymouth - Rose Cliff': 'Weymouth:Rose Cliff',
+        'Weymouth - South Weymouth': 'Weymouth:South Weymouth',
+        'Weymouth - Weymouth Heights': 'Weymouth:Weymouth Heights',
+        'Weymouth - Weymouth Landing': 'Weymouth:Weymouth Landing',
       },
       feeMapping: {
         'No Fee': '1', // Fee paid by landlord
         '25% Month Fee': '.75',
-        '50% Off Month Fee': '.5',
+        '50% Month Fee': '.5',
         '75% Month Fee': '.25',
         '1 Month Fee': '0', // Fee paid by tenant
       },
       bedMapping: {
         'Studio': 0,
-      }
+      },
     };
   },
   mounted() {

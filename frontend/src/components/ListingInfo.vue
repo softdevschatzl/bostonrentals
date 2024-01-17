@@ -6,7 +6,7 @@
       <!-- Content of the listing info -->
       <div class="info-content">
         <div class="info-content-header">
-          <h2>{{ listing?.addressLine1 }}</h2>
+          <h2>{{ listing?.streetName }}</h2>
           <span>-</span>
           <p>{{ listing?.city }}, {{ listing?.state }}, {{ listing?.zipCode }}</p>
           <!-- Add more fields as needed -->
@@ -20,17 +20,17 @@
           <div class="info-container-1">
             <div class="info-container-2">
               <h2>Beds</h2>
-              <p>{{ listing?.bedrooms }}</p>
+              <p>{{ listing?.beds }}</p>
             </div>
             <div class="info-container-2">
               <h2>Baths</h2>
-              <p>{{ listing?.bathrooms }}</p>
+              <p>{{ listing?.baths }}</p>
             </div>
           </div>
           <div class="info-container-1" v-if="listing?.rent || listing?.fee">
             <div class="info-container-2">
               <h2>Rent</h2>
-              <p>{{ listing?.rent }}</p>
+              <p>{{ listing?.price }}</p>
             </div>
             <div class="info-container-2">
               <h2>Fee</h2>
@@ -50,7 +50,10 @@
             </div>
             <div class="info-container-2">
                 <h2>Parking</h2>
-                <p>{{ listing?.parking }}</p>
+                <p v-if="listing?.parking?.parkingAvailability">{{ listing?.parking.parkingAvailability }}</p>
+                <p v-if="listing?.parking?.parkingNumber">No.{{ listing?.parking.parkingNumber }}</p>
+                <p v-if="listing?.parking?.parkingPrice">Price: {{ listing?.parking.parkingPrice }}</p>
+                <p v-if="listing?.parking?.parkingType">Type: {{ listing?.parking.parkingType }}</p>
             </div>
           </div>
         </div>
@@ -61,6 +64,7 @@
 
 <script>
 import Carousel from './ImageCarousel.vue';
+import defaultImage from '../assets/no-image-found.jpg';
 
 export default {
   components: {
@@ -80,9 +84,20 @@ export default {
   },
   computed: {
     listingImages() {
-      return this.listing.images || [];
+      return this.listing.photos || defaultImage;
     }
-  }
+  },
+  data() {
+  return {
+    feeMapping: {
+      '0': '1 Month Fee', 
+      '0.25': '75% Month Fee',
+      '0.5': '50% Month Fee',
+      '0.75': '25% Month Fee',
+      '1': 'No Fee',
+    }
+  };
+},
 }
 </script>
 
@@ -142,11 +157,13 @@ h2 {
 .info-container {
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
   width: 100%;
 }
 .info-container-1 {
+  height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -157,6 +174,7 @@ h2 {
   padding: 5px;
 }
 .info-container-2 {
+  height: auto;
   display: flex;
   flex-direction: column;
   justify-content: center;

@@ -3,7 +3,7 @@
 <div id="slider">
   <transition-group tag="div" :name="transitionName" class="slides-group" v-if="show">
     <div v-for="(image, index) in displayedImages" :key="index" class="slide">
-      <img :src="image || defaultImage" alt="Listing Image">
+      <img :src="image" alt="Listing Image" class="image">
     </div>
   </transition-group>
   <div class="btn btn-prev" aria-label="Previous slide" @click="slide(-1)">
@@ -104,6 +104,12 @@ export default {
 
 .yellow {
   background: #f6b93b;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 /* SLIDER STYLES */
