@@ -266,7 +266,6 @@ export default {
         'Boston - Waterfront',
         'Boston - West End',
         'Boston - West Roxbury',
-
         // Braintree
         'Braintree',
         'Braintree - Braintree Highlands',
