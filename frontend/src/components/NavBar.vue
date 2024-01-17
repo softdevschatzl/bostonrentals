@@ -166,11 +166,12 @@
     display: none;
   }
 }
-/** Larger desktop screens. */
-/* @media only screen and (min-width: 1100px) {
-  .user-sign {
-    margin-left: 30vw;
+/* * Larger desktop screens. */
+@media only screen and (min-width: 1100px) {
+  .logo {
+    height: 80%;
+    width: 80%;
   }
-} */
+}
 </style>
   

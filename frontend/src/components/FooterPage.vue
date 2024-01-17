@@ -72,7 +72,6 @@ body, html {
   display: flex;
   flex-direction: column;
   margin-top: 50px;
-  height: 100%;
 }
 
 .logo-company {

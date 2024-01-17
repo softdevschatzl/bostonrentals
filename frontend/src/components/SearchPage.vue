@@ -21,7 +21,11 @@ export default {
       searchCriteria: {
         street_name: null, // Street names, No Addresses!!!
         min_bed: "", // How many beds.
+        max_bed: "", // How many beds.
+        beds: "", // How many beds.
         min_bath: "", // How many baths.
+        max_bath: "", // How many baths.
+        baths: "", // How many baths.
         city_neighborhood: "", // Specific cities/neighborhoods.
         state: 'MA', // State.
         zip: null, // Zip code.
