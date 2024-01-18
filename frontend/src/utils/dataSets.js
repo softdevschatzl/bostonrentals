@@ -272,3 +272,9 @@ export const photoMapping = {
 export const parkingMapping = {
 'Parking Included': 'Y'
 }
+
+export const petMapping = {
+    'Cats': 'cats',
+    'Dogs': 'dogs',
+    'Friendly': 'friendly',
+}

@@ -105,12 +105,6 @@
         <div class="info-group">
           <button class="toggle-btn" @click="toggleGroup('propertyStatusMedia')">Property Status/Photo Filters</button>
           <div v-show="openGroups.propertyStatusMedia" class="property-status-media-group">
-            <select class="value" v-model="localSearchCriteria.status">
-              <option value="" selected>Status...</option>
-              <option>On Market</option>
-              <option>Pending</option>
-              <option>Off Market</option>
-            </select>
             <select class="value" v-model="localSearchCriteria.photo">
               <option value="" selected>Photos...</option>
               <option>Only Listings With Photos</option>
@@ -127,8 +121,8 @@
         <button class="toggle-btn" @click="toggleGroup('availDates')">Available Dates Filters</button>
         <div v-show="openGroups.availDates" class="avail-dates-group"> <!-- v-show="openGroups.availDates" -->
           <div class="avail-dates">
-            <Datepicker class="value datepicker" v-model="localSearchCriteria.startDate" placeholder="From (N/A)"></Datepicker> 
-            <Datepicker class="value datepicker" v-model="localSearchCriteria.endDate" placeholder="To (N/A)"></Datepicker>
+            <Datepicker class="value datepicker" v-model="localSearchCriteria.startDate" placeholder="From Date"></Datepicker> 
+            <Datepicker class="value datepicker" v-model="localSearchCriteria.endDate" placeholder="To Date"></Datepicker>
           </div>
         </div>
       </div>
@@ -152,7 +146,7 @@
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import downArrow from '@/assets/down-arrow.png';
-import { allNeighborhoods, neighborhoodMapping, feeMapping, bedMapping, bathMapping, photoMapping, parkingMapping } from '../utils/dataSets.js';
+import { allNeighborhoods, neighborhoodMapping, feeMapping, bedMapping, bathMapping, photoMapping, parkingMapping, petMapping } from '../utils/dataSets.js';
 
 export default {
   components: {
@@ -222,23 +216,23 @@ export default {
       if (this.bathMapping && apiCriteria.baths in this.bathMapping) {
         apiCriteria.baths = this.bedMapping[apiCriteria.baths];
       }
-
+      // Photos
       if (this.photoMapping && apiCriteria.photo in this.photoMapping) {
         apiCriteria.photo = this.photoMapping[apiCriteria.photo];
       }
-
+      // Parking
       if (this.parkingMapping && apiCriteria.parking in this.parkingMapping) {
         apiCriteria.parking = this.parkingMapping[apiCriteria.parking];
+      }
+      // Pet
+      if (this.petMapping && apiCriteria.pet in this.petMapping) {
+        apiCriteria.pet = this.petMapping[apiCriteria.pet];
       }
 
       console.log("API Criteria: ", apiCriteria);
 
       return apiCriteria;
     },
-    prepareResultsForDisplay() {
-      // Write logic to parse the JSON response from the API.
-      // For example, Fees come through with a lot of bullshit.
-    }
   },
   data() {
     const isMobile = window.innerWidth < 768;
@@ -261,6 +255,7 @@ export default {
       bathMapping,
       photoMapping,
       parkingMapping,
+      petMapping,
     };
   },
   mounted() {

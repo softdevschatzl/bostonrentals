@@ -77,7 +77,24 @@ export default {
   methods: {
     close() {
       this.$emit('close');
-    }
+    },
+    prepareFeeResultsForDisplay() {
+      // For the Fee
+      this.listings.fee.forEach(result => {
+        const fee = result.fee;
+        const cleanedFee = {};
+
+        for (const key in fee) {
+          if (fee[key] !== null) {
+            const formattedKey = key.replace(/([A-Z])/g, ' $1').trim();
+            cleanedFee[formattedKey] = fee[key];
+          }
+        }
+
+        // Replace the fee object with the cleaned fee object.
+        result.fee = cleanedFee;
+      })
+    },
   },
   mounted() {
     console.log(this.listing);
@@ -116,7 +133,7 @@ h2 {
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  background-color: #050833;
+  background-color: #46465e;
   width: 85%;
   height: 75%;
   border-radius: 20px;
@@ -193,7 +210,7 @@ h2 {
   position: absolute;
   top: 0;
   right: 0;
-  background-color: #050833;
+  background-color: transparent;
   color: #ff0000;
   -webkit-appearance: none;
   appearance: none;

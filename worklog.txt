@@ -1,26 +1,22 @@
 TODO:
-    - Run both servers, read console. Everything will be there, trust.
     - Use ip-api to get coordinates in ApartmentList.vue to use for sorting algorithm.
     - Check Chat log, work on ip -> location -> properties inside of ApartmentList and ApartmenItem.
     - prioritize listings with media
-    - dark navy blue/white color scheme
+    - Fix the datepickers in SearchFilters.vue
+    - Remap the Fee section in ListingInfo.vue to be user friendly.
+        in that same sense, make sure every value/object returned by YGL
+        is destructured.
 
 Fee:
-    - no-fee apartments (1 month fee by owner)
-    - no-owner fee (1 month paid by tenant fee)
-    - 50% fee by owner (mask as deal for tenant same as 25% and 75%)
-    - alexandersrentals.com
+    - what should i put instead of Co-Broke in the results?
 
-APIs:
-    - RentCast (property data)
+APIs/Technologies:
     - YouGotListings (better property data, more $)
     - ip-api (convert ip address to usable coordinates, for location data) 13.3euros/month = $169.76/yr Unlimited requests doe
+    - AWS EC2 and RDS
 
 Upon Deployment: 
     - Switch userIp from hardcoded to req.ip in index.js.
-    - Neumorphism design scheme????
-
-
 
 1/8/24:
     - Finish integrating YGL API, in index.jsm App.vue, SearchPage.vue

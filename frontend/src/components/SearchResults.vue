@@ -107,7 +107,7 @@ export default {
     showListingDetails(listing) {
       this.selectedListing = listing;
       this.showListingInfo = true;
-    }
+    },
   }
 }
 </script>
