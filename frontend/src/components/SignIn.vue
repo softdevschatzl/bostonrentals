@@ -34,8 +34,8 @@ export default {
     margin: 0.2rem;
     border-radius: 15px;
     background: #ECF0F3;
-    box-shadow: 5px 5px 10px #313142,
-                -5px -5px 10px #727299;
+    box-shadow: 3px 3px 10px #313142,
+                -3px -3px 10px #727299;
     font-size: 1rem;
     color: #333;
     cursor: pointer;

@@ -14,11 +14,6 @@
         <div class="user-sign">
           <SignIn />
         </div>
-        <!-- <div class="house-image">
-          <button class="new-listing-btn">
-            Add A New Listing
-          </button>
-        </div> -->
       </div>
     </nav>
 </template>
@@ -28,14 +23,6 @@
   import SignIn from './SignIn.vue'
 
   export default {
-    methods: {
-      signUp() {
-        // Implement sign-up functionality.
-      },
-      signIn() {
-        // Implement sign-in functionality.
-      }
-    },
     components: {
       Hamburger,
       SignIn
@@ -63,7 +50,6 @@
     color: #ffffff;
     display: flex;
     justify-content: center;
-    /* width: 100%; */
   }
 
   .logo {
@@ -75,9 +61,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 30%;
-    height: 100px;
-    /* gap: 2px; */
+    width: 33%;
+    height: 100%;
   }
 
   .right {
@@ -92,7 +77,6 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    /* margin-left: 40px; */
   }
   .left, .right {
     flex: 1;
@@ -113,38 +97,8 @@
     margin-left: 2vw;
   }
 
-  /** iPhone 13 apparently */
-@media only screen and (max-width: 400px) {
-  .title {
-    width: 160px;
-    white-space: normal;
-    word-break: break-all;
-    margin-right: 5vw;
-  }
-  .title h1 {
-    font-size: 16px;
-  }
-  .right {
-    width: 100px;
-  }
-
-  .desktop-h1 {
-    display: none;
-  }
-
-}
-
 /* Mobile */
 @media only screen and (max-width: 768px) {
-  .desktop-h1 {
-    display: none;
-  }
-  .mobile-h1 {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
   .user-sign {
     margin-left: 24vw
   }
@@ -156,14 +110,8 @@
     margin-left: 35vw;
   }
 
-  .brand-image {
-    transform: scale(1);
-  }
   .title h1 {
     font-size: 24px;
-  }
-  .mobile-h1 {
-    display: none;
   }
 }
 /* * Larger desktop screens. */

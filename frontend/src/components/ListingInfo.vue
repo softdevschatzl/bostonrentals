@@ -115,6 +115,7 @@ h2 {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  flex-wrap: wrap;
   background-color: #050833;
   width: 85%;
   height: 75%;
@@ -163,7 +164,7 @@ h2 {
 }
 .info-container-1 {
   height: 100%;
-  width: 100%;
+  width: auto;
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -211,9 +212,14 @@ h2 {
   width: 600px;
 }
 
+/* Mobile */
 @media only screen and (max-width: 768px) {
+  h1 {
+    font-size: 20px;
+  }
   h2 {
     text-align: center;
+    font-size: 14px;
   }
   .container {
     width: 100%;
