@@ -4,7 +4,7 @@
   <table>
     <thead>
       <tr class="listing-header">
-        <th><input type="checkbox" @change="selectAllListings" v-model="selectAll"></th>  <!-- Checkbox -->
+        <th><input type="checkbox" @change="selectAllListings" @click.stop v-model="selectAll"></th>  <!-- Checkbox -->
         <th>Photo</th>
         <th>Street Name</th>
         <th>City/State</th>
@@ -16,7 +16,7 @@
     </thead>
     <tbody>
       <tr class="listing" v-for="listing in listings" :key="listing.id" @click="showListingDetails(listing)">
-        <td><input type="checkbox" v-model="listing.selected" /></td>
+        <td><input type="checkbox" v-model="listing.selected" @click.stop /></td>
         <td>
           <img :src="listing.photos[0] || defaultImage" alt="Listing Image" class="listing-image" />
         </td>
