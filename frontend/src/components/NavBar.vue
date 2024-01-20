@@ -118,7 +118,7 @@
 @media only screen and (min-width: 1100px) {
   .logo {
     height: 80%;
-    width: 80%;
+    width: 55%;
   }
 }
 </style>

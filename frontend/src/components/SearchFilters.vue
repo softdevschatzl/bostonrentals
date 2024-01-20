@@ -146,7 +146,7 @@
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import downArrow from '@/assets/down-arrow.png';
-import { allNeighborhoods, neighborhoodMapping, feeMapping, bedMapping, bathMapping, photoMapping, parkingMapping, petMapping } from '../utils/dataSets.js';
+import { allNeighborhoods, neighborhoodMapping, feeMapping, bedMapping, photoMapping, parkingMapping, petMapping } from '../utils/dataSets.js';
 
 export default {
   components: {
@@ -252,7 +252,6 @@ export default {
       neighborhoodMapping,
       feeMapping,
       bedMapping,
-      bathMapping,
       photoMapping,
       parkingMapping,
       petMapping,

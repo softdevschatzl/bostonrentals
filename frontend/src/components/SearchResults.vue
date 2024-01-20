@@ -70,38 +70,12 @@ export default {
     console.log('Listings: ', this.listings);
     console.log('Listings Type: ', typeof this.listings);
   },
-  computed: { // this is where we can do the address manipulation.
-    // numberlessAddresses() {
-    //   return this.listings.map(listing => {
-    //     // no address numbers!!!!
-    //     // Split the address into parts, by spaces.
-    //     let addressParts = listing.addressLine1.split(' ');
-
-    //     // Covering the case where there are hyphenated address numbers.
-    //     const hyphenatedNumberRegex = /^[0-9]+-[0-9]+/;
-
-    //     // Check if the first part is a number and if the next part is not 'St'.
-    //     if (hyphenatedNumberRegex.test(addressParts[0])) {
-    //       // If so, remove the first part.
-    //       addressParts.shift();
-    //     } else if (!isNaN(addressParts[0]) && addressParts[1].toLowerCase() !== 'st') {
-    //       // If the first part is a number and the next part is not 'St', remove the first part.
-    //       addressParts = addressParts.slice(1);
-    //     }
-
-    //     const modifiedAddress = addressParts.join(' ');
-
-    //     return {
-    //       ...listing,
-    //       addressLine1: modifiedAddress
-    //     };
-    //   });
-    // }
-  },
   methods: {
     selectAllListings() {
-      this.streetName.forEach(listing => {
-        listing.selected = !this.selectAll;
+      const isChecked = event.target.checked;
+      this.selectAll = isChecked;
+      this.listings.forEach(listing => {
+        listing.selected = isChecked;
       });
     },
     showListingDetails(listing) {

@@ -6,6 +6,7 @@
       <!-- Content of the listing info -->
       <div class="info-content">
         <div class="info-content-header">
+          <button class="contact-btn">Contact Alex</button>
           <h2>{{ listing?.streetName }}</h2>
           <span>-</span>
           <p>{{ listing?.city }}, {{ listing?.state }}, {{ listing?.zipCode }}</p>
@@ -80,7 +81,7 @@ export default {
     },
     prepareFeeResultsForDisplay() {
       // For the Fee
-      this.listings.fee.forEach(result => {
+      this.listings?.fee.forEach(result => {
         const fee = result.fee;
         const cleanedFee = {};
 
@@ -137,6 +138,8 @@ h2 {
   width: 85%;
   height: 75%;
   border-radius: 20px;
+  box-shadow: 10px 10px 20px #bebebe,
+              -10px -10px 20px #ffffff;
 }
 .listing-info {
   position: fixed;
@@ -162,7 +165,7 @@ h2 {
   width: 80%;
   height: 80%;
   gap: 20px;
-  /* Add more styles as needed */
+  box-shadow: inset 5px 5px 10px #bebebe, inset -5px -5px 10px #ffffff; /* Inset shadows for depth */
 }
 .info-content-header {
   display: flex;
@@ -190,6 +193,7 @@ h2 {
   width: auto;
   background: #b1b1b1;
   padding: 5px;
+  border-radius: 10px;
 }
 .info-container-2 {
   height: auto;
@@ -204,6 +208,10 @@ h2 {
 }
 .info-container-2 h2 {
   text-decoration: underline;
+}
+.info-container-2 {
+  box-shadow: 2px 2px 5px #bebebe, -2px -2px 5px #ffffff;
+  border-radius: 10px;
 }
 
 .close-btn {
@@ -222,6 +230,14 @@ h2 {
   cursor: pointer;
   font-size: 18px;
   border-radius: 50%;
+}
+.contact-btn {
+  background-color: #e0e0e0;
+  color: #333;
+  box-shadow: 2px 2px 5px #bebebe, -2px -2px 5px #ffffff; /* Consistent button style */
+  border-radius: 15px;
+  padding: 10px 15px;
+  border: none;
 }
 
 .image-container {
