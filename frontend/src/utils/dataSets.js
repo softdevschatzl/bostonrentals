@@ -109,21 +109,24 @@ export const allNeighborhoods = [
     'Somerville - West Somerville',
     'Somerville - Winter Hill',
     // Weymouth
-    'Weymouth',
-    'Weymouth - Bicknell Square',
-    'Weymouth - Columbian Square',
-    'Weymouth - East Weymouth',
-    'Weymouth - Fort Hill',
-    'Weymouth - Great Hill',
-    'Weymouth - Jackson Square',
-    'Weymouth - Lincoln Heights',
-    'Weymouth - Lovell Corners',
-    'Weymouth - North Weymouth',
-    'Weymouth - Old Spain',
-    'Weymouth - Rose Cliff',
-    'Weymouth - South Weymouth',
-    'Weymouth - Weymouth Heights',
-    'Weymouth - Weymouth Landing',
+    // 'Weymouth',
+    // 'Weymouth - Bicknell Square',
+    // 'Weymouth - Columbian Square',
+    // 'Weymouth - East Weymouth',
+    // 'Weymouth - Fort Hill',
+    // 'Weymouth - Great Hill',
+    // 'Weymouth - Jackson Square',
+    // 'Weymouth - Lincoln Heights',
+    // 'Weymouth - Lovell Corners',
+    // 'Weymouth - North Weymouth',
+    // 'Weymouth - Old Spain',
+    // 'Weymouth - Rose Cliff',
+    // 'Weymouth - South Weymouth',
+    // 'Weymouth - Weymouth Heights',
+    // 'Weymouth - Weymouth Landing',
+
+
+    // newton, watertown, milton 
 ]
 
 export const neighborhoodMapping = {
