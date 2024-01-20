@@ -6,6 +6,11 @@ TODO:
     - Remap the Fee section in ListingInfo.vue to be user friendly.
         in that same sense, make sure every value/object returned by YGL
         is destructured.
+    
+    - Work on AWS Cognito and RDS implementation. Also figure out how to
+        host on EC2
+    - More tweaks can be done on the frontend/backend on the SearchResults/ListingInfo.vue
+        components.
 
 Fee:
     - what should i put instead of Co-Broke in the results?
