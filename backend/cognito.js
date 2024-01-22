@@ -44,7 +44,7 @@ function signIn(username, password) {
 function redirectToCognitoUI() {
   const cognitoDomain = 'https://alexanderrentals-login.auth.us-east-2.amazoncognito.com';
   const clientId = process.env.APP_CLIENT_ID;
-  const callbackUrl = encodeURIComponent('localhost:8080'); // change to alexandersrentals.com.
+  const callbackUrl = 'http://localhost:8080/'; // change to alexandersrentals.com.
   const responseType = 'token';
 
   const loginUrl = `${cognitoDomain}/login?response_type=${responseType}&client_id=${clientId}&redirect_uri=${callbackUrl}`;

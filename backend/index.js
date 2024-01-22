@@ -1,5 +1,7 @@
 require('dotenv').config();
 const express = require('express');
+// helmet is for csp headers and general web security.
+const helmet = require('helmet');
 const axios = require('axios');
 const apiKey = process.env.YGL_API_KEY;
 const cors = require('cors');
@@ -7,6 +9,14 @@ const { redirectToCognitoUI } = require('./cognito');
 
 const app = express();
 const PORT = 3000;
+
+// Setting CSP headers to allow Cognito scripts.
+app.use(helmet.contentSecurityPolicy({
+    directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "https://d1lcia0inyjsq.cloudfront.net", "https://alexanderrentals-login.auth.us-east-2.amazoncognito.com"]
+    }
+}));
 
 // Only allowing access from certain origin points.
 const allowedOrigins = ['http://localhost:8080', 'http://localhost:3000', 'https://softdevschatzl.github.io', 'https://alexandersrentals.com']
