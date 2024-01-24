@@ -1,3 +1,7 @@
+/**
+ * @fileoverview This is the main file for the backend. It contains the API calls to the YGL API.
+ * It also contains the route to fetch the user's IP address and the route to fetch properties based on latitude and longitude.
+ */
 require('dotenv').config();
 const express = require('express');
 // helmet is for csp headers and general web security.
@@ -11,15 +15,26 @@ const app = express();
 const PORT = 3000;
 
 // Setting CSP headers to allow Cognito scripts.
+app.use('/auth-route', helmet.contentSecurityPolicy({
+    directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'", "https://d1lcia0inyjsq.cloudfront.net", "https://alexanderrentals-login.auth.us-east-2.amazoncognito.com"]
+    },
+    reportOnly: true,
+    reportUri: '/report-violation',
+}));
+
 app.use(helmet.contentSecurityPolicy({
     directives: {
         defaultSrc: ["'self'"],
         scriptSrc: ["'self'", "https://d1lcia0inyjsq.cloudfront.net", "https://alexanderrentals-login.auth.us-east-2.amazoncognito.com"]
-    }
+    },
+    reportOnly: true,
+    reportUri: '/report-violation',
 }));
 
 // Only allowing access from certain origin points.
-const allowedOrigins = ['http://localhost:8080', 'http://localhost:3000', 'https://softdevschatzl.github.io', 'https://alexandersrentals.com']
+const allowedOrigins = ['http://localhost:8080', 'http://localhost:3000', 'https://softdevschatzl.github.io', 'https://alexandersrentals.com', 'https://d1lcia0inyjsq.cloudfront.net', 'https://alexanderrentals-login.auth.us-east-2.amazoncognito.com']
 app.use(cors({
     origin: function (origin, callback) {
         if (!origin || allowedOrigins.includes(origin)) {
@@ -81,9 +96,11 @@ app.post('/properties', async (req, res) => {
 app.get('/api/location', async (req, res) => {
     console.log("Location route hit.")
     try {
-        const userIp = '43.225.189.77';
-        // const userIp = req.ip; Use this after testing locally.
+        const userIp = '149.40.50.212'; // Coordinates returned: 42.3562, -71.0631
+        // const userIp = '76.19.221.189'; // Coordinates returned: 42.2518, -71.0805
+        // const userIp = req.ip; 
         const response = await axios.get(`http://ip-api.com/json/${userIp}`);
+        console.log("Response data:", response.data)
         return res.json(response.data);
     } catch (error) {
         console.error("Failed to fetch user location:", error.message);
@@ -92,22 +109,31 @@ app.get('/api/location', async (req, res) => {
 });
 
 // Fetch properties based on latitude and longitude.
-app.get('/api/apartments', async (req, res) => {
+app.post('/api/apartments', async (req, res) => {
     try {
-        const { lat, lon } = req.query;
+        const latitude = parseFloat(req.query.latitude);
+        const longitude = parseFloat(req.query.longitude);
 
-        const response = await axios.get(`https://www.yougotlistings.com/api/rentals/search.php?key=${apiKey}`, {
-            params: {
-                lat,
-                lon
-            },
-            headers: {
-                'Accept': 'application.json',
-                'X-Api-Key': apiKey
-            }
-        });
+        const radiusInMiles = 20; // Radius in miles.
+        const radiusInDegrees = radiusInMiles / 69; // 1 degree is 69 miles.
+        const latitude_start = latitude - radiusInDegrees;
+        const lattitude_end = latitude + radiusInDegrees;
+        const longitude_start = longitude - radiusInDegrees;
+        const longitude_end = longitude + radiusInDegrees;
+
+        const params = {
+            key: apiKey,
+            latitude_start,
+            lattitude_end,
+            longitude_start,
+            longitude_end,
+            request_type: 'JSON',
+        }
+
+        const response = await axios.post(`https://www.yougotlistings.com/api/rentals/search.php?key=${apiKey}`, params);
 
         return res.json(response.data);
+
     } catch (error) {
         console.error("API call failed:", error.message);
         return res.status(500).json({ error: "Failed to fetch data." });

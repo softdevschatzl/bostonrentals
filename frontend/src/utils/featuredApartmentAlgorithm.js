@@ -38,10 +38,9 @@ function degreesToRadians(degrees) {
 
 function calculateCompletenessScore(apartment) {
     let score = 0;
-    if (apartment.bedrooms) score += 1;
-    if (apartment.bathrooms) score += 1;
+    if (apartment.beds) score += 1;
+    if (apartment.baths) score += 1;
     if (apartment.squareFootage) score += 1;
-    if (apartment.propertyType) score += 1;
 
     return score;
 }

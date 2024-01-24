@@ -3,23 +3,48 @@
     <div class="apartments-header">
       <h1>Find Rentals Near {{ location }}</h1>
     </div>
-    <div class="apartments-wrapper">
-      <ApartmentItem v-for="apartment in apartments" :key="apartment.id" :propertyData="apartment" />
+    <div class="apartments-wrapper" @click="showApartmentDetails">
+      <ApartmentItem v-for="apartment in topThreeApartments" :key="apartment.id" :propertyData="apartment" />
     </div>
+    <ListingInfo :apartment="selectedApartment" :visible="showApartmentInfo" @close="showApartmentInfo = false" />
   </div>
 </template>
 
 <script>
 import ApartmentItem from './ApartmentItem.vue';
+import ListingInfo from './ListingInfo.vue';
+// import sortApartments from '@/utils/featuredApartmentAlgorithm';
 
 export default {
   components: {
     ApartmentItem,
+    ListingInfo,
+  },
+  data() {
+    return {
+      selectedApartment: null,
+      showApartmentInfo: false,
+    };
   },
   props: {
-    apartments: Array,
+    apartments: Object,
     location: String,
   },
+  // Use this until you get featuredApartmentAlgorithm working.
+  computed: {
+    topThreeApartments() {
+      if (this.apartments && this.apartments.listings && this.apartments.listings.length > 0) {
+        return this.apartments.listings.slice(0, 3);
+      }
+      return [];
+    }
+  },
+  methods: {
+    showLApartmentDetails(apartment) {
+      this.selectedApartment = apartment;
+      this.showApartmentInfo = true;
+    },
+  }
 };
 </script>
 
@@ -42,7 +67,6 @@ export default {
   }
 
   .apartments {
-    background-color: rgb(255, 255, 255);
     height: 30vh;
     width: 30vw;
     display: flex;

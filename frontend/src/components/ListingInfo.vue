@@ -35,7 +35,7 @@
             </div>
             <div class="info-container-2">
               <h2>Fee</h2>
-              <p>{{ listing?.fee }}</p>
+              <p>{{ fee }}</p>
             </div>
           </div>
           <div class="info-container-1" v-if="listing?.pet">
@@ -79,30 +79,18 @@ export default {
     close() {
       this.$emit('close');
     },
-    prepareFeeResultsForDisplay() {
-      // For the Fee
-      this.listings?.fee.forEach(result => {
-        const fee = result.fee;
-        const cleanedFee = {};
-
-        for (const key in fee) {
-          if (fee[key] !== null) {
-            const formattedKey = key.replace(/([A-Z])/g, ' $1').trim();
-            cleanedFee[formattedKey] = fee[key];
-          }
-        }
-
-        // Replace the fee object with the cleaned fee object.
-        result.fee = cleanedFee;
-      })
-    },
-  },
-  mounted() {
-    console.log(this.listing);
   },
   computed: {
     listingImages() {
       return this.listing.photos || defaultImage;
+    },
+    fee() { // FIX ME: i always return N/A.
+      if (this.listing.fee && typeof this.listing.fee === 'object' && this.listing.fee['Cooperative Compentation']) {
+        return '1 Month Fee';
+      } else if (typeof this.listing.fee === 'number') {
+        return this.feeMapping[this.listing.fee.toString()] || 'Unknown Fee';
+      }
+      return 'N/A';
     }
   },
   data() {

@@ -82,7 +82,7 @@ export default {
       this.selectedListing = listing;
       this.showListingInfo = true;
     },
-  }
+  },
 }
 </script>
 

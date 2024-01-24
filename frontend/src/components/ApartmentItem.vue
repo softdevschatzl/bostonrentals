@@ -1,13 +1,17 @@
 <template>
-  <div class="apartments"> <!-- :style="backgroundStyle" See line 40. -->
+  <div class="apartments" :style="backgroundStyle"> <!-- :style="backgroundStyle" See line 40. -->
     <div class="border-left"></div>
     <div class="border-right"></div>
     <div class="content">
       <div class="name">{{ address }}</div>
       <div class="details">
-        <span>{{ bedrooms }} Beds,</span>
-        <span>{{ bathrooms }} Baths,</span>
+        <span>{{ bedrooms }} Beds</span>
+        <span>-</span>
+        <span>{{ bathrooms }} Baths</span>
+        <span>-</span>
         <span>{{ sqft }} sqft</span>
+        <span>-</span>
+        <span>${{ rent }}/mo</span>
       </div>
     </div>
   </div>
@@ -25,32 +29,37 @@
       },
       computed: {
         address() {
-          return this.propertyData.formattedAddress;
+          return this.propertyData.streetName;
         },
         bedrooms() {
-          return this.propertyData.bedrooms || 'N/A';
+          return this.propertyData.beds || 'N/A';
         },
         bathrooms() {
-          return this.propertyData.bathrooms || 'N/A';
+          return this.propertyData.baths || 'N/A';
         },
         sqft() {
           return this.propertyData.squareFootage || 'N/A';
         },
-        // YGL might have images, but RentCast does not.
-        // backgroundStyle() {
-        //   return {
-        //     backgroundImage: `url(${this.apartment.imageUrl})`,
-        //     backgroundSize: 'cover', 
-        //     backgroundPosition: 'center'
-        //   };
-        // }
+        rent() {
+          return this.propertyData.price || 'N/A';
+        },
+        backgroundStyle() {
+          return {
+            backgroundImage: `url(${this.propertyData.photos[0]})`,
+            backgroundSize: 'cover', 
+            backgroundPosition: 'center'
+          };
+        },
       },
+      mounted() {
+        console.log("Property data: ", this.propertyData);
+      }
     }
 </script>
 
 <style scoped>
   .apartments {
-    background-color: rgba(255, 255, 255, 0.7);  /* Semi-transparent white to see the apartment image */
+    background-color: #afc6d2;
     height: 30vh;
     width: 30vw;
     display: flex;
@@ -66,7 +75,7 @@
   .apartments::before, .apartments::after {
     content: "";
     position: absolute;
-    background: #668d5e;
+    background: #46465e;
     transition: all 0.3s ease-in-out;
     z-index: 1;
   }
@@ -92,7 +101,7 @@
   .apartments > .border-left::before, .apartments > .border-right::before {
     content: "";
     position: absolute;
-    background: #668d5e;
+    background: #46465e;
     transition: all 0.3s ease-in-out;
     z-index: 1;
   }
@@ -137,7 +146,7 @@
     bottom: 15px;
     left: 15px;
     right: 15px;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.3));
+    background: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.45));
     padding: 15px;
     border-radius: 12px;
   }

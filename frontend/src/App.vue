@@ -6,64 +6,12 @@
 </template>
 
 <script>
-import axios from 'axios'
 import NavBar from './components/NavBar.vue'
-import { sortApartments } from '@/utils/featuredApartmentAlgorithm';
 
 export default {
   components: {
     NavBar,
   },
-  data() {
-    return {
-      // TODO: Get API access to turn GeoData Coordinates 
-      // into actual locations to feed the RentCastAPI.
-      apartments: [],
-      location: '',
-      userCoords: null,
-    };
-  },
-  async mounted() {
-    await this.fetchUserLocation();
-  },
-  methods: {
-    // Retrieving location from IP to show relevant listings on start.
-    async fetchUserLocation() {
-      try {
-        const response = await axios.get('/api/location');
-        this.userCoords = { latitude: response.data.lat, longitude: response.data.lon };
-        this.location = `${response.data.city}, ${response.data.region}`;
-        await this.fetchApartments();
-      } catch (error) {
-        console.error("Failed to fetch user location:", error.message);
-      }
-    },
-
-    // Using user location to fetch nearby relevant properties.
-    async fetchApartments() {
-      if (this.userCoords) {
-        try {
-          const response = await axios.get('/api/apartments', {
-            params: this.userCoords
-          });
-          this.apartments = response.data; // Assuming this is an array.
-        } catch (error) {
-          console.error('Failed to fetch apartments:', error.message);
-        }
-      }
-    },
-  },
-  computed: {
-    sortedApartments() {
-      // Returns only sorted apartments to be featured.
-      // Ensures userCoords are available, same as above.
-      // Also limits featured apartments to three.
-      if (this.userCoords && this.apartments.length > 0) {
-        return sortApartments(this.apartments, this.userCoords).slice(0, 3);
-      } 
-      return [];
-    }
-  }
 }
 </script>
 

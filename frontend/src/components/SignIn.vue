@@ -5,6 +5,7 @@
 </template>
 
 <script>
+
 export default {
   methods: {
     async handleLogin() {
@@ -19,7 +20,7 @@ export default {
       } catch (error) {
         console.error('Login failed:', error.message);
       }
-    }
+    },
   }
 }
 </script>
