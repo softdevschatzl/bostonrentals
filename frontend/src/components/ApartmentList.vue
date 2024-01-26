@@ -34,6 +34,7 @@ export default {
   computed: {
     topThreeApartments() {
       if (this.apartments && this.apartments.listings && this.apartments.listings.length > 0) {
+        console.log("Featured Apartments: ", this.apartments.listings.slice(0, 3));
         return this.apartments.listings.slice(0, 3);
       }
       return [];

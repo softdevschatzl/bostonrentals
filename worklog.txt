@@ -14,6 +14,7 @@ TODO:
 
     - Refine the ApartmentList geolocation. The coordinates are not getting passed to YGL correctly.
     - fee() computed property in ListingInfo.vue always returns N/A for non MLS listings.
+    - essentially handle all mls related listings on searchresults and listinginfo.
 Fee:
     - what should i put instead of Co-Broke in the results?
 

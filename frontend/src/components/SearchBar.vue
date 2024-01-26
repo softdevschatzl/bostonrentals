@@ -20,7 +20,6 @@ export default {
   },
   methods: {
     search() {
-      // Apparently I need to use a router to switch to a new page.
       if (this.query.trim()) {
         this.$router.push({ name: 'Search', query: { q: this.query } });
       }

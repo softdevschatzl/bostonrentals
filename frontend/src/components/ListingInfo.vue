@@ -168,7 +168,7 @@ h2 {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  width: 100%;
+  width: auto;
 }
 .info-container-1 {
   height: 100%;
@@ -180,8 +180,7 @@ h2 {
   gap: 25px;
   width: auto;
   background: #b1b1b1;
-  padding: 5px;
-  border-radius: 10px;
+  padding: 10px;
 }
 .info-container-2 {
   height: auto;
@@ -229,8 +228,8 @@ h2 {
 }
 
 .image-container {
-  height: 300px;
-  width: 600px;
+  height: 35vh;
+  width: 50vw;
 }
 
 /* Mobile */
