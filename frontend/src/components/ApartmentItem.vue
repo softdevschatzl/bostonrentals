@@ -1,5 +1,5 @@
 <template>
-  <div class="apartments" :style="backgroundStyle"> <!-- :style="backgroundStyle" See line 40. -->
+  <div class="apartments" :style="backgroundStyle" @click="handleClick"> <!-- :style="backgroundStyle" See line 40. -->
     <div class="border-left"></div>
     <div class="border-right"></div>
     <div class="content">
@@ -53,6 +53,11 @@
       },
       mounted() {
         console.log("Property data: ", this.propertyData);
+      },
+      methods: {
+        handleClick() {
+          this.$emit('click', this.propertyData);
+        }
       }
     }
 </script>

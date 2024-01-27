@@ -44,15 +44,17 @@
               <p>{{ listing?.pet }}</p>
             </div>
           </div>
-          <div class="info-container-1" v-if="listing?.laundry || parkingInfo.length > 0">
+          <div class="info-container-1" v-if="listing?.laundry || listing?.parking">
             <div class="info-container-2">
                 <h2>Laundry</h2>
                 <p>{{ listing?.laundry }}</p>
             </div>
-            <div class="info-container-2" v-for="(item, index) in parkingInfo" :key="index">
+            <div class="info-container-2">
                 <h2>Parking</h2>
-                <h2>{{ item.key }}</h2>
-                <p>{{ item.value }}</p>
+                <p v-if="listing?.parking?.parkingAvailability">{{ listing?.parking.parkingAvailability }}</p>
+                <p v-if="listing?.parking?.parkingNumber">No.{{ listing?.parking.parkingNumber }}</p>
+                <p v-if="listing?.parking?.parkingPrice">Price: {{ listing?.parking.parkingPrice }}</p>
+                <p v-if="listing?.parking?.parkingType">Type: {{ listing?.parking.parkingType }}</p>
             </div>
           </div>
         </div>
@@ -89,21 +91,6 @@ export default {
         return this.feeMapping[this.listing.fee.toString()] || 'Unknown Fee';
       }
       return 'N/A';
-    },
-    parkingInfo() {
-      const isValidValue = value => value != null || value != 0 || value != false && !Array.isArray(value);
-      if (this.listing.mlsParking) {
-        // Handles MLS parking objects.
-        return Object.entries(this.listing.mlsParking)
-                      .filter(([, value]) => isValidValue(value))
-                      .map(([key, value]) => ({ key, value }));
-      } else if (this.listing.parking) {
-        // Handles YGL parking objects.
-        return Object.entries(this.listings.parking) 
-                      .filter(([, value]) => isValidValue(value))
-                      .map(([key, value]) => ({ key, value }));
-      }
-      return [];
     }
   },
   data() {
@@ -122,7 +109,11 @@ export default {
 
 <style scoped>
 h1 {
-  color: #fff;
+  color: #ffffff;
+  margin-bottom: 15px;
+}
+h2 {
+  font-size: 18px;
 }
 .container {
   position: relative;
@@ -135,9 +126,8 @@ h1 {
   width: 85%;
   height: 75%;
   border-radius: 20px;
-  box-shadow: 8px 8px 15px #a3a3a3,
-              -8px -8px 15px #ffffff;
-  padding: 20px;
+  box-shadow: 10px 10px 20px #bebebe,
+              -10px -10px 20px #ffffff;
 }
 .listing-info {
   position: fixed;
@@ -159,11 +149,11 @@ h1 {
   align-items: center;
   background: #cecece;
   padding: 20px;
+  border-radius: 5px;
   width: 80%;
   height: 80%;
   gap: 20px;
-  box-shadow: inset 8px 8px 15px #a3a3a3, inset -8px -8px 15px #ffffff;
-  border-radius: 15px;
+  box-shadow: inset 5px 5px 10px #bebebe, inset -5px -5px 10px #ffffff; /* Inset shadows for depth */
 }
 .info-content-header {
   display: flex;
@@ -173,16 +163,10 @@ h1 {
   gap: 20px;
   width: 100%;
 }
-.info-container-2, .contact-btn, .close-btn {
-  background: #e0e0e0;
-  box-shadow: 5px 5px 10px #a3a3a3,
-              -5px -5px 10px #ffffff;
-  border-radius: 10px;
-}
 .info-container {
   display: flex;
   flex-direction: row;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
   width: auto;
 }

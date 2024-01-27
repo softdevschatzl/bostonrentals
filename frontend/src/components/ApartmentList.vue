@@ -3,10 +3,18 @@
     <div class="apartments-header">
       <h1>Find Rentals Near {{ location }}</h1>
     </div>
-    <div class="apartments-wrapper" @click="showApartmentDetails">
-      <ApartmentItem v-for="apartment in topThreeApartments" :key="apartment.id" :propertyData="apartment" />
+    <div class="apartments-wrapper">
+      <ApartmentItem 
+        v-for="apartment in topThreeApartments" 
+        :key="apartment.id" :propertyData="apartment" 
+        @click="showApartmentDetails(apartment)" 
+      />
     </div>
-    <ListingInfo :apartment="selectedApartment" :visible="showApartmentInfo" @close="showApartmentInfo = false" />
+    <ListingInfo 
+      :apartment="selectedApartment" 
+      :visible="showApartmentInfo" 
+      @close="showApartmentInfo = false" 
+    />
   </div>
 </template>
 
@@ -41,7 +49,7 @@ export default {
     }
   },
   methods: {
-    showLApartmentDetails(apartment) {
+    showApartmentDetails(apartment) {
       this.selectedApartment = apartment;
       this.showApartmentInfo = true;
     },
