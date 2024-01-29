@@ -1,3 +1,4 @@
+// Filters mapping.
 export const allNeighborhoods = [
     // Boston
     'Boston',
@@ -280,4 +281,10 @@ export const petMapping = {
     'Cats': 'cats',
     'Dogs': 'dogs',
     'Friendly': 'friendly',
+}
+
+// Result mapping.
+
+export const statusMapping = {
+    'ONMARKET': 'On Market',
 }

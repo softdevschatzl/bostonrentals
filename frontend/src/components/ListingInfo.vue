@@ -1,65 +1,74 @@
 <template>
   <div class="listing-info" v-if="visible && listing">
     <div class="container">
-      <h1>Rental Information</h1>
-      <button class="close-btn" @click="close">X</button>
-      <!-- Content of the listing info -->
-      <div class="info-content">
-        <div class="info-content-header">
-          <button class="contact-btn">Contact Alex</button>
-          <h2>{{ listing?.streetName }}</h2>
-          <span>-</span>
-          <p>{{ listing?.city }}, {{ listing?.state }}, {{ listing?.zipCode }}</p>
-          <!-- Add more fields as needed -->
-        </div>
-        <p class="property-type" v-if="listing?.propertyType">{{ listing?.propertyType }}</p>
-        <!-- Display listing details here -->
-        <div class="image-container">
-          <Carousel :images="listingImages"/>
-        </div>
-        <div class="info-container">
-          <div class="info-container-1">
-            <div class="info-container-2">
-              <h2>Beds</h2>
-              <p>{{ listing?.beds }}</p>
-            </div>
-            <div class="info-container-2">
-              <h2>Baths</h2>
-              <p>{{ listing?.baths }}</p>
-            </div>
-          </div>
-          <div class="info-container-1" v-if="listing?.rent || listing?.fee">
-            <div class="info-container-2">
-              <h2>Rent</h2>
-              <p>{{ listing?.price }}</p>
-            </div>
-            <div class="info-container-2">
-              <h2>Fee</h2>
-              <p>{{ fee }}</p>
-            </div>
-          </div>
-          <div class="info-container-1" v-if="listing?.pet">
-            <div class="info-container-2">
-              <h2>Pet</h2>
-              <p>{{ listing?.pet }}</p>
-            </div>
-          </div>
-          <div class="info-container-1" v-if="listing?.laundry || parkingInfo.length > 0">
-            <div class="info-container-2">
-                <h2>Laundry</h2>
-                <p>{{ listing?.laundry }}</p>
-            </div>
-            <div class="info-container-2" v-for="(item, index) in parkingInfo" :key="index">
-                <h2>Parking</h2>
-                <h2>{{ item.key }}</h2>
-                <p>{{ item.value }}</p>
-            </div>
-          </div>
-        </div>
+      <div class="header">
+        <button class="contact-btn">Contact Agent</button>
+        <h1>Rental Information</h1>
+        <button class="close-btn" @click="close">X</button>
+        <div class="right"></div>
+      </div>
+      <div class="table-container">
+        <table class="info-table">
+          <!-- Header Row -->
+          <tr class="info-header">
+            <th colspan="2">{{ listing?.streetName }}, {{ listing?.city }}, {{ listing?.state }} {{ listing?.zip }}</th>
+          </tr>
+          <!-- Property Type -->
+          <tr class="info-row" v-if="listing?.propertyType">
+            <td>Property Type</td>
+            <td>{{ listing?.propertyType }}</td>
+          </tr>
+          <!-- Beds and Baths -->
+          <tr class="info-row">
+            <td>Beds</td>
+            <td>{{ listing?.beds }}</td>
+          </tr>
+          <tr class="info-row">
+            <td>Baths</td>
+            <td>{{ listing?.baths }}</td>
+          </tr>
+          <!-- Rent and Fee -->
+          <tr class="info-row" v-if="listing?.rent || listing?.fee">
+            <td>Rent</td>
+            <td>{{ listing?.price }}/mo</td>
+          </tr>
+          <tr class="info-row" v-if="listing?.fee">
+            <td>Fee</td>
+            <td>{{ fee }}</td>
+          </tr>
+          <tr class="info-row" v-if="listing?.squareFootage">
+            <td>Square Footage</td>
+            <td>{{ listing?.squareFootage }}</td>
+          </tr>
+          <tr class="info-row" v-if="listing?.pet">
+            <td>Pets</td>
+            <td>{{ listing?.pet }}</td>
+          </tr>
+          <tr class="info-row" v-if="listing?.laundry">
+            <td>Laundry</td>
+            <td>{{ listing?.laundry }}</td>
+          </tr>
+          <tr class="info-row" v-if="listing?.parking || listing?.mlsParking">
+            <td>Parking</td>
+            <td>{{ parkingInfo }}</td>
+          </tr>
+          <tr class="info-row" v-if="listing?.status">
+            <td>Status</td>
+            <td>{{ listing?.status }}</td>
+          </tr>
+          <!-- Additional Details -->
+          <!-- ... Add more rows as needed -->
+        </table>
+      </div>
+      <div class="image-container">
+        <h2>Photos: ({{ listing.photos.length }})</h2>
+        <Carousel :images="listingImages"/>
       </div>
     </div>
   </div>
 </template>
+
+
 
 <script>
 import Carousel from './ImageCarousel.vue';
@@ -121,147 +130,127 @@ export default {
 </script>
 
 <style scoped>
-h1 {
-  color: #fff;
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 20px;
+}
+.right {
+  width: 10%;
 }
 .container {
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  flex-wrap: wrap;
   background-color: #46465e;
   width: 85%;
   height: 75%;
   border-radius: 20px;
-  box-shadow: 8px 8px 15px #a3a3a3,
-              -8px -8px 15px #ffffff;
+  box-shadow: 8px 8px 15px #a3a3a3, -8px -8px 15px #ffffff;
   padding: 20px;
+  margin-top: 10vh;
 }
+
+h1 {
+  color: #fff;
+  margin-bottom: 20px;
+}
+h2 {
+  color: #fff;
+  margin-bottom: 10px;
+}
+th {
+  text-decoration: underline;
+}
+
+.info-row {
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+}
+
 .listing-info {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  background-color: rgba(0, 0, 0, 0.5); 
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.info-content {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: #cecece;
-  padding: 20px;
-  width: 80%;
-  height: 80%;
-  gap: 20px;
-  box-shadow: inset 8px 8px 15px #a3a3a3, inset -8px -8px 15px #ffffff;
-  border-radius: 15px;
-}
-.info-content-header {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
+.table-container {
   width: 100%;
+  overflow: auto;
+  margin-bottom: 20px;
+  border-radius: 5px;
 }
-.info-container-2, .contact-btn, .close-btn {
+
+.info-table {
+  width: 100%;
+  border-collapse: collapse;
   background: #e0e0e0;
-  box-shadow: 5px 5px 10px #a3a3a3,
-              -5px -5px 10px #ffffff;
+  box-shadow: 5px 5px 10px #a3a3a3, -5px -5px 10px #ffffff;
   border-radius: 10px;
 }
-.info-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-  align-items: center;
-  width: auto;
-}
-.info-container-1 {
-  height: 100%;
-  width: auto;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  gap: 25px;
-  width: auto;
-  background: #b1b1b1;
+
+.info-table th, .info-table td {
   padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
 }
-.info-container-2 {
-  height: auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 5px;
-  width: auto;
-  padding: 5px;
-  border: 1px solid black;
-}
-.info-container-2 h2 {
-  text-decoration: underline;
-}
-.info-container-2 {
-  box-shadow: 2px 2px 5px #bebebe, -2px -2px 5px #ffffff;
-  border-radius: 10px;
+
+.info-header th {
+  text-align: center;
+  font-size: 1.2em;
 }
 
 .close-btn {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 10px;
+  right: 15px;
   background-color: transparent;
   color: #ff0000;
-  -webkit-appearance: none;
-  appearance: none;
   border: none;
   width: 50px;
   height: 50px;
-  padding: 0;
-  margin: 0;
   cursor: pointer;
   font-size: 18px;
   border-radius: 50%;
 }
+
 .contact-btn {
   background-color: #e0e0e0;
   color: #333;
-  box-shadow: 2px 2px 5px #bebebe, -2px -2px 5px #ffffff; /* Consistent button style */
+  box-shadow: 2px 2px 5px #bebebe, -2px -2px 5px #ffffff;
   border-radius: 15px;
   padding: 10px 15px;
   border: none;
 }
 
 .image-container {
-  height: 35vh;
-  width: 50vw;
+  height: 50%;
+  width: 80%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* Mobile */
 @media only screen and (max-width: 768px) {
-  h1 {
-    font-size: 20px;
-  }
-  h2 {
-    text-align: center;
-    font-size: 14px;
-  }
   .container {
     width: 100%;
     height: 90%;
     top: 5%;
     border-radius: 0;
+  }
+
+  .info-table th, .info-table td {
+    padding: 5px;
   }
 
   .image-container {
