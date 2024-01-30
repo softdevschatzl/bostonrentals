@@ -2,8 +2,13 @@
 <template>
 <div id="slider">
   <transition-group tag="div" :name="transitionName" class="slides-group" v-if="show">
-    <div v-for="(image, index) in displayedImages" :key="index" class="slide">
-      <img :src="image" alt="Listing Image" class="image">
+    <div 
+      class="slide" 
+      :key="current" 
+      @click="enlarged = true" 
+      :data-tooltip="enlarged ? 'Click to minimize' : 'Click to enlarge'"
+    >
+      <img :src="displayedImages[current]" alt="Listing Image" class="image">
     </div>
   </transition-group>
   <div class="btn btn-prev" aria-label="Previous slide" @click="slide(-1)">
@@ -11,6 +16,9 @@
   </div>
   <div class="btn btn-next" aria-label="Next slide" @click="slide(1)">
     &#10095;
+  </div>
+  <div class="enlarged-image" v-if="enlarged" @click="enlarged = false" :data-tooltip="enlarged ? 'Click to minimize' : 'Click to enlarge'">
+    <img :src="displayedImages[current]" alt="Enlarged Image">
   </div>
 </div>
 </template>
@@ -30,7 +38,8 @@ export default {
       current: 0,
       direction: 1,
       transitionName: "fade",
-      show: false
+      show: false,
+      enlarged: false,
     }
   },
   computed: {
@@ -107,9 +116,25 @@ export default {
 }
 
 .image {
-  width: 100%;
+  width: auto;
   height: 100%;
   object-fit: contain;
+  max-width: 800px;
+  max-height: 400px;
+}
+.slide:hover::after, .enlarged-image:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: #fff;
+  padding: 5px;
+  border-radius: 5px;
+  white-space: nowrap;
+  font-size: 12px;
+  pointer-events: none;
 }
 
 /* SLIDER STYLES */
@@ -161,6 +186,24 @@ body {
 
 .btn:hover {
   transform: scale(1.1);
+}
+
+.enlarged-image {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  cursor: pointer;
+}
+.enlarged-image img {
+  max-width: 90%;
+  max-height: 90%;
 }
 
 </style>

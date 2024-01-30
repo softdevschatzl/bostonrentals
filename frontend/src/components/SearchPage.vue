@@ -50,20 +50,6 @@ export default {
     async searchListings(criteria) {
       try {
         const response = await axios.post('/properties', criteria);
-          // params: {
-          //   city: this.searchCriteria.cities, 
-          //   address: this.searchCriteria.address,
-          //   bedrooms: this.searchCriteria.bedrooms,
-          //   bathrooms: this.searchCriteria.bathrooms,
-          //   minRent: this.minRent,
-          //   maxRent: this.maxRent,
-          //   sqft: this.sqft,
-          //   state: this.searchCriteria.state,
-          //   zipCode: this.searchCriteria.zipCode,
-          //   availFrom: this.searchCriteria.startDate,
-          //   availTo: this.searchCriteria.endDate,
-          //   limit: this.searchCriteria.limit,
-          // }
         
         console.log('API Query: ', criteria);
         console.log('API Response: ', response.data.listings);

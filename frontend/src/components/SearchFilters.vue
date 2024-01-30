@@ -234,6 +234,11 @@ export default {
         apiCriteria.pet = this.petMapping[apiCriteria.pet];
       }
 
+      // Virtual Tours
+      if (apiCriteria.tours === 'Virtual Tours Only') {
+        apiCriteria.tours = "Y";
+      }
+
       console.log("API Criteria: ", apiCriteria);
 
       return apiCriteria;
