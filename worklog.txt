@@ -15,6 +15,9 @@ TODO:
     - Refine the ApartmentList geolocation. The coordinates are not getting passed to YGL correctly.
     - fee() computed property in ListingInfo.vue always returns N/A for non MLS listings.
     - essentially handle all mls related listings on searchresults and listinginfo.
+
+    - find why listings are only returning one photo (possibly CORS issue)
+    - add filter for virtual tours
 Fee:
     - what should i put instead of Co-Broke in the results?
 
