@@ -96,8 +96,8 @@ app.post('/properties', async (req, res) => {
 app.get('/api/location', async (req, res) => {
     console.log("Location route hit.")
     try {
-        const userIp = '149.40.50.212'; // Coordinates returned: 42.3562, -71.0631
-        // const userIp = '76.19.221.189'; // Coordinates returned: 42.2518, -71.0805
+        // const userIp = '149.40.50.212'; // Coordinates returned: 42.3562, -71.0631
+        const userIp = '76.19.221.189'; // Coordinates returned: 42.2518, -71.0805
         // const userIp = req.ip; 
         const response = await axios.get(`http://ip-api.com/json/${userIp}`);
         console.log("Response data:", response.data)
@@ -111,22 +111,10 @@ app.get('/api/location', async (req, res) => {
 // Fetch properties based on latitude and longitude.
 app.post('/api/apartments', async (req, res) => {
     try {
-        const latitude = parseFloat(req.query.latitude);
-        const longitude = parseFloat(req.query.longitude);
-
-        const radiusInMiles = 20; // Radius in miles.
-        const radiusInDegrees = radiusInMiles / 69; // 1 degree is 69 miles.
-        const latitude_start = latitude - radiusInDegrees;
-        const lattitude_end = latitude + radiusInDegrees;
-        const longitude_start = longitude - radiusInDegrees;
-        const longitude_end = longitude + radiusInDegrees;
-
+        const coords = req.body;
         const params = {
             key: apiKey,
-            latitude_start,
-            lattitude_end,
-            longitude_start,
-            longitude_end,
+            ...coords,
             request_type: 'JSON',
         }
 

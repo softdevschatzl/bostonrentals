@@ -13,6 +13,7 @@
   import RentalTools from './RentalTools.vue';
   import FooterPage from './FooterPage.vue';
   import axios from 'axios';
+  import { calculateFullCoordinates } from '@/utils/featuredApartmentAlgorithm';
   
   export default {
     components: {
@@ -49,11 +50,10 @@
         if (this.userCoords) {
           console.log("User coords: ", this.userCoords);
           try {
+            const coords = calculateFullCoordinates(this.userCoords.latitude, this.userCoords.longitude, 20);
+            console.log("Full coords: ", coords);
             const response = await axios.post('/api/apartments', null, {
-              params: {
-                latitude: this.userCoords.latitude,
-                longitude: this.userCoords.longitude,
-              }
+              params: coords
             });
             this.apartments = response.data; // Assuming this is an array.
           } catch (error) {

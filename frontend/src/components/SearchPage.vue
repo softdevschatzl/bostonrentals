@@ -40,6 +40,7 @@ export default {
         listing_fee: "", // no co-broke
         status: "", // Active, or not.
         square_footage_minimum: "", // Minimum square footage.
+        tours: "", // Virtual tours, or not.
         // Add more criteria.
       },
       listings: []

@@ -3,9 +3,6 @@ TODO:
     - Check Chat log, work on ip -> location -> properties inside of ApartmentList and ApartmenItem.
     - prioritize listings with media
     - Fix the datepickers in SearchFilters.vue
-    - Remap the Fee section in ListingInfo.vue to be user friendly.
-        in that same sense, make sure every value/object returned by YGL
-        is destructured.
     
     - Work on AWS Cognito and RDS implementation. Also figure out how to
         host on EC2
@@ -18,6 +15,10 @@ TODO:
 
     - find why listings are only returning one photo (possibly CORS issue)
     - add filter for virtual tours
+
+    - sidenote, i feel like i should move the logic for parsing through responses to the backend.
+        maybe it'll make it so i dont have to implement it in every component.
+        
 Fee:
     - what should i put instead of Co-Broke in the results?
 
