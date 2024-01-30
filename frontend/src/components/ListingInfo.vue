@@ -4,6 +4,7 @@
       <div class="header">
         <button class="contact-btn">Contact Agent</button>
         <h1>Rental Information</h1>
+        <button class="save">Save to List</button>
         <button class="close-btn" @click="close">X</button>
         <div class="right"></div>
       </div>
@@ -15,46 +16,54 @@
           </tr>
           <!-- Property Type -->
           <tr class="info-row" v-if="listing?.propertyType">
-            <td>Property Type</td>
-            <td>{{ listing?.propertyType }}</td>
+            <td class="key">Property Type</td>
+            <td class="value">{{ listing?.propertyType }}</td>
+          </tr>
+          <tr class="info-row" v-if="listing?.availableDate">
+            <td class="key">Date Available</td>
+            <td class="value">{{ listing?.availableDate }}</td>
           </tr>
           <!-- Beds and Baths -->
           <tr class="info-row">
-            <td>Beds</td>
-            <td>{{ listing?.beds }}</td>
+            <td class="key">Beds</td>
+            <td class="value">{{ listing?.beds }}</td>
           </tr>
           <tr class="info-row">
-            <td>Baths</td>
-            <td>{{ listing?.baths }}</td>
+            <td class="key">Baths</td>
+            <td class="value">{{ listing?.baths }}</td>
           </tr>
           <!-- Rent and Fee -->
           <tr class="info-row" v-if="listing?.rent || listing?.fee">
-            <td>Rent</td>
-            <td>{{ listing?.price }}/mo</td>
+            <td class="key">Rent</td>
+            <td class="value">${{ listing?.price }}/mo</td>
           </tr>
           <tr class="info-row" v-if="listing?.fee">
-            <td>Fee</td>
-            <td>{{ fee }}</td>
+            <td class="key">Fee</td>
+            <td class="value">{{ fee }}</td>
           </tr>
           <tr class="info-row" v-if="listing?.squareFootage">
-            <td>Square Footage</td>
-            <td>{{ listing?.squareFootage }}</td>
+            <td class="key">Square Footage</td>
+            <td class="value">{{ squareFoot }} sqft</td>
           </tr>
           <tr class="info-row" v-if="listing?.pet">
-            <td>Pets</td>
-            <td>{{ listing?.pet }}</td>
+            <td class="key">Pets</td>
+            <td class="value">{{ listing?.pet }}</td>
           </tr>
           <tr class="info-row" v-if="listing?.laundry">
-            <td>Laundry</td>
-            <td>{{ listing?.laundry }}</td>
+            <td class="key">Laundry</td>
+            <td class="value">{{ listing?.laundry }}</td>
           </tr>
           <tr class="info-row" v-if="listing?.parking || listing?.mlsParking">
-            <td>Parking</td>
-            <td>{{ parkingInfo }}</td>
+            <td class="key">Parking</td>
+            <td class="value">{{ parkingInfo }}</td>
           </tr>
           <tr class="info-row" v-if="listing?.status">
-            <td>Status</td>
-            <td>{{ listing?.status }}</td>
+            <td class="key">Status</td>
+            <td class="value">{{ status }}</td>
+          </tr>
+          <tr class="info-row" v-if="listing?.rentIncludes?.length">
+            <td class="key">Rent Includes</td>
+            <td class="value">{{ listing.rentIncludes.join(', ') }}</td>
           </tr>
           <!-- Additional Details -->
           <!-- ... Add more rows as needed -->
@@ -73,6 +82,7 @@
 <script>
 import Carousel from './ImageCarousel.vue';
 import defaultImage from '../assets/no-image-found.jpg';
+import { statusMapping, squareFootageMapping } from '../utils/dataSets';
 
 export default {
   components: {
@@ -99,20 +109,27 @@ export default {
       }
       return 'N/A';
     },
+    status() {
+      return statusMapping[this.listing?.status] || this.listing.status;
+    },
+    squareFoot() {
+      return squareFootageMapping[this.listing?.squareFootage] || this.listing.squareFootage;
+    },
     parkingInfo() {
-      const isValidValue = value => value != null || value != 0 || value != false && !Array.isArray(value);
+      const isValidValue = value => value != null && value != 0 && value != false && !Array.isArray(value);
+      let parkingData =[];
       if (this.listing.mlsParking) {
         // Handles MLS parking objects.
-        return Object.entries(this.listing.mlsParking)
+        parkingData = Object.entries(this.listing.mlsParking)
                       .filter(([, value]) => isValidValue(value))
-                      .map(([key, value]) => ({ key, value }));
+                      .map(([key, value]) => `${key}: ${value}`);
       } else if (this.listing.parking) {
         // Handles YGL parking objects.
-        return Object.entries(this.listings.parking) 
+        parkingData = Object.entries(this.listing.parking) 
                       .filter(([, value]) => isValidValue(value))
-                      .map(([key, value]) => ({ key, value }));
+                      .map(([key, value]) => `${key}: ${value}`);
       }
-      return [];
+      return parkingData.length > 0 ? parkingData.join(', '): "No Parking Covered";
     }
   },
   data() {
@@ -157,6 +174,7 @@ export default {
 h1 {
   color: #fff;
   margin-bottom: 20px;
+  text-align: center;
 }
 h2 {
   color: #fff;
@@ -191,22 +209,31 @@ th {
 }
 
 .info-table {
+  padding: 5px;
   width: 100%;
   border-collapse: collapse;
   background: #e0e0e0;
   box-shadow: 5px 5px 10px #a3a3a3, -5px -5px 10px #ffffff;
-  border-radius: 10px;
 }
 
 .info-table th, .info-table td {
   padding: 10px;
   text-align: left;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #9b9b9b;
 }
 
 .info-header th {
   text-align: center;
   font-size: 1.2em;
+}
+
+.key {
+  font-weight: bold;
+  width: auto;
+  border-right: 1px solid #9b9b9b;
+}
+.value {
+  color: #333;
 }
 
 .close-btn {
@@ -223,10 +250,11 @@ th {
   border-radius: 50%;
 }
 
-.contact-btn {
+.contact-btn, .save {
   background-color: #e0e0e0;
   color: #333;
-  box-shadow: 2px 2px 5px #bebebe, -2px -2px 5px #ffffff;
+  box-shadow: 3px 3px 10px #313142,
+                -3px -3px 10px #727299;
   border-radius: 15px;
   padding: 10px 15px;
   border: none;

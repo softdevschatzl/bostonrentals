@@ -1,6 +1,6 @@
 <!-- SearchResults.vue -->
 <template>
-<div class="listings" v-if="Array.isArray(listings)">
+<div class="listings" v-if="Array.isArray(listings) && listings.length">
   <table>
     <thead>
       <tr class="listing-header">
@@ -145,6 +145,7 @@ export default {
 }
 .no-listings {
   margin-top: 100px;
+  margin-bottom: 100px;
   display: flex;
   justify-content: center;
   align-items: center;

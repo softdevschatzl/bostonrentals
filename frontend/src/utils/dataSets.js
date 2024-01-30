@@ -288,3 +288,18 @@ export const petMapping = {
 export const statusMapping = {
     'ONMARKET': 'On Market',
 }
+
+export const parking = {
+    "parkingAvailability": "Parking Availability",
+    "parkingNumber": "Parking Spaces",
+    "parkingType": "Parking Type",
+    "parkingPrice": "Parking Price",
+}
+
+export const mslParking = {
+
+}
+
+export const squareFootageMapping = {
+    "9999": "N/A",
+}
