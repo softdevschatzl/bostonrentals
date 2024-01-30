@@ -110,6 +110,11 @@
               <option>Only Listings With Photos</option>
               <option>Any Listing With or Without</option>
             </select>
+            <select class="value" v-model="localSearchCriteria.tours">
+              <option value="" selected>Virtual Tours...</option>
+              <option>Virtual Tours Only</option>
+              <option>All Listings</option>
+            </select>
             <select class="value">
               <option value="" selected>Advanced Options</option>
               <option>FIX THIS</option>

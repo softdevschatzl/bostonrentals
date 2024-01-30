@@ -6,7 +6,6 @@
         <h1>Rental Information</h1>
         <button class="save">Save to List</button>
         <button class="close-btn" @click="close">X</button>
-        <div class="right"></div>
       </div>
       <div class="table-container">
         <table class="info-table">
@@ -153,9 +152,7 @@ export default {
   align-items: center;
   width: 100%;
   margin-bottom: 20px;
-}
-.right {
-  width: 10%;
+  position: relative;
 }
 .container {
   position: relative;
@@ -172,8 +169,10 @@ export default {
 }
 
 h1 {
+  order: 2;
   color: #fff;
   margin-bottom: 20px;
+  margin-left: 10%;
   text-align: center;
 }
 h2 {
@@ -258,6 +257,10 @@ th {
   border-radius: 15px;
   padding: 10px 15px;
   border: none;
+}
+.save {
+  order: 3;
+  margin-right: 10%;
 }
 
 .image-container {
