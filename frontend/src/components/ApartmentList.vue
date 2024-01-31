@@ -106,12 +106,22 @@ export default {
     color: #fff;
     display: flex;
     justify-content: flex-start;
+    text-align: center;
     top: 0;
   }
 
   @media only screen and (max-width: 768px) {
     h1 {
       font-size: 25px;
+    }
+    .apartments-wrapper {
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .apartments {
+      width: 65%;
     }
   }
 </style>

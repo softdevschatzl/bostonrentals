@@ -60,6 +60,8 @@ export function calculateCompletenessScore(apartment) {
     if (apartment.photo) score += 1;
     if (apartment.virtualTours.length) score += 1;
 
+    if (apartment.source === "MLS") score += 999;
+
     return score;
 }
 

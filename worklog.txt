@@ -19,6 +19,9 @@ TODO:
         maybe it'll make it so i dont have to implement it in every component.
     
     - fix parking info not displaying in a user-friendly way.
+    -prioritize mls in results
+
+    - pictures slideshow desktop no slideshow
         
 Fee:
     - what should i put instead of Co-Broke in the results?

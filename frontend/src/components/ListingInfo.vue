@@ -2,10 +2,16 @@
   <div class="listing-info" v-if="visible && listing">
     <div class="container">
       <div class="header">
-        <button class="contact-btn">Contact Agent</button>
+        <button v-if="!isMobile" class="contact-btn">Contact Agent</button>
         <h1>Rental Information</h1>
         <button class="save">Save to List</button>
-        <button class="close-btn" @click="close">X</button>
+        <!-- Credits: Cyril Lamotte on Codepen.
+        https://codepen.io/cyril-lamotte/pen/bGVxjOr -->
+        <button type="button" class="btn-close" @click="close">
+          <span class="icon-cross"></span>
+          <span class="visually-hidden">Close</span>
+        </button>
+        <div v-if="isMobile" class="right"></div>
       </div>
       <div class="table-container">
         <table class="info-table">
@@ -106,7 +112,7 @@ export default {
       } else if (typeof this.listing.fee === 'number') {
         return this.feeMapping[this.listing.fee.toString()] || 'Unknown Fee';
       }
-      return 'N/A';
+      return 'Not Specified';
     },
     status() {
       return statusMapping[this.listing?.status] || this.listing.status;
@@ -129,6 +135,9 @@ export default {
                       .map(([key, value]) => `${key}: ${value}`);
       }
       return parkingData.length > 0 ? parkingData.join(', '): "No Parking Covered";
+    },
+    isMobile() {
+      return window.innerWidth <= 768;
     }
   },
   data() {
@@ -145,7 +154,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .header {
   display: flex;
   justify-content: space-between;
@@ -235,18 +244,88 @@ th {
   color: #333;
 }
 
-.close-btn {
+// Display a cross with CSS only.
+//
+// Cool close button.
+//
+// Credits: Cyril Lamotte on Codepen.
+// https://codepen.io/cyril-lamotte/pen/bGVxjOr
+//
+// $size  : px or em
+// $color : color
+// $thickness : px
+@mixin cross($size: 20px, $color: currentColor, $thickness: 1px) {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  position: relative;
+  width: $size;
+  height: $size;
+
+  &:before,
+  &:after {
+    content: '';
+    position: absolute;
+    top: calc(($size - $thickness) / 2);
+    left: 0;
+    right: 0;
+    height: $thickness;
+    background: $color;
+    border-radius: $thickness;
+  }
+
+  &:before {
+    transform: rotate(45deg);
+  }
+
+  &:after {
+    transform: rotate(-45deg);
+  }
+
+  span {
+    display: block;
+  }
+
+}
+.btn-close {
   position: absolute;
-  top: 10px;
+  top: 3.5px;
   right: 15px;
-  background-color: transparent;
-  color: #ff0000;
-  border: none;
+  margin: 0;
+  border: 0;
+  padding: 0;
+  background: #333;
+  border-radius: 50%;
   width: 50px;
   height: 50px;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
-  font-size: 18px;
-  border-radius: 50%;
+  transition: all 150ms;
+  
+  .icon-cross {
+    @include cross(30px, #afc6d2, 6px);   
+  }
+  
+  &:hover,
+  &:focus {
+    transform: rotateZ(90deg);
+    background: #444444;
+  }
+
+}
+// For screen readers.
+.visually-hidden {
+  position: absolute !important;
+  clip: rect(1px, 1px, 1px, 1px);
+  padding: 0 !important;
+  border: 0 !important;
+  height: 1px !important;
+  width: 1px !important;
+  overflow: hidden;
 }
 
 .contact-btn, .save {
@@ -257,6 +336,11 @@ th {
   border-radius: 15px;
   padding: 10px 15px;
   border: none;
+}
+.contact-btn:hover, .save:hover {
+  opacity: 0.75;
+    box-shadow: 2px 2px 5px #3b3b50,
+                -2px -2px 5px #5c5c7c;
 }
 .save {
   order: 3;
@@ -273,9 +357,17 @@ th {
 }
 
 @media only screen and (max-width: 768px) {
+  h1 {
+    font-size: 1.2rem;
+    display: flex;
+    justify-content: center;
+  }
+  .header {
+    justify-content: space-between;
+  }
   .container {
     width: 100%;
-    height: 90%;
+    height: 100%;
     top: 5%;
     border-radius: 0;
   }
@@ -287,6 +379,20 @@ th {
   .image-container {
     width: 90%;
     height: 50%;
+  }
+  .save {
+    order: 1;
+    margin-right: 0;
+  }
+  .right {
+    order: 3;
+    width: 33%;
+  }
+  .table-container {
+    height: 30%;
+  }
+  .btn-close, .save {
+    scale: 0.8;
   }
 }
 </style>

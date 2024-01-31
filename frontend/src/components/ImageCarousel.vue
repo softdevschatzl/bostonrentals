@@ -147,7 +147,7 @@ body {
 }
 
 #slider {
-  width: 100%;
+  width: 60%;
   height: 100%;
   position: relative;
 }
@@ -204,6 +204,15 @@ body {
 .enlarged-image img {
   max-width: 90%;
   max-height: 90%;
+}
+
+@media only screen and (max-width: 768px) {
+  .image {
+    width: 100%;
+  }
+  #slider {
+    width: 100%;
+  }
 }
 
 </style>
