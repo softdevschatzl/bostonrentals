@@ -47,18 +47,12 @@ app.use(cors({
 
 app.use(express.json());
 
-// // Limits API queries. Remove when upgrading API.
-// const limiter = rateLimit({
-//     windowMs: 15 * 60 * 1000, // 30 days in milliseconds.
-//     max: 50, // Limiting API calls to 50 every month.
-//     message: "Too many requests from this IP."
-// });
-
 // Creating route to fetch data (YGL API)
 app.post('/properties', async (req, res) => {
     try {
-        const { street_name, city_neighborhood, zip, state, beds, baths, square_footage_min, max_rent, min_rent, listing_fee, avail_from, avail_to, photo, tours } = req.body;
-        console.log("Query body:", req.body)
+        const { latitude_start, latitude_end, longitude_start, longitude_end, street_name, 
+            city_neighborhood, zip, state = 'MA', beds, baths, square_footage_min, max_rent, min_rent, 
+            listing_fee, avail_from, avail_to, photo, tours } = req.body;
 
         // Needed a workaround for the API to work with blank query params.
         // If the query param is blank, it will not be included in the API call.
@@ -70,6 +64,12 @@ app.post('/properties', async (req, res) => {
         };
 
         // Add parameters to the request if they are not blank.
+        // Coordinate parameters for ApartmentList.
+        if (latitude_start) params.latitude_start = latitude_start;
+        if (latitude_end) params.latitude_end = latitude_end;
+        if (longitude_start) params.longitude_start = longitude_start;
+        if (longitude_end) params.longitude_end = longitude_end;
+        // Other parameters.
         if (street_name) params.street_name = street_name;
         if (city_neighborhood) params.city_neighborhood = city_neighborhood;
         if (zip) params.zip = zip;
@@ -84,8 +84,11 @@ app.post('/properties', async (req, res) => {
         if (photo) params.photo = photo;
         if (tours) params.tours = tours;
 
+        console.log("Full Params:", params)
 
         const response = await axios.post(`https://www.yougotlistings.com/api/rentals/search.php?key=${apiKey}`, params);
+        
+        console.log("Response data:", response.data) 
         
         return res.json(response.data);
 
@@ -112,25 +115,25 @@ app.get('/api/location', async (req, res) => {
 });
 
 // Fetch properties based on latitude and longitude.
-app.post('/api/apartments', async (req, res) => {
-    try {
-        const coords = req.body;
-        const params = {
-            key: apiKey,
-            detail_level: 2,
-            ...coords,
-            request_type: 'JSON',
-        }
+// app.post('/api/apartments', async (req, res) => {
+//     try {
+//         const coords = req.body;
+//         const params = {
+//             key: apiKey,
+//             detail_level: 2,
+//             ...coords,
+//             request_type: 'JSON',
+//         }
 
-        const response = await axios.post(`https://www.yougotlistings.com/api/rentals/search.php?key=${apiKey}`, params);
+//         const response = await axios.post(`https://www.yougotlistings.com/api/rentals/search.php?key=${apiKey}`, params);
 
-        return res.json(response.data);
+//         return res.json(response.data);
 
-    } catch (error) {
-        console.error("API call failed:", error.message);
-        return res.status(500).json({ error: "Failed to fetch data." });
-    }
-});
+//     } catch (error) {
+//         console.error("API call failed:", error.message);
+//         return res.status(500).json({ error: "Failed to fetch data." });
+//     }
+// });
 
 // Creates endpoint for Cognito login.
 app.get('/api/login', (req, res) => {

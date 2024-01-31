@@ -13,11 +13,12 @@ TODO:
     - fee() computed property in ListingInfo.vue always returns N/A for non MLS listings.
     - essentially handle all mls related listings on searchresults and listinginfo.
 
-    - find why listings are only returning one photo (possibly CORS issue)
     - add filter for virtual tours
 
     - sidenote, i feel like i should move the logic for parsing through responses to the backend.
         maybe it'll make it so i dont have to implement it in every component.
+    
+    - fix parking info not displaying in a user-friendly way.
         
 Fee:
     - what should i put instead of Co-Broke in the results?

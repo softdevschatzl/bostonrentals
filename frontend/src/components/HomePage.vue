@@ -48,13 +48,10 @@
       // Using user location to fetch nearby relevant properties.
       async fetchApartments() {
         if (this.userCoords) {
-          console.log("User coords: ", this.userCoords);
           try {
             const coords = calculateFullCoordinates(this.userCoords.latitude, this.userCoords.longitude, 20);
             console.log("Full coords: ", coords);
-            const response = await axios.post('/api/apartments', null, {
-              params: coords
-            });
+            const response = await axios.post('/properties', coords);
             this.apartments = response.data; // Assuming this is an array.
           } catch (error) {
             console.error('Failed to fetch apartments:', error.message);

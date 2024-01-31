@@ -1,5 +1,5 @@
 <template>
-  <div class="apartments" :style="backgroundStyle" @click="handleClick"> <!-- :style="backgroundStyle" See line 40. -->
+  <div class="apartments" :style="backgroundStyle" @item-click="handleClick"> <!-- :style="backgroundStyle" See line 40. -->
     <div class="border-left"></div>
     <div class="border-right"></div>
     <div class="content">
@@ -56,7 +56,7 @@
       },
       methods: {
         handleClick() {
-          this.$emit('click', this.propertyData);
+          this.$emit('item-click', this.propertyData);
         }
       }
     }

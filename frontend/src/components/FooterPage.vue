@@ -5,11 +5,11 @@
         <div class="col-md-6">
           <div class="logo-company">
             <img src="../assets/AlexandersRentals_Logo1-01.png" alt="Alexanders Rentals Logo" class="logo" />
-            <p>@2024 FagFuck Realty</p>
+            <p>@2024 The Real Broker MA</p>
           </div>
-          <p>123 Main Street, Boston, MA 02101</p>
-          <p>Phone: (123) 456-7890</p>
-          <p>Email: info@company.com</p>
+          <p>90 Canal St, Boston, MA 02114</p>
+          <p>Phone: (617) - 842 - 9261</p>
+          <p>Email: astamatiou123@gmail.com</p>
         </div>
         <div class="col-md-3">
           <h4>Quick Links</h4>
@@ -17,7 +17,6 @@
             <li><a href="/">Home</a></li>
             <li><a href="/search">Search Apartments</a></li>
             <li><a href="/about">About Us</a></li>
-            <li><a href="/contact">Contact</a></li>
           </ul>
         </div>
         <div class="col-md-3">
