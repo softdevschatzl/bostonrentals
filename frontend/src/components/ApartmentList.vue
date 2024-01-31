@@ -11,7 +11,7 @@
       />
     </div>
     <ListingInfo 
-      :apartment="selectedApartment" 
+      :listing="selectedApartment" 
       :visible="showApartmentInfo" 
       @close="showApartmentInfo = false" 
     />
