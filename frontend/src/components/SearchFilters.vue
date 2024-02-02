@@ -10,7 +10,7 @@
             <input class="value" type="text" v-model="localSearchCriteria.street_name" placeholder="Street Name..." />
             <input class="value" type="text" v-model="localSearchCriteria.zip" placeholder="Zip Code..." />
             <select class="value" v-model="localSearchCriteria.city_neighborhood">
-              <option value="" selected><strong>City/Neighborhood</strong></option>
+              <option value="null" selected><strong>City/Neighborhood</strong></option>
               <optgroup v-for="(group, letter) in groupedNeighborhoods" :label="letter" :key="letter">
                 <option v-for="neighborhood in group" :key="neighborhood" :value="neighborhood">{{ neighborhood }}</option>
               </optgroup>
@@ -20,8 +20,8 @@
         <div class="info-group">
           <button class="toggle-btn" data-group="bedroomsBathrooms" @click="toggleGroup('bedroomsBathrooms')">Bedrooms/Bathrooms Filters</button>
           <div v-show="openGroups.bedroomsBathrooms" class="bedrooms-bathrooms-group">
-            <select class="value" v-model="localSearchCriteria.beds">
-              <option value="" selected>Number of Beds...</option>
+            <select class="value" @change="updateBedSearchCriteria($event.target.value)">
+              <option value="null" selected>Number of Beds...</option>
               <option>Studio</option>
               <option>1</option>
               <option>1.5</option>
@@ -42,8 +42,8 @@
               <option>9</option>
               <option>10+</option>
             </select>
-            <select class="value" v-model="localSearchCriteria.baths">
-              <option value="" selected>Number of Baths...</option>
+            <select class="value" @change="updateBathSearchCriteria($event.target.value)">
+              <option value="null" selected>Number of Baths...</option>
               <option>1</option>
               <option>1.5</option>
               <option>2</option>
@@ -69,7 +69,7 @@
             <input class="value" type="text" v-model="localSearchCriteria.min_rent" placeholder="Min Rent..." />
             <input class="value" type="text" v-model="localSearchCriteria.max_rent" placeholder="Max Rent..." />
             <select class="value" v-model="localSearchCriteria.listing_fee">
-              <option value="" selected>Fee...</option>
+              <option value="null" selected>Fee...</option>
               <option>No Fee</option>
               <option>25% Month Fee</option> 
               <option>50% Off Month Fee</option>
@@ -82,7 +82,7 @@
           <button class="toggle-btn" @click="toggleGroup('laundryParkingPet')">Laundry/Parking/Pet Filters</button>
           <div v-show="openGroups.laundryParkingPet" class="laundry-parking-pet-group"> <!-- v-show="openGroups.laundryParkingPet" -->
             <select class="value" v-model="localSearchCriteria.laundry">
-              <option value="" selected>Laundry...</option>
+              <option value="null" selected>Laundry...</option>
               <option>Washer/Dryer In Unit</option>
               <option>Laundry In Building</option>
               <option>Laundry On Site</option>
@@ -91,11 +91,11 @@
               <option>None</option>
             </select>
             <select class="value" v-model="localSearchCriteria.parking">
-              <option value="" selected>Parking...</option>
+              <option value="null" selected>Parking...</option>
               <option>Parking Included</option>
             </select>
             <select class="value" v-model="localSearchCriteria.pet">
-              <option value="" selecetd>Pet...</option>
+              <option value="null" selecetd>Pet...</option>
               <option>Cat</option>
               <option>Dog</option>
               <option>Friendly</option>
@@ -106,17 +106,17 @@
           <button class="toggle-btn" @click="toggleGroup('propertyStatusMedia')">Property Status/Photo Filters</button>
           <div v-show="openGroups.propertyStatusMedia" class="property-status-media-group">
             <select class="value" v-model="localSearchCriteria.photo">
-              <option value="" selected>Photos...</option>
+              <option value="null" selected>Photos...</option>
               <option>Only Listings With Photos</option>
               <option>Any Listing With or Without</option>
             </select>
             <select class="value" v-model="localSearchCriteria.tours">
-              <option value="" selected>Virtual Tours...</option>
+              <option value="null" selected>Virtual Tours...</option>
               <option>Virtual Tours Only</option>
               <option>All Listings</option>
             </select>
             <select class="value">
-              <option value="" selected>Advanced Options</option>
+              <option value="null" selected>Advanced Options</option>
               <option>FIX THIS</option>
             </select>
           </div>
@@ -217,6 +217,14 @@ export default {
       if (this.bedMapping && apiCriteria.beds in this.bedMapping) {
         apiCriteria.beds = this.bedMapping[apiCriteria.beds];
       }
+      // max_bed
+      if (this.bedMapping && apiCriteria.max_bed in this.bedMapping) {
+        apiCriteria.max_bed = this.bedMapping[apiCriteria.max_bed];
+      }
+      // min_bed
+      if (this.bedMapping && apiCriteria.min_bed in this.bedMapping) {
+        apiCriteria.min_bed = this.bedMapping[apiCriteria.min_bed];
+      }
       // Baths
       if (this.bathMapping && apiCriteria.baths in this.bathMapping) {
         apiCriteria.baths = this.bedMapping[apiCriteria.baths];
@@ -242,6 +250,14 @@ export default {
       console.log("API Criteria: ", apiCriteria);
 
       return apiCriteria;
+    },
+    updateBedSearchCriteria(value) {
+      this.localSearchCriteria.beds = value;
+      
+    },
+    updateBathSearchCriteria(value) {
+      this.localSearchCriteria.max_bath = value;
+      this.localSearchCriteria.min_bath = value;
     },
   },
   data() {

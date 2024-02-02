@@ -20,27 +20,27 @@ export default {
     return {
       searchCriteria: {
         street_name: null, // Street names, No Addresses!!!
-        min_bed: "", // How many beds.
-        max_bed: "", // How many beds.
-        beds: "", // How many beds.
-        min_bath: "", // How many baths.
-        max_bath: "", // How many baths.
-        baths: "", // How many baths.
-        city_neighborhood: "", // Specific cities/neighborhoods.
+        min_bed: null, // How many beds.
+        max_bed: null, // How many beds.
+        beds: null, // How many beds.
+        min_bath: null, // How many baths.
+        max_bath: null, // How many baths.
+        baths: null, // How many baths.
+        city_neighborhood: null, // Specific cities/neighborhoods.
         state: 'MA', // State.
         zip: null, // Zip code.
         min_rent: null, // Minimum rent.
         max_rent: null, // Maximum rent.
         avail_from: null, // Available from.
         avail_to: null, // Available to.
-        pet: "", // Pet friendly, or not.
-        photo: "", // Photos or virtual tours.
-        laundry: "", // Laundry in unit.
-        parking: "", // Parking available.
-        listing_fee: "", // no co-broke
-        status: "", // Active, or not.
-        square_footage_minimum: "", // Minimum square footage.
-        tours: "", // Virtual tours, or not.
+        pet: null, // Pet friendly, or not.
+        photo: null, // Photos or virtual tours.
+        laundry: null, // Laundry in unit.
+        parking: null, // Parking available.
+        listing_fee: null, // no co-broke
+        status: null, // Active, or not.
+        square_footage_minimum: null, // Minimum square footage.
+        tours: null, // Virtual tours, or not.
         // Add more criteria.
       },
       listings: []

@@ -266,6 +266,7 @@ export const feeMapping = {
 
 export const bedMapping = {
 'Studio': 0,
+'1': 1,
 }
 
 export const photoMapping = {
@@ -282,6 +283,9 @@ export const petMapping = {
     'Dogs': 'dogs',
     'Friendly': 'friendly',
 }
+
+
+
 
 // Result mapping.
 
