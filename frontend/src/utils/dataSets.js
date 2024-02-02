@@ -289,17 +289,25 @@ export const statusMapping = {
     'ONMARKET': 'On Market',
 }
 
-export const parking = {
+export const parkingResultsKeyMapping = {
     "parkingAvailability": "Parking Availability",
     "parkingNumber": "Parking Spaces",
     "parkingType": "Parking Type",
     "parkingPrice": "Parking Price",
 }
-
-export const mslParking = {
-
+export const parkingResultsValueMapping = {
+    'NON': 'No Parking',
+    'FOR': 'For Sale',
 }
 
 export const squareFootageMapping = {
     "9999": "N/A",
+}
+
+export const feeResultsMapping = {
+    '0': '1 Month Fee', 
+    '0.25': '75% Month Fee',
+    '0.5': '50% Month Fee',
+    '0.75': '25% Month Fee',
+    '1': 'No Fee',
 }

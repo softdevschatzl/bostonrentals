@@ -70,6 +70,10 @@
             <td class="key">Rent Includes</td>
             <td class="value">{{ listing.rentIncludes.join(', ') }}</td>
           </tr>
+          <tr class="info-row" v-if="listing?.features?.length">
+            <td class="key">Features</td>
+            <td class="value">{{ listing.features.join(', ') }}</td>
+          </tr>
           <!-- Additional Details -->
           <!-- ... Add more rows as needed -->
         </table>
@@ -87,7 +91,7 @@
 <script>
 import Carousel from './ImageCarousel.vue';
 import defaultImage from '../assets/no-image-found.jpg';
-import { statusMapping, squareFootageMapping } from '../utils/dataSets';
+import { statusMapping, squareFootageMapping, feeResultsMapping, parkingResultsKeyMapping, parkingResultsValueMapping } from '../utils/dataSets';
 
 export default {
   components: {
@@ -110,9 +114,9 @@ export default {
       if (this.listing.fee && typeof this.listing.fee === 'object' && this.listing.fee['Cooperative Compentation']) {
         return '1 Month Fee';
       } else if (typeof this.listing.fee === 'number') {
-        return this.feeMapping[this.listing.fee.toString()] || 'Unknown Fee';
+        return feeResultsMapping[this.listing.fee.toString()] || 'Unknown Fee';
       }
-      return 'Not Specified';
+      return '1 Month Fee';
     },
     status() {
       return statusMapping[this.listing?.status] || this.listing.status;
@@ -123,6 +127,20 @@ export default {
     parkingInfo() {
       const isValidValue = value => value != null && value != 0 && value != false && !Array.isArray(value);
       let parkingData =[];
+
+      const remapKey = key => {
+        if (parkingResultsKeyMapping && key in parkingResultsKeyMapping) {
+          return parkingResultsKeyMapping[key];
+        }
+        return key;
+      }
+      const remapValue = value => {
+        if (parkingResultsValueMapping && value in parkingResultsValueMapping) {
+          return parkingResultsValueMapping[value];
+        }
+        return value;
+      }
+
       if (this.listing.mlsParking) {
         // Handles MLS parking objects.
         parkingData = Object.entries(this.listing.mlsParking)
@@ -132,7 +150,7 @@ export default {
         // Handles YGL parking objects.
         parkingData = Object.entries(this.listing.parking) 
                       .filter(([, value]) => isValidValue(value))
-                      .map(([key, value]) => `${key}: ${value}`);
+                      .map(([key, value]) => `${remapKey(key)}: ${remapValue(value)}`);
       }
       return parkingData.length > 0 ? parkingData.join(', '): "No Parking Covered";
     },
@@ -140,17 +158,6 @@ export default {
       return window.innerWidth <= 768;
     }
   },
-  data() {
-  return {
-    feeMapping: {
-      '0': '1 Month Fee', 
-      '0.25': '75% Month Fee',
-      '0.5': '50% Month Fee',
-      '0.75': '25% Month Fee',
-      '1': 'No Fee',
-    }
-  };
-},
 }
 </script>
 
@@ -393,6 +400,9 @@ th {
   }
   .btn-close, .save {
     scale: 0.8;
+  }
+  .save {
+    font-size: 12px;
   }
 }
 </style>
