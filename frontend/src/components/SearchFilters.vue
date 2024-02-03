@@ -3,6 +3,7 @@
   <div class="search-container">
     <!-- Search Filters -->
     <div class="filters">
+      <button class="reset-btn" @click="resetFilters">Reset Filters</button>
       <div class="top">
         <div class="info-group location-input">
           <button class="toggle-btn" data-group="locationInput" @click="toggleGroup('locationInput')">Location Filters </button>
@@ -20,7 +21,7 @@
         <div class="info-group">
           <button class="toggle-btn" data-group="bedroomsBathrooms" @click="toggleGroup('bedroomsBathrooms')">Bedrooms/Bathrooms Filters</button>
           <div v-show="openGroups.bedroomsBathrooms" class="bedrooms-bathrooms-group">
-            <select class="value" @change="updateBedSearchCriteria($event.target.value)">
+            <select class="value" v-model="localSearchCriteria.beds">
               <option value="null" selected>Number of Beds...</option>
               <option>Studio</option>
               <option>1</option>
@@ -42,7 +43,7 @@
               <option>9</option>
               <option>10+</option>
             </select>
-            <select class="value" @change="updateBathSearchCriteria($event.target.value)">
+            <select class="value" v-model="localSearchCriteria.baths">
               <option value="null" selected>Number of Baths...</option>
               <option>1</option>
               <option>1.5</option>
@@ -251,13 +252,9 @@ export default {
 
       return apiCriteria;
     },
-    updateBedSearchCriteria(value) {
-      this.localSearchCriteria.beds = value;
-      
-    },
-    updateBathSearchCriteria(value) {
-      this.localSearchCriteria.max_bath = value;
-      this.localSearchCriteria.min_bath = value;
+    // Resets the search criteria to the default values.
+    resetFilters() {
+      window.location.reload();
     },
   },
   data() {
@@ -448,6 +445,28 @@ select:valid {
   transition: all 0.2s ease;
 }
 .search-btn:hover {
+  background: #788792;
+  box-shadow: 2px 2px 5px #bebebe,
+              -2px -2px 5px #ffffff;
+}
+
+.reset-btn {
+  max-width: 250px;
+  min-width: 100px;
+  border: none;
+  outline: none;
+  padding: 0.8rem 1rem;
+  margin: 0.2rem;
+  border-radius: 15px;
+  background: #afc6d2;
+  box-shadow: 5px 5px 10px #bebebe,
+              -5px -5px 10px #ffffff;
+  font-size: 1rem;
+  color: #252525;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.reset-btn:hover {
   background: #788792;
   box-shadow: 2px 2px 5px #bebebe,
               -2px -2px 5px #ffffff;

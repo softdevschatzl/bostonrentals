@@ -51,7 +51,8 @@ app.use(express.json());
 app.post('/properties', async (req, res) => {
     try {
         const { latitude_start, latitude_end, longitude_start, longitude_end, street_name, 
-            city_neighborhood, zip, state = 'MA', beds, baths, square_footage_min, max_rent, min_rent, 
+            city_neighborhood, zip, state = 'MA', beds, min_bed, max_bed, baths, min_bath, max_bath,
+             square_footage_min, max_rent, min_rent, 
             listing_fee, avail_from, avail_to, photo, tours } = req.body;
 
         // Needed a workaround for the API to work with blank query params.
@@ -73,8 +74,12 @@ app.post('/properties', async (req, res) => {
         if (street_name) params.street_name = street_name;
         if (city_neighborhood) params.city_neighborhood = city_neighborhood;
         if (zip) params.zip = zip;
-        if (beds) params.min_bed = beds;
-        if (baths) params.min_bath = baths;
+        if (beds) params.beds = beds;
+        if (min_bed) params.min_bed = min_bed;
+        if (max_bed) params.max_bed = max_bed;
+        if (baths) params.baths = baths;
+        if (min_bath) params.min_bath = min_bath;
+        if (max_bath) params.max_bath = max_bath;
         if (square_footage_min) params.square_footage_min = square_footage_min;
         if (max_rent) params.max_rent = max_rent;
         if (min_rent) params.min_rent = min_rent;
@@ -87,9 +92,7 @@ app.post('/properties', async (req, res) => {
         console.log("Full Params:", params)
 
         const response = await axios.post(`https://www.yougotlistings.com/api/rentals/search.php?key=${apiKey}`, params);
-        
-        console.log("Response data:", response.data) 
-        
+                
         return res.json(response.data);
 
     } catch (error) {
@@ -113,27 +116,6 @@ app.get('/api/location', async (req, res) => {
         return res.status(500).json({ error: "Failed to fetch user location." });
     }
 });
-
-// Fetch properties based on latitude and longitude.
-// app.post('/api/apartments', async (req, res) => {
-//     try {
-//         const coords = req.body;
-//         const params = {
-//             key: apiKey,
-//             detail_level: 2,
-//             ...coords,
-//             request_type: 'JSON',
-//         }
-
-//         const response = await axios.post(`https://www.yougotlistings.com/api/rentals/search.php?key=${apiKey}`, params);
-
-//         return res.json(response.data);
-
-//     } catch (error) {
-//         console.error("API call failed:", error.message);
-//         return res.status(500).json({ error: "Failed to fetch data." });
-//     }
-// });
 
 // Creates endpoint for Cognito login.
 app.get('/api/login', (req, res) => {

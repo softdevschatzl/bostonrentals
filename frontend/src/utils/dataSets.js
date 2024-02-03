@@ -259,7 +259,7 @@ export const neighborhoodMapping = {
 export const feeMapping = {
 'No Fee': '1', // Fee paid by landlord
 '25% Month Fee': '.75',
-'50% Month Fee': '.5',
+'50% Off Month Fee': '.5',
 '75% Month Fee': '.25',
 '1 Month Fee': '0', // Fee paid by tenant
 }

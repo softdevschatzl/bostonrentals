@@ -62,6 +62,32 @@ export default {
     updateCriteria(newCriteria) {
       this.searchCriteria = { ...newCriteria };
     },
+    resetSearchCriteria() {
+      this.searchCriteria = {
+        street_name: null,
+        min_bed: null,
+        max_bed: null,
+        beds: null,
+        min_bath: null,
+        max_bath: null,
+        baths: null,
+        city_neighborhood: null,
+        state: 'MA',
+        zip: null,
+        min_rent: null,
+        max_rent: null,
+        avail_from: null,
+        avail_to: null,
+        pet: null,
+        photo: null,
+        laundry: null,
+        parking: null,
+        listing_fee: null,
+        status: null,
+        square_footage_minimum: null,
+        tours: null,
+      };
+    }
   },
   mounted() {
     // Perform an initial search when the component mounts

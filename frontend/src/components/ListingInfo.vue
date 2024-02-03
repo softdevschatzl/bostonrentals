@@ -113,7 +113,7 @@ export default {
     fee() { // FIX ME: i always return N/A.
       if (this.listing.fee && typeof this.listing.fee === 'object' && this.listing.fee['Cooperative Compentation']) {
         return '1 Month Fee';
-      } else if (typeof this.listing.fee === 'number') {
+      } else if (typeof this.listing.fee === 'number' || typeof this.listing.fee === 'string') {
         return feeResultsMapping[this.listing.fee.toString()] || 'Unknown Fee';
       }
       return '1 Month Fee';
