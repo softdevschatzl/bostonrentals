@@ -257,30 +257,40 @@ export const neighborhoodMapping = {
 }
 
 export const feeMapping = {
-'No Fee': '1', // Fee paid by landlord
-'25% Month Fee': '.75',
-'50% Off Month Fee': '.5',
-'75% Month Fee': '.25',
-'1 Month Fee': '0', // Fee paid by tenant
+    'No Fee': '1', // Fee paid by landlord
+    '25% Month Fee': '.75',
+    '50% Off Month Fee': '.5',
+    '75% Month Fee': '.25',
+    '1 Month Fee': '0', // Fee paid by tenant
 }
 
 export const bedMapping = {
-'Studio': 0,
-'1': 1,
+    'Studio': 0,
+    '1': 1,
 }
 
 export const photoMapping = {
-'Only Listings With Photos': 'Y',
-'Any Listings With or Without': '',
+    'Only Listings With Photos': 'Y',
+    'Any Listings With or Without': null,
 }
 
 export const parkingMapping = {
-'Parking Included': 'Y'
+    'Parking Included': 'Y'
+}
+
+export const featuresMapping = {
+    'Washer/Dryer In Unit': 'Laundry In Unit',
+    'None': null,
+}
+
+export const laundryMapping = {
+    'Washer/Dryer In Unit': 'Laundry In Unit',
+    'None': null,
 }
 
 export const petMapping = {
-    'Cats': 'cats',
-    'Dogs': 'dogs',
+    'Cat': 'cat',
+    'Dog': 'dog',
     'Friendly': 'friendly',
 }
 
@@ -302,6 +312,7 @@ export const parkingResultsKeyMapping = {
 export const parkingResultsValueMapping = {
     'NON': 'No Parking',
     'FOR': 'For Sale',
+    'AVL': 'Available',
 }
 
 export const squareFootageMapping = {

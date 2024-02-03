@@ -45,8 +45,11 @@ export default {
   computed: {
     // Added this because of a false linting positive.
     displayedImages() {
+      if (!this.images.length || this.images.every(image => !image)) {
+        return [defaultImage];
+      }
+
       const images = this.images.map(image => image || defaultImage);
-      console.log(images);
       return images;
     }
   },
@@ -119,8 +122,8 @@ export default {
   width: auto;
   height: 100%;
   object-fit: contain;
-  max-width: 800px;
-  max-height: 400px;
+  max-width: 40vw;
+  max-height: 40vh;
 }
 .slide:hover::after, .enlarged-image:hover::after {
   content: attr(data-tooltip);

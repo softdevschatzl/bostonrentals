@@ -52,8 +52,8 @@ app.post('/properties', async (req, res) => {
     try {
         const { latitude_start, latitude_end, longitude_start, longitude_end, street_name, 
             city_neighborhood, zip, state = 'MA', beds, min_bed, max_bed, baths, min_bath, max_bath,
-             square_footage_min, max_rent, min_rent, 
-            listing_fee, avail_from, avail_to, photo, tours } = req.body;
+             square_footage_min, max_rent, min_rent, pet, parking, features,
+            listing_fee, avail_from, avail_to, photo, tours, laundry } = req.body;
 
         // Needed a workaround for the API to work with blank query params.
         // If the query param is blank, it will not be included in the API call.
@@ -81,6 +81,8 @@ app.post('/properties', async (req, res) => {
         if (min_bath) params.min_bath = min_bath;
         if (max_bath) params.max_bath = max_bath;
         if (square_footage_min) params.square_footage_min = square_footage_min;
+        if (pet) params.pet = pet;
+        if (parking) params.parking = parking;
         if (max_rent) params.max_rent = max_rent;
         if (min_rent) params.min_rent = min_rent;
         if (listing_fee) params.listing_fee = listing_fee;
@@ -88,6 +90,8 @@ app.post('/properties', async (req, res) => {
         if (avail_to) params.avail_to = avail_to;
         if (photo) params.photo = photo;
         if (tours) params.tours = tours;
+        if (features) params.features = features;
+        if (laundry) params.laundry = laundry;
 
         console.log("Full Params:", params)
 

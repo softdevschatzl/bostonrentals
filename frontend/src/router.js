@@ -1,6 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomePage from '@/components/HomePage.vue';
 import SearchPage from '@/components/SearchPage.vue';
+import AboutPage from '@/components/AboutPage.vue';
+import PrivacyPolicyPage from '@/components/PrivacyPolicyPage.vue';
+import CookiePolicyPage from '@/components/CookiePolicyPage.vue';
+import TermsOfServicePage from '@/components/TermsOfServicePage.vue';
 
 // Vue.use(Router);
 
@@ -10,6 +14,18 @@ const routes = [
     },
     {
         path: '/search', name: 'Search', component: SearchPage 
+    },
+    {
+        path: '/about', name: 'About', component: AboutPage
+    },
+    {
+        path: '/privacy-policy', name: 'PrivacyPolicy', component: PrivacyPolicyPage
+    },
+    {
+        path: '/cookie-policy', name: 'CookiePolicy', component: CookiePolicyPage
+    },
+    {
+        path: '/terms-of-service', name: 'TermsOfService', component: TermsOfServicePage
     },
 ];
 

@@ -35,12 +35,13 @@ export default {
         avail_to: null, // Available to.
         pet: null, // Pet friendly, or not.
         photo: null, // Photos or virtual tours.
-        laundry: null, // Laundry in unit.
+        features: null, // Laundry in unit.
         parking: null, // Parking available.
         listing_fee: null, // no co-broke
         status: null, // Active, or not.
         square_footage_minimum: null, // Minimum square footage.
         tours: null, // Virtual tours, or not.
+        laundry: null,
         // Add more criteria.
       },
       listings: []
@@ -80,12 +81,13 @@ export default {
         avail_to: null,
         pet: null,
         photo: null,
-        laundry: null,
+        features: null,
         parking: null,
         listing_fee: null,
         status: null,
         square_footage_minimum: null,
         tours: null,
+        laundry: null,
       };
     }
   },

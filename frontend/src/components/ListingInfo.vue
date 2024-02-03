@@ -74,6 +74,26 @@
             <td class="key">Features</td>
             <td class="value">{{ listing.features.join(', ') }}</td>
           </tr>
+          <tr class="info-row" v-if="listing?.mlsFeatures?.length">
+            <td class="key">Other Features</td>
+            <td class="value">{{ listing?.mlsFeatures.join(', ') }}</td>
+          </tr>
+          <tr class="info-row" v-if="listing?.unitDescription">
+            <td class="key">Description</td>
+            <td class="value">{{ listing?.unitDescription }}</td>
+          </tr>
+          <tr class="info-row" v-if="listing?.virtualTours?.length">
+            <td class="key">Virtual Tours</td>
+            <td class="value">
+              <a v-for="(tour, index) in listing.virtualTours" 
+                :key="index" 
+                :href="tour" 
+                target="_blank"
+                rel="noopener noreferrer">
+                Tour {{ index + 1 }}, 
+              </a>
+            </td>
+          </tr>
           <!-- Additional Details -->
           <!-- ... Add more rows as needed -->
         </table>

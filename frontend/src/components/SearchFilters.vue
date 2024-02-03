@@ -10,7 +10,10 @@
           <div v-show="openGroups.locationInput" class="location-input-group"> <!-- v-show="openGroups.locationInput" -->
             <input class="value" type="text" v-model="localSearchCriteria.street_name" placeholder="Street Name..." />
             <input class="value" type="text" v-model="localSearchCriteria.zip" placeholder="Zip Code..." />
-            <select class="value" v-model="localSearchCriteria.city_neighborhood">
+            <select 
+              class="value" 
+              v-model="localSearchCriteria.city_neighborhood"
+            >
               <option value="null" selected><strong>City/Neighborhood</strong></option>
               <optgroup v-for="(group, letter) in groupedNeighborhoods" :label="letter" :key="letter">
                 <option v-for="neighborhood in group" :key="neighborhood" :value="neighborhood">{{ neighborhood }}</option>
@@ -82,12 +85,11 @@
         <div class="info-group">
           <button class="toggle-btn" @click="toggleGroup('laundryParkingPet')">Laundry/Parking/Pet Filters</button>
           <div v-show="openGroups.laundryParkingPet" class="laundry-parking-pet-group"> <!-- v-show="openGroups.laundryParkingPet" -->
-            <select class="value" v-model="localSearchCriteria.laundry">
+            <select class="value" v-model="localSearchCriteria.features">
               <option value="null" selected>Laundry...</option>
               <option>Washer/Dryer In Unit</option>
               <option>Laundry In Building</option>
               <option>Laundry On Site</option>
-              <option>Washer/Dryer Hookups</option>
               <option>Laundry Services</option>
               <option>None</option>
             </select>
@@ -117,7 +119,7 @@
               <option>All Listings</option>
             </select>
             <select class="value">
-              <option value="null" selected>Advanced Options</option>
+              <option value="null" selected>Features...</option>
               <option>FIX THIS</option>
             </select>
           </div>
@@ -152,7 +154,7 @@
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import downArrow from '@/assets/down-arrow.png';
-import { allNeighborhoods, neighborhoodMapping, feeMapping, bedMapping, photoMapping, parkingMapping, petMapping } from '../utils/dataSets.js';
+import { laundryMapping, featuresMapping, allNeighborhoods, neighborhoodMapping, feeMapping, bedMapping, photoMapping, parkingMapping, petMapping } from '../utils/dataSets.js';
 
 export default {
   components: {
@@ -189,6 +191,9 @@ export default {
   methods: {
     // Searches for listings using the search criteria.
     searchListings() {
+      if (this.localSearchCriteria.max_rent <= 1500 && this.localSearchCriteria.max_rent !== '' && this.localSearchCriteria.max_rent !== null) {
+        window.alert('CAUTION: Many listings you see for under $1500 are either single rooms, or parking spots for rent. We will not assist in the pursuit of these listings. Please pay attention to listing details.');
+      }
       const criteriaForApi = this.prepareSearchCriteriaForApi();
       // Sends the event to the parent component.
       console.log("Criteria for API: ", criteriaForApi);
@@ -243,6 +248,14 @@ export default {
         apiCriteria.pet = this.petMapping[apiCriteria.pet];
       }
 
+      if (this.featuresMapping && apiCriteria.features in this.featuresMapping) {
+        apiCriteria.features = this.featuresMapping[apiCriteria.features];
+      }
+
+      if (this.laundryMapping && apiCriteria.laundry in this.laundryMapping) {
+        apiCriteria.laundry = this.laundryMapping[apiCriteria.laundry];
+      }
+
       // Virtual Tours
       if (apiCriteria.tours === 'Virtual Tours Only') {
         apiCriteria.tours = "Y";
@@ -269,7 +282,7 @@ export default {
         laundryParkingPet: !isMobile,
         availDates: !isMobile,
       },
-
+      
       // Importing all the data sets and mappings used for API queries.
       allNeighborhoods,
       neighborhoodMapping,
@@ -278,6 +291,8 @@ export default {
       photoMapping,
       parkingMapping,
       petMapping,
+      featuresMapping,
+      laundryMapping,
     };
   },
   mounted() {
