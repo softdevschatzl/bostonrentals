@@ -59,17 +59,6 @@
         }
       },
     },
-    // computed: {
-    //   sortedApartments() {
-    //     // Returns only sorted apartments to be featured.
-    //     // Ensures userCoords are available, same as above.
-    //     // Also limits featured apartments to three.
-    //     if (this.userCoords && this.apartments.length > 0) {
-    //       return sortApartments(this.apartments, this.userCoords).slice(0, 3);
-    //     } 
-    //     return [];
-    //   }
-    // }
   };
   </script>
   

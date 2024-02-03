@@ -22,6 +22,8 @@ TODO:
     -prioritize mls in results
 
     - pictures slideshow desktop no slideshow
+
+    - fix datepicker and add Features.
         
 Fee:
     - what should i put instead of Co-Broke in the results?

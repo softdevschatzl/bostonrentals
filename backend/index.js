@@ -51,8 +51,8 @@ app.use(express.json());
 app.post('/properties', async (req, res) => {
     try {
         const { latitude_start, latitude_end, longitude_start, longitude_end, street_name, 
-            city_neighborhood, zip, state = 'MA', beds, min_bed, max_bed, baths, min_bath, max_bath,
-             square_footage_min, max_rent, min_rent, pet, parking, features,
+            city_neighborhood, zip, state = 'MA', beds, min_bed, max_bed, baths, min_bath, max_bath, 
+            square_footage_min, max_rent, min_rent, pet, parking, features,
             listing_fee, avail_from, avail_to, photo, tours, laundry } = req.body;
 
         // Needed a workaround for the API to work with blank query params.

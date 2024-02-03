@@ -10,10 +10,7 @@
           <div v-show="openGroups.locationInput" class="location-input-group"> <!-- v-show="openGroups.locationInput" -->
             <input class="value" type="text" v-model="localSearchCriteria.street_name" placeholder="Street Name..." />
             <input class="value" type="text" v-model="localSearchCriteria.zip" placeholder="Zip Code..." />
-            <select 
-              class="value" 
-              v-model="localSearchCriteria.city_neighborhood"
-            >
+            <select class="value" v-model="localSearchCriteria.city_neighborhood">
               <option value="null" selected><strong>City/Neighborhood</strong></option>
               <optgroup v-for="(group, letter) in groupedNeighborhoods" :label="letter" :key="letter">
                 <option v-for="neighborhood in group" :key="neighborhood" :value="neighborhood">{{ neighborhood }}</option>
@@ -129,8 +126,8 @@
         <button class="toggle-btn" @click="toggleGroup('availDates')">Available Dates Filters</button>
         <div v-show="openGroups.availDates" class="avail-dates-group"> <!-- v-show="openGroups.availDates" -->
           <div class="avail-dates">
-            <Datepicker class="value datepicker" v-model="localSearchCriteria.startDate" placeholder="From Date"></Datepicker> 
-            <Datepicker class="value datepicker" v-model="localSearchCriteria.endDate" placeholder="To Date"></Datepicker>
+            <Datepicker class="value datepicker" v-model="localSearchCriteria.avail_from" placeholder="From Date"></Datepicker> 
+            <Datepicker class="value datepicker" v-model="localSearchCriteria.avail_to" placeholder="To Date"></Datepicker>
           </div>
         </div>
       </div>
@@ -308,6 +305,18 @@ export default {
       availDates: defaultState,
     };
   },
+  watch: {
+    localSearchCriteria: {
+      deep: true,
+      handler(newCriteria) {
+        for (const key in newCriteria) {
+          if (newCriteria[key] === "null") {
+            this.localSearchCriteria[key] = null;
+          }
+        }
+      }
+    }
+  }
 }
 
 </script>

@@ -131,6 +131,7 @@ export const allNeighborhoods = [
 ]
 
 export const neighborhoodMapping = {
+    "null": null,
     'Boston - Allston': 'Boston:Allston',
     'Boston - Back Bay': 'Boston:Back Bay',
     'Boston - Bay Village': 'Boston:Bay Village',
@@ -257,6 +258,7 @@ export const neighborhoodMapping = {
 }
 
 export const feeMapping = {
+    "null": null, // "Any Fee"
     'No Fee': '1', // Fee paid by landlord
     '25% Month Fee': '.75',
     '50% Off Month Fee': '.5',
@@ -265,30 +267,36 @@ export const feeMapping = {
 }
 
 export const bedMapping = {
+    "null": null, // "Any Bed"
     'Studio': 0,
     '1': 1,
 }
 
 export const photoMapping = {
+    "null": null, // "Any Photo"
     'Only Listings With Photos': 'Y',
     'Any Listings With or Without': null,
 }
 
 export const parkingMapping = {
+    "null": null, // "Any Parking"
     'Parking Included': 'Y'
 }
 
 export const featuresMapping = {
+    "null": null, // "Any Feature"
     'Washer/Dryer In Unit': 'Laundry In Unit',
     'None': null,
 }
 
 export const laundryMapping = {
+    "null": null, // "Any Laundry"
     'Washer/Dryer In Unit': 'Laundry In Unit',
     'None': null,
 }
 
 export const petMapping = {
+    "null": null, // "Any Pet"
     'Cat': 'cat',
     'Dog': 'dog',
     'Friendly': 'friendly',
