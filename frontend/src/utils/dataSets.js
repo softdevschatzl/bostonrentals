@@ -286,6 +286,7 @@ export const parkingMapping = {
 export const featuresMapping = {
     "null": null, // "Any Feature"
     'Washer/Dryer In Unit': 'Laundry In Unit',
+    'Laundry Services': 'Laundry',
     'None': null,
 }
 
