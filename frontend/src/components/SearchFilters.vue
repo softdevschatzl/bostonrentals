@@ -26,16 +26,12 @@
               <option>Studio</option>
               <option>1</option>
               <option>1.5</option>
-              <option>1 split</option>
               <option>2</option>
               <option>2.5</option>
-              <option>2 split</option>
               <option>3</option>
               <option>3.5</option>
-              <option>3 split</option>
               <option>4</option>
               <option>4.5</option>
-              <option>4 split</option>
               <option>5</option>
               <option>6</option>
               <option>7</option>
@@ -205,6 +201,13 @@ export default {
         button.setAttribute('aria-expanded', this.openGroups[groupName]);
       }
     },
+    formatDate(date) {
+      if (!date) return null;
+      let d = new Date(date);
+      return ((d.getMonth() + 1).toString().padStart(2, '0') + '/' +
+              d.getDate().toString().padStart(2, '0') + '/' +
+              d.getFullYear());
+    },
     // Transforms the search criteria to match the API's format.
     prepareSearchCriteriaForApi() {
       const apiCriteria = { ...this.searchCriteria };
@@ -251,6 +254,13 @@ export default {
 
       if (this.laundryMapping && apiCriteria.laundry in this.laundryMapping) {
         apiCriteria.laundry = this.laundryMapping[apiCriteria.laundry];
+      }
+
+      if (apiCriteria.avail_from) {
+        apiCriteria.avail_from = this.formatDate(this.searchCriteria.avail_from);
+      }
+      if (apiCriteria.avail_to) {
+        apiCriteria.avail_to = this.formatDate(this.searchCriteria.avail_to);
       }
 
       // Virtual Tours

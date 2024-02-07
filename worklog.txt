@@ -9,25 +9,15 @@ TODO:
     - More tweaks can be done on the frontend/backend on the SearchResults/ListingInfo.vue
         components.
 
-    - Refine the ApartmentList geolocation. The coordinates are not getting passed to YGL correctly.
-    - fee() computed property in ListingInfo.vue always returns N/A for non MLS listings.
-    - essentially handle all mls related listings on searchresults and listinginfo.
-
-    - add filter for virtual tours
-
     - sidenote, i feel like i should move the logic for parsing through responses to the backend.
         maybe it'll make it so i dont have to implement it in every component.
     
-    - fix parking info not displaying in a user-friendly way.
-    -prioritize mls in results
+    - prioritize mls in results
 
     - pictures slideshow desktop no slideshow
 
     - fix datepicker and add Features.
         
-Fee:
-    - what should i put instead of Co-Broke in the results?
-
 APIs/Technologies:
     - YouGotListings (better property data, more $)
     - ip-api (convert ip address to usable coordinates, for location data) 13.3euros/month = $169.76/yr Unlimited requests doe
@@ -35,6 +25,3 @@ APIs/Technologies:
 
 Upon Deployment: 
     - Switch userIp from hardcoded to req.ip in index.js.
-
-1/8/24:
-    - Finish integrating YGL API, in index.jsm App.vue, SearchPage.vue
