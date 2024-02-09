@@ -335,3 +335,17 @@ export const feeResultsMapping = {
     '0.75': '25% Month Fee',
     '1': 'No Fee',
 }
+
+// Filter values
+export const features = {
+    'Microwave': 'Microwave',
+    'A/C': 'A/C',
+    'Dish Washer': 'Dish Washer',
+    'Pool': 'Pool',
+    'Refrigerator': 'Refrigerator',
+    'Fireplace': 'Fireplace',
+    'Private Balcony': 'Private Balcony',
+    'Private Patio': 'Private Patio',
+    'Fitness Center': 'Fitness Center',
+    'Laundry': 'Laundry',
+}
