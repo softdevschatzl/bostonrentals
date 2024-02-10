@@ -337,6 +337,7 @@ export const feeResultsMapping = {
 }
 
 // Filter values
+// Map these.
 export const features = [
     'Microwave',
     'A/C',
@@ -344,8 +345,8 @@ export const features = [
     'Pool',
     'Refrigerator',
     'Fireplace',
-    'Private Balcony',
-    'Private Patio',
+    'Balcony',
+    'Patio',
     'Fitness Center',
     'Laundry',
 ].map(feature => ({ name: feature }));

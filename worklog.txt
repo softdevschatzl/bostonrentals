@@ -16,7 +16,7 @@ TODO:
 
     - pictures slideshow desktop no slideshow
 
-    - FEATURES FROM MULTISELECT NOT GETTING TO APIs
+    - Map the features from user-friendly -> expected values, i dont think ygl like multi-word features.
         
 APIs/Technologies:
     - YouGotListings (better property data, more $)
