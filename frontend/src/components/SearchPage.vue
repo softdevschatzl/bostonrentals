@@ -39,6 +39,7 @@ export default {
         parking: null, // Parking available.
         listing_fee: null, // no co-broke
         status: null, // Active, or not.
+        square_footage_maximum: null, // Maximum square footage.
         square_footage_minimum: null, // Minimum square footage.
         tours: null, // Virtual tours, or not.
         laundry: null,

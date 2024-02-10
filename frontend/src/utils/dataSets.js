@@ -337,15 +337,15 @@ export const feeResultsMapping = {
 }
 
 // Filter values
-export const features = {
-    'Microwave': 'Microwave',
-    'A/C': 'A/C',
-    'Dish Washer': 'Dish Washer',
-    'Pool': 'Pool',
-    'Refrigerator': 'Refrigerator',
-    'Fireplace': 'Fireplace',
-    'Private Balcony': 'Private Balcony',
-    'Private Patio': 'Private Patio',
-    'Fitness Center': 'Fitness Center',
-    'Laundry': 'Laundry',
-}
+export const features = [
+    'Microwave',
+    'A/C',
+    'Dish Washer',
+    'Pool',
+    'Refrigerator',
+    'Fireplace',
+    'Private Balcony',
+    'Private Patio',
+    'Fitness Center',
+    'Laundry',
+].map(feature => ({ name: feature }));

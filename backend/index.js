@@ -52,7 +52,7 @@ app.post('/properties', async (req, res) => {
     try {
         const { latitude_start, latitude_end, longitude_start, longitude_end, street_name, 
             city_neighborhood, zip, state = 'MA', beds, min_bed, max_bed, baths, min_bath, max_bath, 
-            square_footage_min, max_rent, min_rent, pet, parking, features,
+            square_footage_min, square_footage_max, max_rent, min_rent, pet, parking, features,
             listing_fee, avail_from, avail_to, photo, tours, laundry } = req.body;
 
         // Needed a workaround for the API to work with blank query params.
@@ -81,6 +81,7 @@ app.post('/properties', async (req, res) => {
         if (min_bath) params.min_bath = min_bath;
         if (max_bath) params.max_bath = max_bath;
         if (square_footage_min) params.square_footage_min = square_footage_min;
+        if (square_footage_max) params.square_footage_max = square_footage_max;
         if (pet) params.pet = pet;
         if (parking) params.parking = parking;
         if (max_rent) params.max_rent = max_rent;

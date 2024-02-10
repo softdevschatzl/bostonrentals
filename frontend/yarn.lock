@@ -6171,6 +6171,11 @@ vue-loader@^17.0.0:
     hash-sum "^2.0.0"
     watchpack "^2.4.0"
 
+vue-multiselect@^3.0.0-beta.3:
+  version "3.0.0-beta.3"
+  resolved "https://registry.npmjs.org/vue-multiselect/-/vue-multiselect-3.0.0-beta.3.tgz"
+  integrity sha512-P7Fx+ovVF7WMERSZ0lw6N3p4H4bnQ3NcaY3ORjzFPv0r/6lpIqvFWmK9Xnwze9mgAvmNV1foI1VWrBmjnfBTLQ==
+
 vue-router@4:
   version "4.2.5"
   resolved "https://registry.npmjs.org/vue-router/-/vue-router-4.2.5.tgz"

@@ -16,7 +16,19 @@ TODO:
 
     - pictures slideshow desktop no slideshow
 
-    - fix datepicker and add Features.
+    - FEATURES FROM MULTISELECT NOT GETTING TO APIs
+    - THIS REQUEST:
+    ```Full Params: {
+        key: '5rCLvhtNzygc8XK2HOYEUdZsIinejqQJWVAPlbaT',
+        state: 'MA',
+        detail_level: 2,
+        request_type: 'JSON',
+        latitude_start: 42.2463,
+        latitude_end: 42.3601,
+        longitude_start: -70.9972,
+        longitude_end: -71.0589
+    }   ```
+    DOESN'T RETURN LISTINGS FOR HOME PAGE
         
 APIs/Technologies:
     - YouGotListings (better property data, more $)
