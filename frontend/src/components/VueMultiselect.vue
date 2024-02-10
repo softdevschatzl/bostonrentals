@@ -35,6 +35,14 @@ export default {
   components: {
     VueMultiselect
   },
+  watch: {
+    multiValue: {
+      handler(newVal) {
+        this.$emit('update:features', newVal);
+      },
+      deep: true
+    }
+  }
 }
 </script>
 

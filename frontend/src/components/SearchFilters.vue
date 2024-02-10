@@ -128,6 +128,7 @@
           </div>            
           <div class="multi-container">
             <VueMultiselect
+              :localSearchCriteria="localSearchCriteria"
               class="multiselect"
               v-model="localSearchCriteria.features"
               :options="features"
@@ -136,6 +137,7 @@
               placeholder="Features..."
               label="name"
               track-by="name"
+              @update:features="updateFeatures"
             />
           </div>
         </div>
@@ -278,6 +280,11 @@ export default {
         apiCriteria.avail_to = this.formatDate(this.searchCriteria.avail_to);
       }
 
+      if (Array.isArray(apiCriteria.features)) {
+        // Transform the features array into strings separated by commas.
+        apiCriteria.features = apiCriteria.features.map(feature => feature.name).join(',')
+      }
+
       // Virtual Tours
       if (apiCriteria.tours === 'Virtual Tours Only') {
         apiCriteria.tours = "Y";
@@ -291,6 +298,11 @@ export default {
     resetFilters() {
       window.location.reload();
     },
+    // Helper function to update localSearchCriteria.features from 
+    // the VueMultiselect component.
+    updateFeatures(newFeatures) {
+      this.localSearchCriteria.features = newFeatures;
+    }
   },
   data() {
     const isMobile = window.innerWidth < 768;

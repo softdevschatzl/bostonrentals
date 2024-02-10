@@ -28,8 +28,8 @@ export function calculateFullCoordinates(latitude, longitude) {
     // const newLongitudeInRadians = longitudeInRadians + Math.atan2(Math.sin(Math.PI / 2) * Math.sin(distanceInMiles / earthRadiusInMiles) * Math.cos(latitudeInRadians), Math.cos(distanceInMiles / earthRadiusInMiles) - Math.sin(latitudeInRadians) * Math.sin(newLatitudeInRadians));
     // const newLongitude = Number(radiansToDegrees(newLongitudeInRadians).toFixed(4));
 
-    const bostonLatitude = 42.3601;
-    const bostonLongitude = -71.0589;
+    const bostonLatitude = 42.3383;
+    const bostonLongitude = -70.9596;
 
     return {
         latitude_start: latitude,
