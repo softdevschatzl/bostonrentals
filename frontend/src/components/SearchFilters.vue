@@ -57,12 +57,10 @@
               <option>9</option>
               <option>10+</option>
             </select>
-            <select class="value" v-model="localSearchCriteria.features">
+            <select class="value" v-model="localSearchCriteria.laundry">
               <option value="null" selected>Laundry...</option>
               <option>Washer/Dryer In Unit</option>
               <option>Laundry In Building</option>
-              <option>Laundry On Site</option>
-              <option>Laundry Services</option>
               <option>None</option>
             </select> 
           </div>
@@ -394,6 +392,7 @@ export default {
   color: #ebebeb;
   cursor: pointer;
   transition: all 0.2s ease;
+  min-width: 275px;
 }
 .toggle-btn::after {
   content: '';

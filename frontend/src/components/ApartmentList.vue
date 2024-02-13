@@ -1,7 +1,7 @@
 <template>
   <div class="apartments-section double-color-background">
     <div class="apartments-header">
-      <h1>Find Rentals Near {{ location }}</h1>
+      <h1>Find Rentals Closest To {{ location }}</h1>
     </div>
     <div class="apartments-wrapper">
       <ApartmentItem 

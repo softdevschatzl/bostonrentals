@@ -31,6 +31,12 @@
   </table>
   <ListingInfo :listing="selectedListing" :visible="showListingInfo" @close="showListingInfo = false" />
 </div>
+<!-- <div class="no-listings-container" v-else>
+  <div class="no-listings">
+    <SearchingAnimation />
+  </div>
+</div> -->
+
 <div class="no-listings-container" v-else>
   <div class="no-listings">
     <p>No listings found.</p>
@@ -46,10 +52,12 @@
  */
 import ListingInfo from './ListingInfo.vue';
 import defaultImage from '../assets/no-image-found.jpg';
+// import SearchingAnimation from '../components/SearchAnimation.vue';
 
 export default {
   components: {
-    ListingInfo
+    ListingInfo,
+    // SearchingAnimation,
   },
   data() {
     return {
