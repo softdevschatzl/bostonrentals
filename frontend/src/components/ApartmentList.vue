@@ -22,6 +22,7 @@
 import ApartmentItem from './ApartmentItem.vue';
 import ListingInfo from './ListingInfo.vue';
 // import sortApartments from '@/utils/featuredApartmentAlgorithm';
+import { calculateCompletenessScore } from '@/utils/featuredApartmentAlgorithm';
 
 export default {
   components: {
@@ -42,8 +43,15 @@ export default {
   computed: {
     topThreeApartments() {
       if (this.apartments && this.apartments.listings && this.apartments.listings.length > 0) {
-        console.log("Featured Apartments: ", this.apartments.listings.slice(0, 3));
-        return this.apartments.listings.slice(0, 3);
+        // Calculate the score of each apartment.
+        const scoredApartments = this.apartments.listings.map(apartment => ({
+          ...apartment,
+          score: calculateCompletenessScore(apartment),
+        }));
+        // Sort apartments by their scores.
+        scoredApartments.sort((a, b) => b.score - a.score);
+        // Return top three apartments.
+        return scoredApartments.slice(0, 3);
       }
       return [];
     }

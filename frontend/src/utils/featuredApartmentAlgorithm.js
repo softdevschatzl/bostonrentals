@@ -57,15 +57,15 @@ export function calculateCompletenessScore(apartment) {
     if (apartment.beds) score += 1;
     if (apartment.baths) score += 1;
     if (apartment.squareFootage) score += 1;
-    if (apartment.photo) score += 1;
-    if (apartment.virtualTours.length) score += 1;
+    if (apartment.photo) score += apartment.photo / 2;
+    if (apartment.virtualTours) score += 1;
+    if (apartment.price) score += 1;
+    if (apartment.pet) score += 1;
+    if (apartment.parking) score += 1;
+    if (apartment.description) score += 1;
+    if (apartment.laundry) score += 1;
 
-    if (apartment.source === "MLS") score += 999;
+    if (apartment.source === "MLS") score += 100;
 
     return score;
 }
-
-/**
- * Finally, sorts apartments based on distance and
- * completeness.
- */

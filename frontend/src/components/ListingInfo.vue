@@ -74,9 +74,15 @@
             <td class="key">Features</td>
             <td class="value">{{ listing.features.join(', ') }}</td>
           </tr>
-          <tr class="info-row" v-if="listing?.mlsFeatures?.length">
+          <tr class="info-row" v-if="listing && listing.mlsFeatures && handleFeatures.length">
             <td class="key">Other Features</td>
-            <td class="value">{{ listing?.mlsFeatures.join(', ') }}</td>
+            <td class="value">
+              <ul>
+                <div v-for="(featureCategory, index) in handleFeatures" :key="index">
+                  <strong style="text-decoration: underline;">{{ featureCategory.category }}</strong>: {{ featureCategory.features }}
+                </div>
+              </ul>
+            </td>
           </tr>
           <tr class="info-row" v-if="listing?.unitDescription">
             <td class="key">Description</td>
@@ -105,8 +111,6 @@
     </div>
   </div>
 </template>
-
-
 
 <script>
 import Carousel from './ImageCarousel.vue';
@@ -144,6 +148,7 @@ export default {
     squareFoot() {
       return squareFootageMapping[this.listing?.squareFootage] || this.listing.squareFootage;
     },
+    // Handles all parking info objects.
     parkingInfo() {
       const isValidValue = value => value != null && value != 0 && value != false && !Array.isArray(value);
       let parkingData =[];
@@ -173,6 +178,24 @@ export default {
                       .map(([key, value]) => `${remapKey(key)}: ${remapValue(value)}`);
       }
       return parkingData.length > 0 ? parkingData.join(', '): "No Parking Covered";
+    },
+    // Handles mslFeatures object in the listings prop.
+    handleFeatures() {
+      let featuresList = [];
+
+      const mlsFeatures = this.listing?.mlsFeatures;
+      if (mlsFeatures && typeof mlsFeatures === 'object') {
+        Object.entries(mlsFeatures).forEach(([key, value]) => {
+          if (Array.isArray(value) && value.length > 0) {
+            featuresList.push({
+              category: key,
+              features: value.join(', '),
+            });
+          }
+        });
+      }
+
+      return featuresList;
     },
     isMobile() {
       return window.innerWidth <= 768;

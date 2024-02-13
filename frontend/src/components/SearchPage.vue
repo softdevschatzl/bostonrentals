@@ -10,6 +10,7 @@
 import axios from 'axios';
 import SearchFilters from './SearchFilters.vue';
 import SearchResults from './SearchResults.vue';
+import { calculateCompletenessScore } from '@/utils/featuredApartmentAlgorithm';
 
 export default {
   components: {
@@ -56,7 +57,16 @@ export default {
         console.log('API Query: ', criteria);
         console.log('API Response: ', response.data.listings);
 
-        this.listings = response.data.listings;
+        // Calculate the score of each listing.
+        const scoredListings = response.data.listings.map(listing => ({
+          ...listing,
+          score: calculateCompletenessScore(listing),
+        }));
+
+        // Sort listings by their scores.
+        scoredListings.sort((a, b) => b.score - a.score);
+
+        this.listings = scoredListings;
       } catch (error) {
         console.error('Error fetching listings:', error);
       }
