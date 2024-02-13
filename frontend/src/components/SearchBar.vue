@@ -2,7 +2,7 @@
   <div class="search-section">
     <div class="search-header">
       <h1>Effortless Living Starts Here</h1>
-      <p>Let us help you find your dream home.</p>
+      <p>Let's take the hassle out of finding a home.</p>
     </div>
     <div class="search-bar">
       <input class="search-input" type="text" placeholder="Search for rentals..." v-model="query" />
