@@ -97,9 +97,10 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 15vw;
+        width: auto;
+        padding: 5px;
         height: 5vh;
-        margin-top: 20px;
+        margin-top: 10px;
         text-decoration: none;
         color: #252525;
         background-color: #afc6d2;

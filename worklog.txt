@@ -1,25 +1,15 @@
-TODO:
-    - Use ip-api to get coordinates in ApartmentList.vue to use for sorting algorithm.
-    - Check Chat log, work on ip -> location -> properties inside of ApartmentList and ApartmenItem.
-    - prioritize listings with media
-    - Fix the datepickers in SearchFilters.vue
-    
+TODO:    
     - Work on AWS Cognito and RDS implementation. Also figure out how to
         host on EC2
-    - More tweaks can be done on the frontend/backend on the SearchResults/ListingInfo.vue
-        components.
 
     - sidenote, i feel like i should move the logic for parsing through responses to the backend.
         maybe it'll make it so i dont have to implement it in every component.
     
-    - prioritize mls in results
-
     - pictures slideshow desktop no slideshow
 
-    - Map the features from user-friendly -> expected values, i dont think ygl like multi-word features.
+    - Add sort low-high/high-low for table headers.
 
-    - Fix pet multiselect.
-    - change color scheme to black and white.
+    - Add some cool animation.
     
         
 APIs/Technologies:
