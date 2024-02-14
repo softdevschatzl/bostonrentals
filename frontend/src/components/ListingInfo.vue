@@ -218,7 +218,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #46465e;
+  background-color: rgb(40, 40, 40);
   width: 85%;
   height: 75%;
   border-radius: 20px;

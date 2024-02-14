@@ -52,8 +52,7 @@
     #sidemenu {
         nav {
             width: auto;
-            // height: calc(100% - #{$headerHeight} - #{$footerHeight});
-            background: #46465e;
+            background: black;
             position: fixed;
             top: 1vh;
             left: 0;

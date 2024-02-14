@@ -3,12 +3,23 @@
     <div class="apartments-header">
       <h1>Find Rentals Closest To {{ location }}</h1>
     </div>
-    <div class="apartments-wrapper">
+    <!-- Check for loading state first -->
+    <div class="search-animation" v-if="loading">
+      <SearchingAnimation />
+    </div>
+    <!-- Then, check if we have apartments to display -->
+    <div class="apartments-wrapper" v-else-if="Array.isArray(topThreeApartments) && topThreeApartments.length">
       <ApartmentItem 
         v-for="apartment in topThreeApartments" 
         :key="apartment.id" :propertyData="apartment" 
         @click="showApartmentDetails(apartment)" 
       />
+    </div>
+    <!-- Finally, show no listings message if not loading and no apartments -->
+    <div class="no-listings-container" v-else>
+      <div class="no-listings">
+        <p>No listings found.</p>
+      </div>
     </div>
     <ListingInfo 
       :listing="selectedApartment" 
@@ -23,11 +34,13 @@ import ApartmentItem from './ApartmentItem.vue';
 import ListingInfo from './ListingInfo.vue';
 // import sortApartments from '@/utils/featuredApartmentAlgorithm';
 import { calculateCompletenessScore } from '@/utils/featuredApartmentAlgorithm';
+import SearchingAnimation from './SearchAnimation.vue';
 
 export default {
   components: {
     ApartmentItem,
     ListingInfo,
+    SearchingAnimation,
   },
   data() {
     return {
@@ -38,6 +51,7 @@ export default {
   props: {
     apartments: Object,
     location: String,
+    loading: Boolean,
   },
   // Use this until you get featuredApartmentAlgorithm working.
   computed: {
@@ -70,7 +84,7 @@ export default {
   .double-color-background {
     height: 100%;
 
-    background: linear-gradient(to bottom, #46465e 15%, #161616 25%, #161616 75%);
+    background: linear-gradient(to bottom, black 15%, rgb(20, 20, 20) 25%, rgb(40, 40, 40) 75%);
   }
 
   .apartments-section {
@@ -116,6 +130,24 @@ export default {
     justify-content: flex-start;
     text-align: center;
     top: 0;
+  }
+
+  .no-listings-container {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .no-listings {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 300px;
+    height: 100px;
+    background: #afc6d2;
+    text-align: center;
+    border: 5px solid #7e7e7e;
   }
 
   @media only screen and (max-width: 768px) {

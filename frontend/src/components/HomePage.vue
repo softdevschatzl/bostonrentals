@@ -1,7 +1,7 @@
 <template>
     <div>
       <SearchBar />
-      <ApartmentList :apartments="apartments" :location="location" />
+      <ApartmentList :apartments="apartments" :location="location" :loading="loading" />
       <RentalTools />
       <FooterPage />
     </div>
@@ -27,6 +27,7 @@
         apartments: {},
         location: '',
         userCoords: { latitude: null, longitude: null },
+        loading: false,
       };
     },
     async mounted() {
@@ -48,6 +49,7 @@
       // Using user location to fetch nearby relevant properties.
       async fetchApartments() {
         if (this.userCoords) {
+          this.loading = true;
           try {
             const coords = calculateFullCoordinates(this.userCoords.latitude, this.userCoords.longitude);
             console.log("Full coords: ", coords);
@@ -56,6 +58,8 @@
             this.apartments = response.data; // Assuming this is an array.
           } catch (error) {
             console.error('Failed to fetch apartments:', error.message);
+          } finally {
+            this.loading = false;
           }
         }
       },

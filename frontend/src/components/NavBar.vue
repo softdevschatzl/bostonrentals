@@ -39,7 +39,7 @@
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    background-color: #46465e;
+    background-color: black;
     height: 10vh;
     width: 100%;
     margin: 0;

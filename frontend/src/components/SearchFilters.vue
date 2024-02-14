@@ -1,13 +1,12 @@
 <!-- SearchFilters.vue  -->
 <template>
   <div class="search-container">
+    <!-- <button class="reset-btn" @click="resetFilters">Reset Filters</button> -->
     <!-- Search Filters -->
     <div class="filters">
-      <button class="reset-btn" @click="resetFilters">Reset Filters</button>
-      <div class="top">
         <div class="info-group location-input">
           <button class="toggle-btn" data-group="locationInput" @click="toggleGroup('locationInput')">Location Filters </button>
-          <div v-show="openGroups.locationInput" class="location-input-group"> <!-- v-show="openGroups.locationInput" -->
+          <div v-show="openGroups.locationInput" class="location-input-group inner-group"> <!-- v-show="openGroups.locationInput" -->
             <input class="value" type="text" v-model="localSearchCriteria.street_name" placeholder="Street Name..." />
             <input class="value" type="text" v-model="localSearchCriteria.zip" placeholder="Zip Code..." />
             <div class="multi-container">
@@ -27,7 +26,7 @@
         </div>
         <div class="info-group bed-bath-sqft">
           <button class="toggle-btn" data-group="bedroomsBathrooms" @click="toggleGroup('bedroomsBathrooms')">Bed/Bath/Laundry Filters</button>
-          <div v-show="openGroups.bedroomsBathrooms" class="bedrooms-bathrooms-group">
+          <div v-show="openGroups.bedroomsBathrooms" class="bedrooms-bathrooms-group inner-group">
             <div class="multi-container">
               <VueMultiselect
                 class="multiselect"
@@ -71,7 +70,7 @@
         </div>
         <div class="info-group min-max-rent">
           <button class="toggle-btn" @click="toggleGroup('minMaxRent')">Min/Max Rent/Fee Filters</button>
-          <div v-show="openGroups.minMaxRent" class="min-max-rent-group"> <!-- v-show="openGroups.minMaxRent" -->
+          <div v-show="openGroups.minMaxRent" class="min-max-rent-group inner-group"> <!-- v-show="openGroups.minMaxRent" -->
             <input class="value" type="text" v-model="localSearchCriteria.min_rent" placeholder="Min Rent..." />
             <input class="value" type="text" v-model="localSearchCriteria.max_rent" placeholder="Max Rent..." />        
             <div class="multi-container">
@@ -91,7 +90,7 @@
         </div>
         <div class="info-group laundry-parking-pet">
           <button class="toggle-btn" @click="toggleGroup('laundryParkingPet')">Min/Max Sqft/Pet Filters</button>
-          <div v-show="openGroups.laundryParkingPet" class="laundry-parking-pet-group"> <!-- v-show="openGroups.laundryParkingPet" -->
+          <div v-show="openGroups.laundryParkingPet" class="laundry-parking-pet-group inner-group"> <!-- v-show="openGroups.laundryParkingPet" -->
             <input class="value" type="text" v-model="localSearchCriteria.square_footage_min" placeholder="Minimum Square Feet..." />
             <input class="value" type="text" v-model="localSearchCriteria.square_footage_max" placeholder="Maximum Square Feet..." />
             <div class="multi-container">
@@ -111,7 +110,7 @@
         </div>
         <div class="info-group photo-tour-feature">
           <button class="toggle-btn" @click="toggleGroup('propertyStatusMedia')">Parking/Photo/Tours Filters</button>
-          <div v-show="openGroups.propertyStatusMedia" class="property-status-media-group">            
+          <div v-show="openGroups.propertyStatusMedia" class="property-status-media-group inner-group">            
             <div class="multi-container">
               <VueMultiselect
                 class="multiselect"
@@ -143,7 +142,7 @@
                 class="multiselect"
                 v-model="localSearchCriteria.tours"
                 :options="tourMapping"
-                :multiple="false"
+                :multiple="true"
                 :close-on-select="true"
                 placeholder="Tours..."
                 label="name"
@@ -153,10 +152,9 @@
             </div>
           </div>
         </div>
-      </div>
       <div class="info-group">
         <button class="toggle-btn" @click="toggleGroup('availDates')">Available Dates/Features Filters</button>
-        <div v-show="openGroups.availDates" class="avail-dates-group"> <!-- v-show="openGroups.availDates" -->
+        <div v-show="openGroups.availDates" class="avail-dates-group inner-group"> <!-- v-show="openGroups.availDates" -->
           <div class="avail-dates">
             <Datepicker class="value datepicker" v-model="localSearchCriteria.avail_from" placeholder="From Date"></Datepicker> 
             <Datepicker class="value datepicker" v-model="localSearchCriteria.avail_to" placeholder="To Date"></Datepicker>
@@ -419,23 +417,110 @@ export default {
 </script>
 
 <style scoped>
+.info-group {
+  margin: 1rem 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 300px;
+}
+.inner-group {
+  width: 100%;
+}
+.filters {
+  border-radius: 5px;
+}
+.filters,
+.filters input {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 0 1rem;
+  font-size: 1rem;
+  border-radius: 5px;
+  width: 88.7%;
+  gap: 5px;
+  align-items: center;
+  font-family: inherit;
+}
+
+.value {
+  display: flex;
+  align-items: center;
+  width: 100%; /* Adjusted to match the full width like VueMultiselect */
+  height: 48px; /* Match the height to VueMultiselect */
+  padding: 0.5rem 1rem; /* Padding to match VueMultiselect */
+  color: #adadad; /* Your existing color */
+  font-size: 1rem; /* Match the font size to VueMultiselect */
+  border: 1px solid #ccc; /* Similar border style */
+  border-radius: 4px; /* Rounded corners like VueMultiselect */
+  background-color: #fff; /* Background color to match */
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075); /* Subtle inner shadow similar to VueMultiselect */
+}
+.value:focus {
+  border-color: #66afe9; /* Highlight color */
+  outline: 0; /* Remove default focus outline */
+  box-shadow: 0 0 8px rgba(102, 175, 233, 0.6); /* Similar focus shadow */
+}
+.multi-container {
+  width: 100%;
+}
+.multiselect {
+  width: 100%;
+}
+
 .search-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   /** Neumorphic styling */
-  background: #ECF0F3; /* Neumorphic background */
-  box-shadow: 20px 20px 60px #bebebe,
-              -20px -20px 60px #ffffff;
+  background: rgb(40, 40, 40); /* Neumorphic background */
   padding: 2rem;
 }
 
-.info-group {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
+.search-btn {
+  max-width: 250px;
+  min-width: 100px;
+  border: none;
+  outline: none;
+  padding: 0.8rem 1rem;
+  margin: 0.2rem;
+  border-radius: 15px;
+  background: #afc6d2;
+  box-shadow: 5px 5px 10px rgb(31, 31, 31),
+              -5px -5px 10px rgb(61, 61, 61);
+  font-size: 1rem;
+  color: #252525;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.search-btn:hover {
+  background: #788792;
+  box-shadow: 2px 2px 5px rgb(31, 31, 31),
+              -2px -2px 5px rgb(61, 61, 61);
+}
+.reset-btn {
+  max-width: 250px;
+  min-width: 100px;
+  border: none;
+  outline: none;
+  padding: 0.8rem 1rem;
+  margin: 0.2rem;
+  border-radius: 15px;
+  background: #afc6d2;
+  box-shadow: 5px 5px 10px rgb(31, 31, 31),
+              -5px -5px 10px rgb(61, 61, 61);
+  font-size: 1rem;
+  color: #252525;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.reset-btn:hover {
+  background: #788792;
+  box-shadow: 2px 2px 5px rgb(31, 31, 31),
+              -2px -2px 5px rgb(61, 61, 61);
 }
 
 .toggle-btn {
@@ -446,9 +531,9 @@ export default {
   padding: 0.8rem 1rem;
   margin: 0.2rem;
   border-radius: 15px;
-  background: #888888;
-  box-shadow: 5px 5px 10px #bebebe,
-              -5px -5px 10px #ffffff;
+  background: #696969;
+  box-shadow: 5px 5px 10px rgb(31, 31, 31),
+              -5px -5px 10px rgb(61, 61, 61);
   font-size: 1rem;
   color: #ebebeb;
   cursor: pointer;
@@ -472,155 +557,23 @@ export default {
 }
 .toggle-btn::hover {
   background: #93ca88;
-  box-shadow: 2px 2px 5px #bebebe,
-              -2px -2px 5px #ffffff;
+  box-shadow: 5px 5px 10px rgb(31, 31, 31),
+              -5px -5px 10px rgb(61, 61, 61);
 
 }
-.value {
-  display: flex;
-  align-items: center;
-  width: 175px;
-  color: #adadad;
-}
 
-.filters,
-.top {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 5px;
-  align-items: center;
-}
-.filters {
-  flex-direction: column;
-}
-
-.datepicker {
-  width: 210px;
-}
-
-.search-btn-container {
-  margin-top: 20px;
-}
-
-/** Neumorphism styling */
-
-.multi-container {
-  width: 210px;
-}
-.filters input {
-  border: none;
-  outline: none;
-  padding: 0.8rem 1rem;
-  margin: 0.2rem;
-  border-radius: 5px;
-  background: #FFF;
-  box-shadow: 5px 5px 10px #bebebe,
-              -5px -5px 10px #ffffff;
-  font-size: 1rem;
-  font-family: inherit;
-}
-.filters select {
-  border: none;
-  outline: none;
-  padding: 0.8rem 1rem;
-  margin: 0.2rem;
-  border-radius: 15px;
-  box-shadow: 5px 5px 10px #bebebe,
-              -5px -5px 10px #ffffff;
-  font-size: 1rem;
-  color: #333;
-}
-.multiselect {
-  border-radius: 15px;
-  box-shadow: 5px 5px 10px #bebebe,
-              -5px -5px 10px #ffffff;
-}
-
-.search-btn {
-  max-width: 250px;
-  min-width: 100px;
-  border: none;
-  outline: none;
-  padding: 0.8rem 1rem;
-  margin: 0.2rem;
-  border-radius: 15px;
-  background: #afc6d2;
-  box-shadow: 5px 5px 10px #bebebe,
-              -5px -5px 10px #ffffff;
-  font-size: 1rem;
-  color: #252525;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-.search-btn:hover {
-  background: #788792;
-  box-shadow: 2px 2px 5px #bebebe,
-              -2px -2px 5px #ffffff;
-}
-
-.reset-btn {
-  max-width: 250px;
-  min-width: 100px;
-  border: none;
-  outline: none;
-  padding: 0.8rem 1rem;
-  margin: 0.2rem;
-  border-radius: 15px;
-  background: #afc6d2;
-  box-shadow: 5px 5px 10px #bebebe,
-              -5px -5px 10px #ffffff;
-  font-size: 1rem;
-  color: #252525;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-.reset-btn:hover {
-  background: #788792;
-  box-shadow: 2px 2px 5px #bebebe,
-              -2px -2px 5px #ffffff;
-}
-/** End neumorphism styling */
-
-/** Multiselect Overrides */
 ::v-deep .multiselect__tags {
   font-size: 1rem;
   padding: 12px 5px 5px 16px;
 }
-
-/** Desktop view */
-@media only screen and (min-width: 768px) {
-  /* .toggle-btn {
-    display: none;
-  } */
-  .search-container {
-    display: flex;
-    justify-content: space-evenly;
-  }
-  .filters input, 
-  .filters select {
-    max-height: 100px;
-  }
-  .toggle-btn {
-    display: none;
-  }
-
-  /* .bed-bath-sqft,
-  .location-input,
-  .min-max-rent,
-  .laundry-parking-pet {
-    width: 35%;
-  } */
+::v-deep .multiselect__single {
+  height: 45px; /* Ensure the single select height matches your inputs */
+  padding: 0.5rem 1rem; /* Adjust padding to match */
 }
 
-@media only screen and (max-width: 768px) {
-  select {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    background: #ECF0F3 url('../assets/down-arrow.png') no-repeat right center; /* 10px is the width of the arrow image */
-    background-size: 12px 12px;
-    padding-right: 50px;
+@media only screen and (min-width: 768px) {
+  .toggle-btn {
+    display: none;
   }
 }
 </style>

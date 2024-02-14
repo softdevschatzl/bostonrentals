@@ -39,7 +39,7 @@ body, html {
   margin: 0;
 }
 .footer {
-  background-color: #252525;
+  background-color: black;
   padding: 20px 0;
   min-height: 30vh;
 }

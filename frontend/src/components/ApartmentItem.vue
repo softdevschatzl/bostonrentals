@@ -80,7 +80,7 @@
   .apartments::before, .apartments::after {
     content: "";
     position: absolute;
-    background: #46465e;
+    background: white;
     transition: all 0.3s ease-in-out;
     z-index: 1;
   }
@@ -106,7 +106,7 @@
   .apartments > .border-left::before, .apartments > .border-right::before {
     content: "";
     position: absolute;
-    background: #46465e;
+    background: white;
     transition: all 0.3s ease-in-out;
     z-index: 1;
   }

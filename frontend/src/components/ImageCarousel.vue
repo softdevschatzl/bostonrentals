@@ -180,11 +180,13 @@ body {
   left: 1%;
   transition: transform 0.3s ease-in-out;
   user-select: none;
+  color: #ffffff;
 }
 
 .btn-next {
   left: auto;
   right: 1%;
+
 }
 
 .btn:hover {

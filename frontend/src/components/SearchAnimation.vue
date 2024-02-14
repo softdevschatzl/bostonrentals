@@ -47,7 +47,7 @@ body {
   -o-transform:rotate(180deg);
   -moz-transform:rotate(180deg);
   -webkit-transform:rotate(180deg);
-  color:#35C4F0;
+  color:#ffffff;
 }
 
 #load div:nth-child(2) {

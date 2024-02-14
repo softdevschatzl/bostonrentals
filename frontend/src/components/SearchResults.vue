@@ -31,13 +31,8 @@
   </table>
   <ListingInfo :listing="selectedListing" :visible="showListingInfo" @close="showListingInfo = false" />
 </div>
-<!-- <div class="no-listings-container" v-else>
-  <div class="no-listings">
-    <SearchingAnimation />
-  </div>
-</div> -->
 
-<div class="no-listings-container" v-if="listings.length === 0">
+<div class="no-listings-container" v-if="!Array.isArray(listings) || listings.length === 0">
   <div class="no-listings" v-if="!loading">
     <p>No listings found.</p>
   </div>
@@ -120,7 +115,9 @@ export default {
   border-bottom: 1px solid #bebebe;
 }
 .listing-header th {
-  background: #ECF0F3;
+  color: #ffffff;
+  background: rgb(30, 30, 30);
+  border-top: 2px solid #bebebe;
   border-bottom: 2px solid #bebebe;
   border-left: 1px solid #cecece;
   border-right: 1px solid #cecece;
@@ -135,13 +132,11 @@ export default {
 }
 
 .listing {
-  background: #bebebe;
+  background: rgb(0, 0, 0);
+  color: #ffffff;
 }
 .listing:hover {
-  background-color: #DFE0E2;
-}
-.listing:hover {
-  background: #DFE0E2;
+  background-color: rgb(41, 41, 41); 
   box-shadow: 2px 2px 5px #bebebe,
               -2px -2px 5px #ffffff;
 }

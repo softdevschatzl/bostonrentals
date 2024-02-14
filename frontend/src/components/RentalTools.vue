@@ -56,7 +56,7 @@
     }
 
     .rental-tools-section {
-        background-color: #46465e;
+        background-color: rgb(40, 40, 40);
         display: flex;
         flex-direction: column;
         text-align: center;
@@ -128,6 +128,9 @@
         h2 {
             font-size: 30px;
         }
+        h3 {
+            font-size: 20px;
+        }
         .content {
             display: flex;
             flex-direction: column;
@@ -139,11 +142,10 @@
         }
         .tool-image {
             width: 50%;
-            height: 270px;
+            height: 100%;
         }
         .tool-content {
             font-size: 0.9em;
-            height: 230px;
         }
         .tools-btn {
             width: 75px;
