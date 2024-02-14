@@ -194,7 +194,7 @@
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import downArrow from '@/assets/down-arrow.png';
-import { laundryMapping, featureMapping, bathMapping, allNeighborhoods, neighborhoodMapping, feeMapping, bedMapping, photoMapping, parkingMapping, petMapping, tourMapping } from '../utils/dataSets.js';
+import { laundryMapping, featureMapping, bathMapping, allNeighborhoods, feeMapping, bedMapping, photoMapping, parkingMapping, petMapping, tourMapping } from '../utils/dataSets.js';
 import VueMultiselect from 'vue-multiselect';
 import '../../node_modules/vue-multiselect/dist/vue-multiselect.css';
 
@@ -374,7 +374,6 @@ export default {
       
       // Importing all the data sets and mappings used for API queries.
       allNeighborhoods,
-      neighborhoodMapping,
       feeMapping,
       bedMapping,
       bathMapping,
