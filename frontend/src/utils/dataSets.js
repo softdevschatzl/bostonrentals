@@ -262,8 +262,8 @@ export const laundryMapping = [
 }));
 
 export const petMapping = [
-    { label: "Cats", value: "cats" },
-    { label: "Dogs", value: "dogs" },
+    { label: "Cats", value: "cat" },
+    { label: "Dogs", value: "dog" },
     { label: "Friendly", value: "friendly" },
 ].map(pet => ({
     name: pet.label,

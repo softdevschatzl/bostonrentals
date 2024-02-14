@@ -444,6 +444,9 @@ export default {
   align-items: center;
   font-family: inherit;
 }
+input::placeholder {
+  color: #adadad;
+}
 
 .value {
   display: flex;
@@ -451,7 +454,7 @@ export default {
   width: 100%; /* Adjusted to match the full width like VueMultiselect */
   height: 48px; /* Match the height to VueMultiselect */
   padding: 0.5rem 1rem; /* Padding to match VueMultiselect */
-  color: #adadad; /* Your existing color */
+  color: black; /* Your existing color */
   font-size: 1rem; /* Match the font size to VueMultiselect */
   border: 1px solid #ccc; /* Similar border style */
   border-radius: 4px; /* Rounded corners like VueMultiselect */
