@@ -10,59 +10,63 @@
           <div v-show="openGroups.locationInput" class="location-input-group"> <!-- v-show="openGroups.locationInput" -->
             <input class="value" type="text" v-model="localSearchCriteria.street_name" placeholder="Street Name..." />
             <input class="value" type="text" v-model="localSearchCriteria.zip" placeholder="Zip Code..." />
-            <select class="value" v-model="localSearchCriteria.city_neighborhood">
-              <option value="null" selected><strong>City/Neighborhood</strong></option>
-              <optgroup v-for="(group, letter) in groupedNeighborhoods" :label="letter" :key="letter">
-                <option v-for="neighborhood in group" :key="neighborhood" :value="neighborhood">{{ neighborhood }}</option>
-              </optgroup>
-            </select>
+            <div class="multi-container">
+              <VueMultiselect
+                class="multiselect"
+                v-model="localSearchCriteria.city_neighborhood"
+                :options="allNeighborhoods"
+                :multiple="true"
+                :close-on-select="true"
+                placeholder="City/Neighborhood..."
+                label="name"
+                track-by="name"
+                @update:city_neighborhood="updateCityNeighborhood"
+              />
+          </div>
           </div>
         </div>
         <div class="info-group bed-bath-sqft">
           <button class="toggle-btn" data-group="bedroomsBathrooms" @click="toggleGroup('bedroomsBathrooms')">Bed/Bath/Laundry Filters</button>
           <div v-show="openGroups.bedroomsBathrooms" class="bedrooms-bathrooms-group">
-            <select class="value" v-model="localSearchCriteria.beds">
-              <option value="null" selected>Number of Beds...</option>
-              <option>Studio</option>
-              <option>1</option>
-              <option>1.5</option>
-              <option>2</option>
-              <option>2.5</option>
-              <option>3</option>
-              <option>3.5</option>
-              <option>4</option>
-              <option>4.5</option>
-              <option>5</option>
-              <option>6</option>
-              <option>7</option>
-              <option>8</option>
-              <option>9</option>
-              <option>10+</option>
-            </select>
-            <select class="value" v-model="localSearchCriteria.baths">
-              <option value="null" selected>Number of Baths...</option>
-              <option>1</option>
-              <option>1.5</option>
-              <option>2</option>
-              <option>2.5</option>
-              <option>3</option>
-              <option>3.5</option>
-              <option>4</option>
-              <option>4.5</option>
-              <option>5</option>
-              <option>5.5</option>
-              <option>6</option>
-              <option>7</option>
-              <option>8</option>
-              <option>9</option>
-              <option>10+</option>
-            </select>
-            <select class="value" v-model="localSearchCriteria.laundry">
-              <option value="null" selected>Laundry...</option>
-              <option>Washer/Dryer In Unit</option>
-              <option>Laundry In Building</option>
-              <option>None</option>
-            </select> 
+            <div class="multi-container">
+              <VueMultiselect
+                class="multiselect"
+                v-model="localSearchCriteria.beds"
+                :options="bedMapping"
+                :multiple="true"
+                :close-on-select="true"
+                placeholder="Number of Beds..."
+                label="name"
+                track-by="name"
+                @update:beds="updateBeds"
+              />
+            </div>
+            <div class="multi-container">
+              <VueMultiselect
+                class="multiselect"
+                v-model="localSearchCriteria.baths"
+                :options="bathMapping"
+                :multiple="true"
+                :close-on-select="true"
+                placeholder="Number of Baths..."
+                label="name"
+                track-by="name"
+                @update:baths="updateBaths"
+              />
+            </div>
+            <div class="multi-container">
+              <VueMultiselect
+                class="multiselect"
+                v-model="localSearchCriteria.laundry"
+                :options="laundryMapping"
+                :multiple="true"
+                :close-on-select="true"
+                placeholder="Laundry..."
+                label="name"
+                track-by="name"
+                @update:laundry="updateLaundry"
+              />
+            </div>
           </div>
         </div>
         <div class="info-group min-max-rent">
@@ -70,14 +74,19 @@
           <div v-show="openGroups.minMaxRent" class="min-max-rent-group"> <!-- v-show="openGroups.minMaxRent" -->
             <input class="value" type="text" v-model="localSearchCriteria.min_rent" placeholder="Min Rent..." />
             <input class="value" type="text" v-model="localSearchCriteria.max_rent" placeholder="Max Rent..." />        
-            <select class="value" v-model="localSearchCriteria.listing_fee">
-              <option value="null" selected>Fee...</option>
-              <option>No Fee</option>
-              <option>25% Month Fee</option> 
-              <option>50% Off Month Fee</option>
-              <option>75% Month Fee</option>
-              <option>1 Month Fee</option>
-            </select>
+            <div class="multi-container">
+              <VueMultiselect
+                class="multiselect"
+                v-model="localSearchCriteria.listing_fee"
+                :options="feeMapping"
+                :multiple="true"
+                :close-on-select="true"
+                placeholder="Fee..."
+                label="name"
+                track-by="name"
+                @update:listing_fee="updateFee"
+              />
+            </div>
           </div>
         </div>
         <div class="info-group laundry-parking-pet">
@@ -85,39 +94,67 @@
           <div v-show="openGroups.laundryParkingPet" class="laundry-parking-pet-group"> <!-- v-show="openGroups.laundryParkingPet" -->
             <input class="value" type="text" v-model="localSearchCriteria.square_footage_min" placeholder="Minimum Square Feet..." />
             <input class="value" type="text" v-model="localSearchCriteria.square_footage_max" placeholder="Maximum Square Feet..." />
-            <select class="value" v-model="localSearchCriteria.pet">
-              <option value="null" selecetd>Pet...</option>
-              <option>Cat</option>
-              <option>Dog</option>
-              <option>Friendly</option>
-            </select>
+            <div class="multi-container">
+              <VueMultiselect
+                class="multiselect"
+                v-model="localSearchCriteria.pet"
+                :options="petMapping"
+                :multiple="true"
+                :close-on-select="true"
+                placeholder="Pets..."
+                label="name"
+                track-by="name"
+                @update:pet="updatePet"
+              />
+            </div>
           </div>
         </div>
         <div class="info-group photo-tour-feature">
           <button class="toggle-btn" @click="toggleGroup('propertyStatusMedia')">Parking/Photo/Tours Filters</button>
           <div v-show="openGroups.propertyStatusMedia" class="property-status-media-group">            
-            <select class="value" v-model="localSearchCriteria.parking">
-              <option value="null" selected>Parking...</option>
-              <option>Parking Included</option>
-            </select>
-            <select class="value" v-model="localSearchCriteria.photo">
-              <option value="null" selected>Photos...</option>
-              <option>Only Listings With Photos</option>
-              <option>Any Listing With or Without</option>
-            </select>
-            <select class="value" v-model="localSearchCriteria.tours">
-              <option value="null" selected>Virtual Tours...</option>
-              <option>Virtual Tours Only</option>
-              <option>All Listings</option>
-            </select>
-            <!-- <select class="value">
-              <option value="null" selected>Features...</option>
-              <option>FIX THIS</option>
-            </select> -->
+            <div class="multi-container">
+              <VueMultiselect
+                class="multiselect"
+                v-model="localSearchCriteria.parking"
+                :options="parkingMapping"
+                :multiple="true"
+                :close-on-select="true"
+                placeholder="Parking..."
+                label="name"
+                track-by="name"
+                @update:parking="updateParking"
+              />
+            </div>
+            <div class="multi-container">
+              <VueMultiselect
+                class="multiselect"
+                v-model="localSearchCriteria.photo"
+                :options="photoMapping"
+                :multiple="true"
+                :close-on-select="true"
+                placeholder="Photos..."
+                label="name"
+                track-by="name"
+                @update:photo="updatePhotos"
+              />
+            </div>
+            <div class="multi-container">
+              <VueMultiselect
+                class="multiselect"
+                v-model="localSearchCriteria.tours"
+                :options="['Virtual Tours Only', 'No Virtual Tours']"
+                :multiple="false"
+                :close-on-select="true"
+                placeholder="Tours..."
+                label="name"
+                track-by="name"
+                @update:tours="updateTours"
+              />
+            </div>
           </div>
         </div>
       </div>
-      <div class="info-group bottom">
+      <div class="info-group">
         <button class="toggle-btn" @click="toggleGroup('availDates')">Available Dates/Features Filters</button>
         <div v-show="openGroups.availDates" class="avail-dates-group"> <!-- v-show="openGroups.availDates" -->
           <div class="avail-dates">
@@ -126,12 +163,11 @@
           </div>            
           <div class="multi-container">
             <VueMultiselect
-              :localSearchCriteria="localSearchCriteria"
               class="multiselect"
               v-model="localSearchCriteria.features"
               :options="features"
               :multiple="true"
-              :close-on-select="false"
+              :close-on-select="true"
               placeholder="Features..."
               label="name"
               track-by="name"
@@ -160,8 +196,9 @@
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import downArrow from '@/assets/down-arrow.png';
-import { features, laundryMapping, featuresMapping, allNeighborhoods, neighborhoodMapping, feeMapping, bedMapping, photoMapping, parkingMapping, petMapping } from '../utils/dataSets.js';
-import VueMultiselect from './VueMultiselect.vue';
+import { features, laundryMapping, featuresMapping, bathMapping, allNeighborhoods, neighborhoodMapping, feeMapping, bedMapping, photoMapping, parkingMapping, petMapping } from '../utils/dataSets.js';
+import VueMultiselect from 'vue-multiselect';
+import '../../node_modules/vue-multiselect/dist/vue-multiselect.css';
 
 export default {
   components: {
@@ -175,26 +212,21 @@ export default {
       }
   },
   computed: {
-      localSearchCriteria: {
-          get() {
-            return this.searchCriteria;
-          },
-          set() {
-            // Sends the event with updated criteria.
-            this.$emit('update-criteria', this.searchCriteria);
-          },
-      },
-      groupedNeighborhoods() {
-        const groups = {};
-        for (const neighborhood of this.allNeighborhoods) {
-          const letter = neighborhood[0];
-          if (!groups[letter]) {
-            groups[letter] = [];
-          }
-          groups[letter].push(neighborhood);
-        }
-        return groups;
+    localSearchCriteria: {
+        get() {
+          return this.searchCriteria;
+        },
+        set() {
+          // Sends the event with updated criteria.
+          this.$emit('update-criteria', this.searchCriteria);
+        },
+    },
+    apiFormattedNeighborhoods() {
+      if (!this.localSearchCriteria.city_neighborhood.length) {
+        return null; // Return null if no selection
       }
+      return this.localSearchCriteria.city_neighborhood.map(item => item.apiValue.replace('-', ':'));
+    }
   },
   methods: {
     // Searches for listings using the search criteria.
@@ -296,10 +328,37 @@ export default {
     resetFilters() {
       window.location.reload();
     },
-    // Helper function to update localSearchCriteria.features from 
+    // Helper functions to update localSearchCriteria from 
     // the VueMultiselect component.
     updateFeatures(newFeatures) {
       this.localSearchCriteria.features = newFeatures;
+    },
+    updateCityNeighborhood(newCityNeighborhood) {
+      this.localSearchCriteria.city_neighborhood = newCityNeighborhood;
+    },
+    updateBeds(newBeds) {
+      this.localSearchCriteria.beds = newBeds;
+    },
+    updateBaths(newBaths) {
+      this.localSearchCriteria.baths = newBaths;
+    },
+    updateLaundry(newLaundry) {
+      this.localSearchCriteria.laundry = newLaundry;
+    },
+    updateFee(newFee) {
+      this.localSearchCriteria.listing_fee = newFee;
+    },
+    updatePet(newPet) {
+      this.localSearchCriteria.pet = newPet;
+    },
+    updateParking(newParking) {
+      this.localSearchCriteria.parking = newParking;
+    },
+    updatePhotos(newPhotos) {
+      this.localSearchCriteria.photo = newPhotos;
+    },
+    updateTours(newTours) {
+      this.localSearchCriteria.tours = newTours;
     }
   },
   data() {
@@ -320,6 +379,7 @@ export default {
       neighborhoodMapping,
       feeMapping,
       bedMapping,
+      bathMapping,
       photoMapping,
       parkingMapping,
       petMapping,
@@ -419,9 +479,7 @@ export default {
   display: flex;
   align-items: center;
   width: 175px;
-}
-select.value {
-  width: 208px;
+  color: #adadad;
 }
 
 .filters,
@@ -435,12 +493,6 @@ select.value {
 .filters {
   flex-direction: column;
 }
-.bottom {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 5px;
-}
 
 .datepicker {
   width: 210px;
@@ -451,21 +503,6 @@ select.value {
 }
 
 /** Neumorphism styling */
-select {
-  color: #aaa; /* Default color, similar to a placeholder */
-}
-select option {
-  color: black; /* Color for options */
-}
-select option[value=""][disabled] {
-  display: none; /* Hide the placeholder from the dropdown list */
-}
-select:not(:valid) {
-  color: #aaa;
-}
-select:valid {
-  color: black;
-}
 
 .multi-container {
   width: 210px;
@@ -475,12 +512,12 @@ select:valid {
   outline: none;
   padding: 0.8rem 1rem;
   margin: 0.2rem;
-  border-radius: 15px;
-  background: #ECF0F3;
+  border-radius: 5px;
+  background: #FFF;
   box-shadow: 5px 5px 10px #bebebe,
               -5px -5px 10px #ffffff;
   font-size: 1rem;
-  color: #333;
+  font-family: inherit;
 }
 .filters select {
   border: none;
@@ -497,7 +534,6 @@ select:valid {
   border-radius: 15px;
   box-shadow: 5px 5px 10px #bebebe,
               -5px -5px 10px #ffffff;
-  color: #333;
 }
 
 .search-btn {
@@ -545,6 +581,12 @@ select:valid {
 }
 /** End neumorphism styling */
 
+/** Multiselect Overrides */
+::v-deep .multiselect__tags {
+  font-size: 1rem;
+  padding: 12px 5px 5px 16px;
+}
+
 /** Desktop view */
 @media only screen and (min-width: 768px) {
   /* .toggle-btn {
@@ -557,7 +599,6 @@ select:valid {
   .filters input, 
   .filters select {
     max-height: 100px;
-    background: #ECF0F3;
   }
   .toggle-btn {
     display: none;
@@ -579,12 +620,6 @@ select:valid {
     background: #ECF0F3 url('../assets/down-arrow.png') no-repeat right center; /* 10px is the width of the arrow image */
     background-size: 12px 12px;
     padding-right: 50px;
-  }
-}
-
-@media only screen and (min-width: 1392px) {
-  .bottom {
-    margin-top: 1rem;
   }
 }
 </style>

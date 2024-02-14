@@ -17,6 +17,10 @@ TODO:
     - pictures slideshow desktop no slideshow
 
     - Map the features from user-friendly -> expected values, i dont think ygl like multi-word features.
+
+    - Fix pet multiselect.
+    - change color scheme to black and white.
+    
         
 APIs/Technologies:
     - YouGotListings (better property data, more $)

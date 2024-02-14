@@ -50,8 +50,75 @@ export default {
     };
   },
   methods: {
-    async searchListings(criteria) {
+    async searchListings(originalCriteria) {
       try {
+        // Clone the original criteria to avoid mutating the original object
+        let criteria = { ...originalCriteria };
+
+        // Transform city_neighborhood array into a comma-separated string
+        if (criteria.city_neighborhood && criteria.city_neighborhood.length > 0) {
+          criteria.city_neighborhood = criteria.city_neighborhood.map(item => item.apiValue.replace('-', ':')).join(',');
+        } else {
+          criteria.city_neighborhood = null; // Send null if the array is empty
+        }
+
+        // Transform beds array into a comma-separated string
+        if (criteria.beds && criteria.beds.length > 0) {
+          criteria.beds = criteria.beds.map(item => item.apiValue).join(',');
+        } else {
+          criteria.beds = null; // Send null if the array is empty
+        }
+
+        // Tranform baths array into a comma-separated string
+        if (criteria.baths && criteria.baths.length > 0) {
+          criteria.baths = criteria.baths.map(item => item.apiValue).join(',');
+        } else {
+          criteria.baths = null; // Send null if the array is empty
+        }
+
+        // Transform laundry array into a comma-separated string
+        if (criteria.laundry && criteria.laundry.length > 0) {
+          criteria.laundry = criteria.laundry.map(item => item.apiValue).join(',');
+        } else {
+          criteria.laundry = null; // Send null if the array is empty
+        }
+
+        // Transform fee array into a comma-separated string
+        if (criteria.listing_fee && criteria.listing_fee.length > 0) {
+          criteria.listing_fee = criteria.listing_fee.map(item => item.apiValue).join(',');
+        } else {
+          criteria.listing_fee = null; // Send null if the array is empty
+        }
+
+        // Transform pets array into a comma-separated string
+        if (criteria.pet && criteria.pet.length > 0) {
+          criteria.pet = criteria.pet.map(item => item.apiValue).join(',');
+        } else {
+          criteria.pet = null; // Send null if the array is empty
+        }
+
+        // Transform parking array into a comma-separated string
+        if (criteria.parking && criteria.parking.length > 0) {
+          criteria.parking = criteria.parking.map(item => item.apiValue).join(',');
+        } else {
+          criteria.parking = null; // Send null if the array is empty
+        }
+
+        // Transform photo array into a comma-separated string
+        if (criteria.photo && criteria.photo.length > 0) {
+          criteria.photo = criteria.photo.map(item => item.apiValue).join(',');
+        } else {
+          criteria.photo = null; // Send null if the array is empty
+        }
+
+        // Transform tours array into a comma-separated string
+        if (criteria.tours && criteria.tours.length > 0) {
+          criteria.tours = criteria.tours.map(item => item.apiValue).join(',');
+        } else {
+          criteria.tours = null; // Send null if the array is empty
+        }
+
+        // API call with preprocessed criteria
         const response = await axios.post('/properties', criteria);
         
         console.log('API Query: ', criteria);
@@ -66,6 +133,7 @@ export default {
         // Sort listings by their scores.
         scoredListings.sort((a, b) => b.score - a.score);
 
+        // Update your component's listings data with the sorted, scored listings
         this.listings = scoredListings;
       } catch (error) {
         console.error('Error fetching listings:', error);
@@ -84,7 +152,6 @@ export default {
         max_bath: null,
         baths: null,
         city_neighborhood: null,
-        state: 'MA',
         zip: null,
         min_rent: null,
         max_rent: null,
