@@ -4,7 +4,7 @@
         
         <!-- Renter Tools -->
         <div class="content">
-            <div class="tool-section">
+            <div class="tool-section" ref="toolSection">
                 <div class="tool-content">
                     <h3>(Coming Soon!)</h3>
                     <h3>For Renters</h3>
@@ -15,7 +15,7 @@
             </div>
 
             <!-- Lessor Tools -->
-            <div class="tool-section">
+            <div class="tool-section" ref="toolSection">
                 <img src="../assets/lessorstockimage2.jpeg" alt="Lessor Image" class="tool-image">
                 <div class="tool-content">
                     <h3>(Also Coming Soon!)</h3>
@@ -29,9 +29,29 @@
 </template>
 
 <script>
-    export default {
-        name: 'RentalToolsSection',
-    };
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import '../assets/css-animations/animation-sheet.css';
+
+gsap.registerPlugin(ScrollTrigger);
+
+export default {
+    name: 'RentalToolsSection',
+    mounted() {
+        gsap.utils.toArray('toolSection').forEach((section, index) => {
+            gsap.from(section, {
+                scrollTrigger: {
+                    trigger: section,
+                    start: 'top bottom-=100',
+                },
+                x: -200,
+                autoAlpha: 0,
+                delay: index * 0.5,
+                duration: 1,
+            });
+        });
+    },
+};
 </script>
 
 <style scoped>

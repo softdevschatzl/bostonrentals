@@ -12,6 +12,8 @@
     "amazon-cognito-identity-js": "^6.3.7",
     "axios": "^1.6.0",
     "core-js": "^3.8.3",
+    "gsap": "^3.12.5",
+    "scrollmagic": "^2.0.8",
     "vue": "^3.2.13",
     "vue-multiselect": "^3.0.0-beta.3",
     "vue-router": "4"

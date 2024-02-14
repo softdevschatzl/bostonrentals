@@ -9,11 +9,13 @@
     </div>
     <!-- Then, check if we have apartments to display -->
     <div class="apartments-wrapper" v-else-if="Array.isArray(topThreeApartments) && topThreeApartments.length">
-      <ApartmentItem 
-        v-for="apartment in topThreeApartments" 
-        :key="apartment.id" :propertyData="apartment" 
-        @click="showApartmentDetails(apartment)" 
-      />
+        <ApartmentItem 
+          :style="{ animationDelay: `${index * 0.2}s` }"
+          class="apartment-item"
+          v-for="apartment in topThreeApartments" 
+          :key="apartment.id" :propertyData="apartment" 
+          @click="showApartmentDetails(apartment)" 
+        />
     </div>
     <!-- Finally, show no listings message if not loading and no apartments -->
     <div class="no-listings-container" v-else>
@@ -35,6 +37,7 @@ import ListingInfo from './ListingInfo.vue';
 // import sortApartments from '@/utils/featuredApartmentAlgorithm';
 import { calculateCompletenessScore } from '@/utils/featuredApartmentAlgorithm';
 import SearchingAnimation from './SearchAnimation.vue';
+import '../assets/css-animations/animation-sheet.css';
 
 export default {
   components: {
@@ -150,6 +153,19 @@ export default {
     border: 5px solid #7e7e7e;
   }
 
+  .apartment-item {
+    animation: slideInFromLeft 1s;
+  }
+  /** same for children */
+  .apartment-item:nth-child(1) {
+    animation-delay: 0.4s;
+    animation: slideInFromLeft 1.1s;
+  }
+  .apartment-item:nth-child(2) {
+    animation-delay: 0.8s;
+    animation: slideInFromLeft 1.2s;
+  }
+
   @media only screen and (max-width: 768px) {
     h1 {
       font-size: 25px;
@@ -159,10 +175,13 @@ export default {
       align-items: center;
       gap: 10px;
       margin-bottom: 20px;
+
+    }
+    .apartment-item {
+      width: 50%;
     }
     .apartments {
       width: 65%;
     }
   }
 </style>
-  
