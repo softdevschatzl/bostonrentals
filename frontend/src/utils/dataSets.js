@@ -272,10 +272,10 @@ export const petMapping = [
 
 // Filter values
 // Map these.
-export const features = [
+export const featureMapping = [
     'Microwave',
     'A/C',
-    'Dish Washer',
+    'Dishwasher',
     'Pool',
     'Refrigerator',
     'Fireplace',
@@ -283,6 +283,16 @@ export const features = [
     'Patio',
     'Fitness Center',
     'Laundry',
+    'Elevator',
+    'Hardwood Floors',
+    'Carpet',
+    'Concierge',
+    'Disposal',
+    'Garage Parking',
+    'Oven/Range',
+    'Storage',
+    'Yard',
+    'Deck',
 ].map(feature => ({ name: feature }));
 
 

@@ -69,7 +69,7 @@
           </div>
         </div>
         <div class="info-group min-max-rent">
-          <button class="toggle-btn" @click="toggleGroup('minMaxRent')">Min/Max Rent/Fee Filters</button>
+          <button class="toggle-btn" data-group="minMaxRent" @click="toggleGroup('minMaxRent')">Min/Max Rent/Fee Filters</button>
           <div v-show="openGroups.minMaxRent" class="min-max-rent-group inner-group"> <!-- v-show="openGroups.minMaxRent" -->
             <input class="value" type="text" v-model="localSearchCriteria.min_rent" placeholder="Min Rent..." />
             <input class="value" type="text" v-model="localSearchCriteria.max_rent" placeholder="Max Rent..." />        
@@ -89,7 +89,7 @@
           </div>
         </div>
         <div class="info-group laundry-parking-pet">
-          <button class="toggle-btn" @click="toggleGroup('laundryParkingPet')">Min/Max Sqft/Pet Filters</button>
+          <button class="toggle-btn" data-group="laundryParkingPet" @click="toggleGroup('laundryParkingPet')">Min/Max Sqft/Pet Filters</button>
           <div v-show="openGroups.laundryParkingPet" class="laundry-parking-pet-group inner-group"> <!-- v-show="openGroups.laundryParkingPet" -->
             <input class="value" type="text" v-model="localSearchCriteria.square_footage_min" placeholder="Minimum Square Feet..." />
             <input class="value" type="text" v-model="localSearchCriteria.square_footage_max" placeholder="Maximum Square Feet..." />
@@ -109,7 +109,7 @@
           </div>
         </div>
         <div class="info-group photo-tour-feature">
-          <button class="toggle-btn" @click="toggleGroup('propertyStatusMedia')">Parking/Photo/Tours Filters</button>
+          <button class="toggle-btn" data-group="propertyStatusMedia" @click="toggleGroup('propertyStatusMedia')">Parking/Photo/Tours Filters</button>
           <div v-show="openGroups.propertyStatusMedia" class="property-status-media-group inner-group">            
             <div class="multi-container">
               <VueMultiselect
@@ -153,7 +153,7 @@
           </div>
         </div>
       <div class="info-group">
-        <button class="toggle-btn" @click="toggleGroup('availDates')">Available Dates/Features Filters</button>
+        <button class="toggle-btn" data-group="availDates" @click="toggleGroup('availDates')">Available Dates/Features Filters</button>
         <div v-show="openGroups.availDates" class="avail-dates-group inner-group"> <!-- v-show="openGroups.availDates" -->
           <div class="avail-dates">
             <Datepicker class="value datepicker" v-model="localSearchCriteria.avail_from" placeholder="From Date"></Datepicker> 
@@ -163,7 +163,7 @@
             <VueMultiselect
               class="multiselect"
               v-model="localSearchCriteria.features"
-              :options="features"
+              :options="featureMapping"
               :multiple="true"
               :close-on-select="true"
               placeholder="Features..."
@@ -194,7 +194,7 @@
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import downArrow from '@/assets/down-arrow.png';
-import { features, laundryMapping, featuresMapping, bathMapping, allNeighborhoods, neighborhoodMapping, feeMapping, bedMapping, photoMapping, parkingMapping, petMapping, tourMapping } from '../utils/dataSets.js';
+import { laundryMapping, featureMapping, bathMapping, allNeighborhoods, neighborhoodMapping, feeMapping, bedMapping, photoMapping, parkingMapping, petMapping, tourMapping } from '../utils/dataSets.js';
 import VueMultiselect from 'vue-multiselect';
 import '../../node_modules/vue-multiselect/dist/vue-multiselect.css';
 
@@ -381,9 +381,8 @@ export default {
       photoMapping,
       parkingMapping,
       petMapping,
-      featuresMapping,
+      featureMapping,
       laundryMapping,
-      features,
       tourMapping,
     };
   },
