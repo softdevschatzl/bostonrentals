@@ -142,7 +142,7 @@
               <VueMultiselect
                 class="multiselect"
                 v-model="localSearchCriteria.tours"
-                :options="['Virtual Tours Only', 'No Virtual Tours']"
+                :options="tourMapping"
                 :multiple="false"
                 :close-on-select="true"
                 placeholder="Tours..."
@@ -196,7 +196,7 @@
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import downArrow from '@/assets/down-arrow.png';
-import { features, laundryMapping, featuresMapping, bathMapping, allNeighborhoods, neighborhoodMapping, feeMapping, bedMapping, photoMapping, parkingMapping, petMapping } from '../utils/dataSets.js';
+import { features, laundryMapping, featuresMapping, bathMapping, allNeighborhoods, neighborhoodMapping, feeMapping, bedMapping, photoMapping, parkingMapping, petMapping, tourMapping } from '../utils/dataSets.js';
 import VueMultiselect from 'vue-multiselect';
 import '../../node_modules/vue-multiselect/dist/vue-multiselect.css';
 
@@ -386,6 +386,7 @@ export default {
       featuresMapping,
       laundryMapping,
       features,
+      tourMapping,
     };
   },
   mounted() {
