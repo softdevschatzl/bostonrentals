@@ -3,10 +3,12 @@
   <div>G</div>
   <div>N</div>
   <div>I</div>
-  <div>D</div>
+  <div>H</div>
+  <div>C</div>
+  <div>R</div>
   <div>A</div>
-  <div>O</div>
-  <div>L</div>
+  <div>E</div>
+  <div>S</div>
 </div>
 </template>
 
@@ -20,18 +22,15 @@ body {
 }
 
 #load {
-  position:absolute;
-  width:600px;
-  height:36px;
-  left:50%;
-  top:40%;
-  margin-left:-300px;
-  overflow:visible;
-  -webkit-user-select:none;
-  -moz-user-select:none;
-  -ms-user-select:none;
-  user-select:none;
-  cursor:default;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 36px;
+  overflow: visible;
+  user-select: none;
+  cursor: default;
 }
 
 #load div {
@@ -40,10 +39,10 @@ body {
   height:36px;
   opacity:0;
   font-family:Helvetica, Arial, sans-serif;
-  animation:move 2s linear infinite;
-  -o-animation:move 2s linear infinite;
-  -moz-animation:move 2s linear infinite;
-  -webkit-animation:move 2s linear infinite;
+  animation:move 3s linear infinite;
+  -o-animation:move 3s linear infinite;
+  -moz-animation:move 3s linear infinite;
+  -webkit-animation:move 3s linear infinite;
   transform:rotate(180deg);
   -o-transform:rotate(180deg);
   -moz-transform:rotate(180deg);
@@ -86,6 +85,24 @@ body {
   -o-animation-delay:1.2s;
   -moz-animation-delay:1.2s;
   -webkit-animation-delay:1.2s;
+}
+#load div:nth-child(8) {
+  animation-delay:1.4s;
+  -o-animation-delay:1.4s;
+  -moz-animation-delay:1.4s;
+  -webkit-animation-delay:1.4s;
+}
+#load div:nth-child(9) {
+  animation-delay:1.6s;
+  -o-animation-delay:1.6s;
+  -moz-animation-delay:1.6s;
+  -webkit-animation-delay:1.6s;
+}
+#load div:nth-child(10) {
+  animation-delay:1.8s;
+  -o-animation-delay:1.8s;
+  -moz-animation-delay:1.8s;
+  -webkit-animation-delay:1.8s;
 }
 
 @keyframes move {
@@ -192,5 +209,15 @@ body {
 		transform:rotate(-180deg); 
 		opacity:0;
 	}
+}
+
+@media only screen and (max-width: 768px) {
+  #load {
+    width: 300px;
+  }
+  #load div {
+    width: 15px;
+    height: 18px;
+  }
 }
 </style>

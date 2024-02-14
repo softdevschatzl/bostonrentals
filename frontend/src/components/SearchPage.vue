@@ -3,7 +3,7 @@
   <!-- Search Filters -->
   <SearchFilters :searchCriteria="searchCriteria" @update-criteria="updateCriteria" @search="searchListings"/>
   <!-- Search Results -->
-  <SearchResults :listings="listings"/>
+  <SearchResults :listings="listings" :loading="loading" />
 </template>
   
 <script>
@@ -46,12 +46,15 @@ export default {
         laundry: null,
         // Add more criteria.
       },
-      listings: []
+      listings: [],
+      loading: false,
     };
   },
   methods: {
     async searchListings(originalCriteria) {
       try {
+        this.loading = true;
+        this.listings = [];
         // Clone the original criteria to avoid mutating the original object
         let criteria = { ...originalCriteria };
 
@@ -137,6 +140,8 @@ export default {
         this.listings = scoredListings;
       } catch (error) {
         console.error('Error fetching listings:', error);
+      } finally {
+        this.loading = false;
       }
     },
     updateCriteria(newCriteria) {

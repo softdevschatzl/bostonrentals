@@ -37,9 +37,12 @@
   </div>
 </div> -->
 
-<div class="no-listings-container" v-else>
-  <div class="no-listings">
+<div class="no-listings-container" v-if="listings.length === 0">
+  <div class="no-listings" v-if="!loading">
     <p>No listings found.</p>
+  </div>
+  <div class="search-animation" v-else>
+    <SearchingAnimation />
   </div>
 </div>
 </template>
@@ -52,19 +55,19 @@
  */
 import ListingInfo from './ListingInfo.vue';
 import defaultImage from '../assets/no-image-found.jpg';
-// import SearchingAnimation from '../components/SearchAnimation.vue';
+import SearchingAnimation from '../components/SearchAnimation.vue';
 
 export default {
   components: {
     ListingInfo,
-    // SearchingAnimation,
+    SearchingAnimation,
   },
   data() {
     return {
       selectAll: false,
       defaultImage,
       selectedListing: null,
-      showListingInfo: false
+      showListingInfo: false,
     }
   },
   props: {
@@ -73,6 +76,10 @@ export default {
           required: true,
           default: () => []
       },
+      loading: {
+          type: Boolean,
+          required: true,
+      }
   },
   mounted() {
     console.log('Listings: ', this.listings);
@@ -146,6 +153,7 @@ export default {
 }
 
 .no-listings-container {
+  position: relative;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -162,6 +170,10 @@ export default {
   background: #afc6d2;
   text-align: center;
   border: 5px solid #7e7e7e;
+}
+
+.search-animation {
+  margin-top: 40vh;
 }
 
 @media only screen and (max-width: 768px) {
