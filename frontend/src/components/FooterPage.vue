@@ -15,7 +15,7 @@
           <h4>Quick Links</h4>
           <ul>
             <li><a href="/">Home</a></li>
-            <li><a href="/search">Search Apartments</a></li>
+            <li><a href="/search">Search Rentals</a></li>
             <li><a href="/about">About Us</a></li>
           </ul>
         </div>
@@ -39,7 +39,7 @@ body, html {
   margin: 0;
 }
 .footer {
-  background-color: black;
+  background-color: rgb(40, 40, 40);
   padding: 20px 0;
   min-height: 30vh;
 }

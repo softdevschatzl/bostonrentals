@@ -76,7 +76,7 @@ export default {
     }
 
     .rental-tools-section {
-        background-color: rgb(40, 40, 40);
+        background-color: black;
         display: flex;
         flex-direction: column;
         text-align: center;

@@ -222,7 +222,7 @@ export default {
   width: 85%;
   height: 75%;
   border-radius: 20px;
-  box-shadow: 8px 8px 15px #a3a3a3, -8px -8px 15px #ffffff;
+  border: 3px solid white;
   padding: 20px;
   margin-top: 10vh;
 }

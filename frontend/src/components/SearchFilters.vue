@@ -234,7 +234,6 @@ export default {
       }
       const criteriaForApi = this.prepareSearchCriteriaForApi();
       // Sends the event to the parent component.
-      console.log("Criteria for API: ", criteriaForApi);
       this.$emit('search', criteriaForApi);
     },
     // Toggles the group with the given name (mobile dropdowns).
@@ -317,8 +316,6 @@ export default {
       if (apiCriteria.tours === 'Virtual Tours Only') {
         apiCriteria.tours = "Y";
       }
-
-      console.log("API Criteria: ", apiCriteria);
 
       return apiCriteria;
     },
@@ -422,6 +419,7 @@ export default {
   align-items: center;
   flex-direction: column;
   width: 300px;
+  border-radius: 5px;
 }
 .inner-group {
   width: 100%;
@@ -563,13 +561,23 @@ input::placeholder {
 
 }
 
-::v-deep .multiselect__tags {
+:deep(.multiselect__tags) {
   font-size: 1rem;
   padding: 12px 5px 5px 16px;
 }
-::v-deep .multiselect__single {
+:deep(.multiselect__single) {
   height: 45px; /* Ensure the single select height matches your inputs */
   padding: 0.5rem 1rem; /* Adjust padding to match */
+}
+:deep(.multiselect__option--highlight) {
+  background: #afc6d2;
+}
+:deep(.multiselect__option--highlight::after) {
+  background: #afc6d2;
+}
+:deep(.multiselect__tag) {
+  background: #afc6d2;
+  color: black;
 }
 
 @media only screen and (min-width: 768px) {

@@ -91,7 +91,7 @@ export default {
   }
 
   .apartments-section {
-    min-height: 80vh;
+    min-height: 75vh;
     width: 100%;
     background-color: #4b4b4b;
     display: flex;

@@ -12,6 +12,11 @@
         <th>Beds</th>
         <th>Baths</th>
         <th>Price</th>
+        <span @click="toggleSortPrice">
+          <svg v-if="sortState === 'asc'">▲</svg>
+          <svg v-else-if="sortState === 'desc'">▼</svg>
+          <svg v-else>⬍</svg>
+        </span>
       </tr>
     </thead>
     <tbody>
@@ -63,6 +68,7 @@ export default {
       defaultImage,
       selectedListing: null,
       showListingInfo: false,
+      sortState: '',
     }
   },
   props: {
@@ -92,6 +98,24 @@ export default {
       this.selectedListing = listing;
       this.showListingInfo = true;
     },
+    toggleSortPrice() {
+      if (this.sortState === '') {
+        this.sortState = 'asc';
+      } else if (this.sortState === 'asc') {
+        this.sortState = 'desc';
+      } else {
+        this.sortState = '';
+      }
+      
+      this.sortListings();
+    },
+    sortListings() {
+      if (this.sortState === 'asc') {
+        this.listings.sort((a, b) => a.price - b.price);
+      } else if (this.sortState === 'desc') {
+        this.listings.sort((a, b) => b.price - a.price);
+      }
+    }
   },
 }
 </script>
