@@ -11,16 +11,25 @@
         <th>Neighborhood</th>
         <th>Beds</th>
         <th>Baths</th>
-        <th>Price</th>
-        <span @click="toggleSortPrice">
-          <svg v-if="sortState === 'asc'">▲</svg>
-          <svg v-else-if="sortState === 'desc'">▼</svg>
-          <svg v-else>⬍</svg>
-        </span>
+        <th>
+          Price
+          <span class="price" @click="toggleSortPrice">
+            <svg v-if="sortState === 'asc'" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M8 12a.5.5 0 0 1-.5-.5V3.707l-2.146 2.147a.5.5 0 0 1-.708-.708l3-3a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 3.707V11.5a.5.5 0 0 1-.5.5z"/>
+            </svg>
+            <svg v-else-if="sortState === 'desc'" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v7.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 0 1 .708-.708L7.5 12.293V4.5A.5.5 0 0 1 8 4z"/>
+            </svg>
+            <svg v-else xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrows-expand" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1H2.707l3.147 3.146a.5.5 0 0 1-.708.708L2 9.707V13.5a.5.5 0 0 1-1 0v-4.5z"/>
+              <path fill-rule="evenodd" d="M14.5 7.5a.5.5 0 0 1 .5.5v4.5a.5.5 0 0 1-1 0V9.707l-3.146 3.147a.5.5 0 0 1-.708-.708L13.293 9H9.5a.5.5 0 0 1 0-1h4.5z"/>
+            </svg>
+          </span>
+        </th>
       </tr>
     </thead>
     <tbody>
-      <tr class="listing" v-for="listing in listings" :key="listing.id" @click="showListingDetails(listing)">
+      <tr class="listing" v-for="listing in sortedListings" :key="listing.id" @click="showListingDetails(listing)">
         <td><input type="checkbox" v-model="listing.selected" @click.stop /></td>
         <td>
           <img :src="listing.photos[0] || defaultImage" alt="Listing Image" class="listing-image" />
@@ -106,17 +115,19 @@ export default {
       } else {
         this.sortState = '';
       }
-      
-      this.sortListings();
-    },
-    sortListings() {
-      if (this.sortState === 'asc') {
-        this.listings.sort((a, b) => a.price - b.price);
-      } else if (this.sortState === 'desc') {
-        this.listings.sort((a, b) => b.price - a.price);
-      }
     }
   },
+  computed: {
+    sortedListings() {
+      if (this.sortState === 'asc') {
+        return [...this.listings].sort((a, b) => a.price - b.price);
+      } else if (this.sortState === 'desc') {
+        return [...this.listings].sort((a, b) => b.price - a.price);
+      } else {
+        return this.listings;
+      }
+    }
+  }
 }
 </script>
 
@@ -147,7 +158,7 @@ export default {
   border-right: 1px solid #cecece;
 }
 .listings th, .listings td {
-  width: 1/6*100%;
+  width: calc(1/6*100%);
   box-sizing: border-box;
 }
 .listing td {
@@ -193,6 +204,14 @@ export default {
 
 .search-animation {
   margin-top: 40vh;
+}
+
+.price {
+  display: flex;
+  justify-content: center;
+}
+.listings th svg {
+  vertical-align: middle;
 }
 
 @media only screen and (max-width: 768px) {
