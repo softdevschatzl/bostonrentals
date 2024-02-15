@@ -209,9 +209,7 @@ export default {
 .price {
   display: flex;
   justify-content: center;
-}
-.listings th svg {
-  vertical-align: middle;
+  align-items: center;
 }
 
 @media only screen and (max-width: 768px) {

@@ -111,7 +111,7 @@ app.get('/api/location', async (req, res) => {
     console.log("Location route hit.")
     try {
         // const userIp = '149.40.50.212'; // Coordinates returned: 42.3562, -71.0631
-        const userIp = '185.141.119.125'; // Coordinates returned: 42.2518, -71.0805
+        const userIp = '98.118.50.209'; // Coordinates returned: 42.2518, -71.0805
         // const userIp = req.ip; 
         const response = await axios.get(`http://ip-api.com/json/${userIp}`);
         console.log("Response data:", response.data)

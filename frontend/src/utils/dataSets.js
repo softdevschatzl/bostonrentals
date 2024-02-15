@@ -65,7 +65,7 @@ export const allNeighborhoods = [
     { label: "Cambridge - Wellington-Harrington", value: "Cambridge:Wellington-Harrington" },
     { label: "Cambridge - West Cambridge", value: "Cambridge:West Cambridge" },
     
-    { label: "Chealsea", value: "Chelsea:MA" },
+    { label: "Chelsea", value: "Chelsea:MA" },
 
     { label: "Everett", value: "Everett:Glendale,Everett:Washington Park,Everett:West Everett" },
     { label: "Everett - Glendale", value: "Everett:Glendale" },
