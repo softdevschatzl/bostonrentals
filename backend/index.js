@@ -10,9 +10,47 @@ const axios = require('axios');
 const apiKey = process.env.YGL_API_KEY;
 const cors = require('cors');
 const { redirectToCognitoUI } = require('./cognito');
+const { signIn } = require('./cognito');
+
+const cookieParser = require('cookie-parser');
 
 const app = express();
 const PORT = 3000;
+
+// Login logic.
+app.use(cookieParser());
+
+app.post('/api/login', (req, res) => {
+    const { username, password } = req.body;
+
+    signIn(username, password, (err, tokens) => {
+        if (err) {
+            // Handle error (invalid credentials, Cognito errors, etc.)
+            res.status(401).json({ error: err.message });
+        } else {
+            // Set tokens in HTTP-only cookies
+            res.cookie('accessToken', tokens.accessToken, { httpOnly: true, secure: true, sameSite: 'Strict' });
+            res.cookie('idToken', tokens.idToken, { httpOnly: true, secure: true, sameSite: 'Strict' });
+
+            // Send a success response
+            res.status(200).json({ message: 'Logged in successfully' });
+        }
+    });
+});
+
+app.get('/api/check-login-status', (req, res) => {
+    if (req.cookies.accessToken) {
+        res.json({ isLoggedIn: true });
+    } else {
+        res.json({ isLoggedIn: false });
+    }
+});
+
+app.get('/api/logout', (req, res) => {
+    res.clearCookie('accessToken');
+    res.clearCookie('idToken');
+    res.json({ message: 'Logged out successfully.' });
+});
 
 // Setting CSP headers to allow Cognito scripts.
 app.use('/auth-route', helmet.contentSecurityPolicy({
@@ -34,7 +72,14 @@ app.use(helmet.contentSecurityPolicy({
 }));
 
 // Only allowing access from certain origin points.
-const allowedOrigins = ['http://localhost:8080', 'http://localhost:3000', 'https://softdevschatzl.github.io', 'https://alexandersrentals.com', 'https://d1lcia0inyjsq.cloudfront.net', 'https://alexanderrentals-login.auth.us-east-2.amazoncognito.com']
+const allowedOrigins = [
+    'http://localhost:8080', 
+    'http://localhost:3000', 
+    'https://softdevschatzl.github.io', 
+    'https://alexandersrentals.com', 
+    'https://d1lcia0inyjsq.cloudfront.net', 
+    'https://alexanderrentals-login.auth.us-east-2.amazoncognito.com'
+];
 app.use(cors({
     origin: function (origin, callback) {
         if (!origin || allowedOrigins.includes(origin)) {
@@ -42,7 +87,8 @@ app.use(cors({
         } else {
             callback(new Error('Not allowed by CORS'));
         }
-    }
+    },
+    credentials: true
 }));
 
 app.use(express.json());
@@ -94,7 +140,7 @@ app.post('/properties', async (req, res) => {
         if (features) params.features = features;
         if (laundry) params.laundry = laundry;
 
-        console.log("Full Params:", params)
+        // console.log("Full Params:", params)
 
         const response = await axios.post(`https://www.yougotlistings.com/api/rentals/search.php?key=${apiKey}`, params);
                 
@@ -108,13 +154,13 @@ app.post('/properties', async (req, res) => {
 
 // Fetch user's IP to show featured apartments closest to them.
 app.get('/api/location', async (req, res) => {
-    console.log("Location route hit.")
+    // console.log("Location route hit.")
     try {
         // const userIp = '149.40.50.212'; // Coordinates returned: 42.3562, -71.0631
         const userIp = '98.118.50.209'; // Coordinates returned: 42.2518, -71.0805
         // const userIp = req.ip; 
         const response = await axios.get(`http://ip-api.com/json/${userIp}`);
-        console.log("Response data:", response.data)
+        // console.log("Response data:", response.data)
         return res.json(response.data);
     } catch (error) {
         console.error("Failed to fetch user location:", error.message);

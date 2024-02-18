@@ -20,7 +20,7 @@ function getUserPool() {
 }
 
 // Implements Cognito authentication.
-function signIn(username, password) {
+function signIn(username, password, callback) {
   const authenticationData = {
     Username: username,
     Password: password,
@@ -35,14 +35,19 @@ function signIn(username, password) {
 
   return new Promise((resolve, reject) => {
     cognitoUser.authenticateUser(authenticationDetails, {
-      onSuccess: (result) => resolve(result),
-      onFailure: (err) => reject(err),
+      onSuccess: (result) => {
+        const accessToken = result.getAccessToken().getJwtToken();
+        const idToken = result.getIdToken().getJwtToken();
+        // Get and securely store the refreshToken.
+        callback(null, { accessToken, idToken });
+      },
+      onFailure: (err) => callback(err, null),
     });
   });
 }
 
 function redirectToCognitoUI() {
-  const cognitoDomain = 'https://alexandersrentals.auth.us-east-2.amazoncognito.com';
+  const cognitoDomain = 'https://alexandersrentals-nosms.auth.us-east-2.amazoncognito.com';
   const clientId = process.env.COGNITO_CLIENT_ID;
   const callbackUrl = 'http://localhost:8080/'; // change to alexandersrentals.com.
   const responseType = 'code';

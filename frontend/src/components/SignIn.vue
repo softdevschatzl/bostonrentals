@@ -1,12 +1,18 @@
 <!-- SignIn.vue -->
 
 <template>
-  <button @click="handleLogin" class="user-sign-in">Login</button>
+  <button v-if="!isUserLoggedIn" @click="handleLogin" class="user-sign-in">Login</button>
+  <button v-else @click="goToMyAccount" class="user-sign-in">My Account</button>
 </template>
 
 <script>
 
 export default {
+  data() {
+    return {
+      isUserLoggedIn: false
+    }
+  },
   methods: {
     async handleLogin() {
       try {
@@ -21,6 +27,24 @@ export default {
         console.error('Login failed:', error.message);
       }
     },
+    goToMyAccount() {
+      this.$router.push('/my-account');
+    },
+    checkLoginStatus() {
+      fetch('http://localhost:3000/api/check-login-status', {
+        method: 'GET',
+        credentials: 'include'
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Login status response:', data);
+        this.isUserLoggedIn = data.isLoggedIn;
+      })
+      .catch(error => console.error('Error checking login status:', error));
+    },
+  },
+  mounted() {
+    this.checkLoginStatus();
   }
 }
 </script>
