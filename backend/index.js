@@ -5,71 +5,23 @@
 require('dotenv').config();
 const express = require('express');
 // helmet is for csp headers and general web security.
-const helmet = require('helmet');
+// const helmet = require('helmet');
 const axios = require('axios');
 const apiKey = process.env.YGL_API_KEY;
 const cors = require('cors');
 const { redirectToCognitoUI } = require('./cognito');
 const { signIn } = require('./cognito');
-
+const querystring = require('querystring');
 const cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
+const jwksClient = require('jwks-rsa');
 
 const app = express();
 const PORT = 3000;
 
-// Login logic.
 app.use(cookieParser());
 
-app.post('/api/login', (req, res) => {
-    const { username, password } = req.body;
-
-    signIn(username, password, (err, tokens) => {
-        if (err) {
-            // Handle error (invalid credentials, Cognito errors, etc.)
-            res.status(401).json({ error: err.message });
-        } else {
-            // Set tokens in HTTP-only cookies
-            res.cookie('accessToken', tokens.accessToken, { httpOnly: true, secure: true, sameSite: 'Strict' });
-            res.cookie('idToken', tokens.idToken, { httpOnly: true, secure: true, sameSite: 'Strict' });
-
-            // Send a success response
-            res.status(200).json({ message: 'Logged in successfully' });
-        }
-    });
-});
-
-app.get('/api/check-login-status', (req, res) => {
-    if (req.cookies.accessToken) {
-        res.json({ isLoggedIn: true });
-    } else {
-        res.json({ isLoggedIn: false });
-    }
-});
-
-app.get('/api/logout', (req, res) => {
-    res.clearCookie('accessToken');
-    res.clearCookie('idToken');
-    res.json({ message: 'Logged out successfully.' });
-});
-
-// Setting CSP headers to allow Cognito scripts.
-app.use('/auth-route', helmet.contentSecurityPolicy({
-    directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "'unsafe-inline'", "https://d1lcia0inyjsq.cloudfront.net", "https://alexanderrentals-login.auth.us-east-2.amazoncognito.com"]
-    },
-    reportOnly: true,
-    reportUri: '/report-violation',
-}));
-
-app.use(helmet.contentSecurityPolicy({
-    directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "https://d1lcia0inyjsq.cloudfront.net", "https://alexanderrentals-login.auth.us-east-2.amazoncognito.com"]
-    },
-    reportOnly: true,
-    reportUri: '/report-violation',
-}));
+app.use(express.json());
 
 // Only allowing access from certain origin points.
 const allowedOrigins = [
@@ -91,7 +43,107 @@ app.use(cors({
     credentials: true
 }));
 
-app.use(express.json());
+// Login logic.
+app.post('/api/login', (req, res) => {
+    const { username, password } = req.body;
+    console.log('Login request received:', username, password);
+
+    signIn(username, password, (err, tokens) => {
+        if (err) {
+            // Handle error (invalid credentials, Cognito errors, etc.)
+            res.status(401).json({ error: err.message });
+        } else {
+            // Set tokens in HTTP-only cookies
+            const isLocal = process.env.NODE_ENV === 'development';
+            res.cookie('accessToken', tokens.accessToken, { httpOnly: true, secure: !isLocal, sameSite: 'Lax' });
+            res.cookie('idToken', tokens.idToken, { httpOnly: true, secure: !isLocal, sameSite: 'Lax' });
+
+            // Send a success response
+            res.status(200).json({ message: 'Logged in successfully' });
+            console.log('Tokens received:', tokens);
+        }
+    });
+});
+
+app.post('/api/token', async (req, res) => {
+    const {code} = req.body;
+
+    try {
+        // Exchange code for tokens
+        const postData = querystring.stringify({
+            grant_type: 'authorization_code',
+            client_id: process.env.COGNITO_CLIENT_ID,
+            code,
+            redirect_uri: 'http://localhost:8080/',
+        });
+        
+        const response = await axios.post(`https://alexandersrentals-nosms.auth.us-east-2.amazoncognito.com/oauth2/token`, postData, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+        });
+        
+        res.json({ message: 'Authentication successful', tokens: response.data});
+    } catch (error) {
+        console.error('Failed to exchange code for tokens:', error);
+        res.status(500).json({ error: 'Failed to exchange code for tokens' });
+    }
+});
+
+// We validate the token using the public key provided by Cognito.
+const client = jwksClient({
+    jwksUri: `https://cognito-idp.us-east-2.amazonaws.com/${process.env.COGNITO_USER_POOL_ID}/.well-known/jwks.json`
+});
+
+function getKey(header, callback) {
+    client.getSigningKey(header.kid, function (err, key) {
+        var signingKey = key.publicKey || key.rsaPublicKey;
+        callback(null, signingKey);
+    });
+}
+
+// And then check the login status.
+app.get('/api/check-login-status', (req, res) => {
+    const accessToken = req.cookies.accessToken;
+
+    if (accessToken) {
+        try {
+            jwt.verify(accessToken, process.env.COGNITO_PUBLIC_KEY);
+            res.json({ isLoggedIn: true });
+        } catch (err) {
+            console.error('Invalid access token:', err.message);
+            res.clearCookie('accessToken');
+            res.json({ isLoggedIn: false });
+        }
+    } else {
+        res.json({ isLoggedIn: false });
+    }
+});
+
+app.get('/api/logout', (req, res) => {
+    res.clearCookie('accessToken', { path: '/', domain: 'http://localhost:8080/'}); // Change this for production.
+    res.clearCookie('idToken', { path: '/', domain: 'http://localhost:8080/'}); // Change this for production.
+    res.json({ message: 'Logged out successfully.' });
+});
+
+// Setting CSP headers to allow Cognito scripts.
+// app.use('/auth-route', helmet.contentSecurityPolicy({
+//     directives: {
+//         defaultSrc: ["'self'"],
+//         scriptSrc: ["'self'", "'unsafe-inline'", "https://d1lcia0inyjsq.cloudfront.net", "https://alexanderrentals-login.auth.us-east-2.amazoncognito.com"]
+//     },
+//     reportOnly: true,
+//     reportUri: '/report-violation',
+// }));
+
+// app.use(helmet.contentSecurityPolicy({
+//     directives: {
+//         defaultSrc: ["'self'"],
+//         scriptSrc: ["'self'", "https://d1lcia0inyjsq.cloudfront.net", "https://alexanderrentals-login.auth.us-east-2.amazoncognito.com"]
+//     },
+//     reportOnly: true,
+//     reportUri: '/report-violation',
+// }));
 
 // Creating route to fetch data (YGL API)
 app.post('/properties', async (req, res) => {

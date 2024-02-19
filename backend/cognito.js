@@ -41,7 +41,10 @@ function signIn(username, password, callback) {
         // Get and securely store the refreshToken.
         callback(null, { accessToken, idToken });
       },
-      onFailure: (err) => callback(err, null),
+      onFailure: (err) => {
+        console.error('signIn error:', err);
+        callback(err, null);
+      },
     });
   });
 }

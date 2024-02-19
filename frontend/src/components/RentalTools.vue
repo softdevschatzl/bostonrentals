@@ -172,4 +172,17 @@ export default {
             width: 75px;
         }
     }
+
+    @media only screen and (max-width: 578px) {
+        h3 {
+            font-size: 16px;
+        }
+        .tools-btn {
+            width: 50px;
+            font-size: 10px;
+        }
+        p {
+            font-size: 12px;
+        }
+    }
 </style>

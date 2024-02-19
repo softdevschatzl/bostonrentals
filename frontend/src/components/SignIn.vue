@@ -42,9 +42,34 @@ export default {
       })
       .catch(error => console.error('Error checking login status:', error));
     },
+    async handleAuthorizationCode(code) {
+      try {
+        const response = await fetch('http://localhost:3000/api/token', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ code })
+        });
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Token response:', data);
+          this.checkLoginStatus();
+        } else {
+          console.error('Token exchange failed.');
+        }
+      } catch (error) {
+        console.error('Token exchange failed:', error.message);
+      }
+    },
   },
   mounted() {
-    this.checkLoginStatus();
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+
+    if (code) {
+      this.handleAuthorizationCode(code);
+    }
   }
 }
 </script>

@@ -178,10 +178,10 @@ export default {
 
     }
     .apartment-item {
-      width: 50%;
+      width: 25%;
     }
     .apartments {
-      width: 65%;
+      width: 50%;
     }
   }
 </style>
