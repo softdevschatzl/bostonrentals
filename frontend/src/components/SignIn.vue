@@ -49,7 +49,8 @@ export default {
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ code })
+          body: JSON.stringify({ code }),
+          credentials: 'include'
         });
         if (response.ok) {
           const data = await response.json();

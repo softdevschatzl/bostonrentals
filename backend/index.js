@@ -47,22 +47,6 @@ app.use(cors({
 app.post('/api/login', (req, res) => {
     const { username, password } = req.body;
     console.log('Login request received:', username, password);
-
-    signIn(username, password, (err, tokens) => {
-        if (err) {
-            // Handle error (invalid credentials, Cognito errors, etc.)
-            res.status(401).json({ error: err.message });
-        } else {
-            // Set tokens in HTTP-only cookies
-            const isLocal = process.env.NODE_ENV === 'development';
-            res.cookie('accessToken', tokens.accessToken, { httpOnly: true, secure: !isLocal, sameSite: 'Lax' });
-            res.cookie('idToken', tokens.idToken, { httpOnly: true, secure: !isLocal, sameSite: 'Lax' });
-
-            // Send a success response
-            res.status(200).json({ message: 'Logged in successfully' });
-            console.log('Tokens received:', tokens);
-        }
-    });
 });
 
 app.post('/api/token', async (req, res) => {
@@ -82,7 +66,13 @@ app.post('/api/token', async (req, res) => {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
         });
-        
+
+        const tokens = response.data;
+
+        // Set tokens in HTTP-only cookies.
+        const isLocal = process.env.NODE_ENV === 'development';
+        res.cookie('access_token', tokens.access_token, { httpOnly: true, secure: !isLocal, sameSite: 'Lax' });
+        res.cookie('id_token', tokens.id_token, { httpOnly: true, secure: !isLocal, sameSite: 'Lax' });
         res.json({ message: 'Authentication successful', tokens: response.data});
     } catch (error) {
         console.error('Failed to exchange code for tokens:', error);
@@ -96,25 +86,32 @@ const client = jwksClient({
 });
 
 function getKey(header, callback) {
-    client.getSigningKey(header.kid, function (err, key) {
-        var signingKey = key.publicKey || key.rsaPublicKey;
-        callback(null, signingKey);
+    client.getSigningKey(header.kid, function(err, key) {
+        if (err) {
+            callback(err, null);
+        } else {
+            // Use getPublicKey() to get the actual key
+            var signingKey = key.getPublicKey();
+            callback(null, signingKey);
+        }
     });
 }
 
 // And then check the login status.
 app.get('/api/check-login-status', (req, res) => {
-    const accessToken = req.cookies.accessToken;
+    console.log("Received cookies: ", req.cookies);
+    const accessToken = req.cookies.access_token;
 
     if (accessToken) {
-        try {
-            jwt.verify(accessToken, process.env.COGNITO_PUBLIC_KEY);
-            res.json({ isLoggedIn: true });
-        } catch (err) {
-            console.error('Invalid access token:', err.message);
-            res.clearCookie('accessToken');
-            res.json({ isLoggedIn: false });
-        }
+        jwt.verify(accessToken, getKey, { algorithm: ['RS256'] }, function(err, decoded) {
+            if (err) {
+                console.error("Token validation error:", err.message);
+                res.clearCookie('accessToken'); // Clear the invalid token
+                res.json({ isLoggedIn: false });
+            } else {
+                res.json({ isLoggedIn: true });
+            }
+        });
     } else {
         res.json({ isLoggedIn: false });
     }
