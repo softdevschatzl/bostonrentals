@@ -70,13 +70,71 @@ app.post('/api/token', async (req, res) => {
         const tokens = response.data;
 
         // Set tokens in HTTP-only cookies.
+        const tenMinutes = 1000 * 60 * 10;
         const isLocal = process.env.NODE_ENV === 'development';
-        res.cookie('access_token', tokens.access_token, { httpOnly: true, secure: !isLocal, sameSite: 'Lax' });
-        res.cookie('id_token', tokens.id_token, { httpOnly: true, secure: !isLocal, sameSite: 'Lax' });
+        res.cookie('access_token', tokens.access_token, { 
+            httpOnly: true, 
+            secure: !isLocal, // Just set this to true in production.
+            sameSite: 'Lax', 
+            maxAge: tenMinutes
+        });
+        res.cookie('id_token', tokens.id_token, { 
+            httpOnly: true, 
+            secure: !isLocal, // Just set this to true in production.
+            sameSite: 'Lax' 
+        });
+        res.cookie('refresh_token', tokens.refresh_token, {
+            httpOnly: true,
+            secure: !isLocal, // Just set this to true in production.
+            sameSite: 'Lax',
+            maxAge: 1000 * 60 * 60 * 24 * 30 // 30 days
+        });
+
         res.json({ message: 'Authentication successful', tokens: response.data});
     } catch (error) {
         console.error('Failed to exchange code for tokens:', error);
         res.status(500).json({ error: 'Failed to exchange code for tokens' });
+    }
+});
+
+// Endpoint for refreshing the access token.
+app.post('/api/refresh', async (req, res) => {
+    const refreshToken = req.cookies.refresh_token;
+
+    if (!refreshToken) {
+        return res.status(401).json({ error: 'No refresh token found' });
+    }
+
+    try {
+        // Use Cognito to validate the refresh token and get a new access token.
+        // Replace the URL and headers with the correct values.
+        const response = await axios.post('https://alexandersrentals-nosms.auth.us-east-2.amazoncognito.com/oauth2/token', querystring.stringify({
+            grant_type: 'refresh_token',
+            client_id: process.env.COGNITO_CLIENT_ID,
+            refresh_token: refreshToken,
+        }), {
+            headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+    });
+
+    const tokens = response.data;
+
+    // Set the new access token in an HTTP-only cookie.
+    const isLocal = process.env.NODE_ENV === 'development';
+    res.cookie('access_token', tokens.access_token, {
+        httpOnly: true,
+        secure: !isLocal, // Just set this to true in production.
+        sameSite: 'Lax',
+        maxAge: 1000 * 60 * 10 // 10 minutes
+    });
+    
+
+    res.json({ success: true });
+
+    } catch (error) {
+        console.error('Failed to refresh token:', error);
+        res.status(500).json({ error: 'Failed to refresh token' });
     }
 });
 
@@ -121,6 +179,15 @@ app.get('/api/logout', (req, res) => {
     res.clearCookie('accessToken', { path: '/', domain: 'http://localhost:8080/'}); // Change this for production.
     res.clearCookie('idToken', { path: '/', domain: 'http://localhost:8080/'}); // Change this for production.
     res.json({ message: 'Logged out successfully.' });
+});
+
+// Endpoint for fetching cognito client id and domain.
+app.get('/api/cognito-config', (req, res) => {
+    res.json({
+        cognitoClientId: process.env.COGNITO_CLIENT_ID,
+        cognitoDomain: process.env.COGNITO_DOMAIN,
+        redirectUri: 'http://localhost:8080/'
+    });
 });
 
 // Setting CSP headers to allow Cognito scripts.

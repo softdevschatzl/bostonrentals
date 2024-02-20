@@ -12,6 +12,32 @@ export default {
   components: {
     NavBar,
   },
+  data() {
+    return {
+      inactivityTimer: null,
+    }
+  },
+  created() {
+    this.resetInactivityTimer()
+    window.addEventListener('mousemove', this.resetInactivityTimer);
+    window.addEventListener('keypress', this.resetInactivityTimer);
+  },
+  beforeUnmount() {
+    clearTimeout(this.inactivityTimer);
+    window.removeEventListener('mousemove', this.resetInactivityTimer);
+    window.removeEventListener('keypress', this.resetInactivityTimer);
+  },
+  methods: {
+    resetInactivityTimer() {
+      clearTimeout(this.inactivityTimer);
+      this.inactivityTimer = setTimeout(() => {
+        this.$router.push('/logout');
+      }, 600000);
+    },
+    handleInactivity() {
+      this.$router.push('/logout');
+    }
+  }
 }
 </script>
 

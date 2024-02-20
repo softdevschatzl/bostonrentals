@@ -63,6 +63,25 @@ export default {
         console.error('Token exchange failed:', error.message);
       }
     },
+    async refreshToken() {
+      try {
+        const response = await fetch('http://localhost:3000/api/refresh', {
+          method: 'POST',
+          credentials: 'include'
+        });
+        
+        if (!response.ok) {
+          throw new ('Token refresh failed.');
+        }
+
+        // The access token has been refreshed successfully.
+        this.checkLoginStatus();
+      } catch (error) {
+        console.error('Token refresh failed:', error);
+        // Redirect to the login page to log back in.
+        this.$router.push('/login');
+      }
+    }
   },
   mounted() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -96,5 +115,12 @@ export default {
     opacity: 0.75;
     box-shadow: 2px 2px 5px #3b3b50,
                 -2px -2px 5px #5c5c7c;
+  }
+
+  @media only screen and (max-width: 768px) {
+    .user-sign-in {
+      padding: 0.6rem 0.8rem;
+      font-size: 0.75rem;
+    }
   }
 </style>

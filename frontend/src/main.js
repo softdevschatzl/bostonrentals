@@ -8,6 +8,31 @@ import App from './App.vue'
 import router from './router';
 import axios from 'axios';
 
+async function fetchCognitoConfig() {
+    try {
+        const response = await fetch('http://localhost:8080/api/cognito-config');
+        const config = await response.json();
+        this.cognitoClientId = config.cognitoClientId;
+        this.cognitoDomain = config.cognitoDomain;
+        this.redirectUri = config.redirectUri;
+    } catch (error) {
+        console.error('Failed to fetch cognito configuration.', error);
+    }
+}
+
+async function main() {
+    const cognitoConfig = await fetchCognitoConfig();
+
+    if (!cognitoConfig) {
+        console.error('Failed to fetch cognito configuration.');
+        return;
+    }
+    
+    const app = createApp(App);
+    app.config.globalProperties.$cognitoConfig = cognitoConfig;
+    app.use(router).mount('#app')
+}
+
 axios.defaults.baseURL = 'http://localhost:3000';
 
 const app = createApp(App);
@@ -15,3 +40,5 @@ const app = createApp(App);
 app.use(router);
 
 app.mount('#app')
+
+main();
