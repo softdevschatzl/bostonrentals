@@ -184,7 +184,6 @@ app.get('/api/logout', (req, res) => {
 // Endpoint for fetching cognito client id and domain.
 app.get('/api/cognito-config', (req, res) => {
     res.json({
-        cognitoUserPoolId: process.env.COGNITO_USER_POOL_ID,
         cognitoClientId: process.env.COGNITO_CLIENT_ID,
         cognitoDomain: process.env.COGNITO_DOMAIN,
         redirectUri: 'http://localhost:8080/'

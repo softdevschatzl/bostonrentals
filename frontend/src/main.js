@@ -7,13 +7,14 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router';
 import axios from 'axios';
-import { Amplify } from 'aws-amplify';
 
 async function fetchCognitoConfig() {
     try {
         const response = await fetch('http://localhost:8080/api/cognito-config');
         const config = await response.json();
-        return config;
+        this.cognitoClientId = config.cognitoClientId;
+        this.cognitoDomain = config.cognitoDomain;
+        this.redirectUri = config.redirectUri;
     } catch (error) {
         console.error('Failed to fetch cognito configuration.', error);
     }
@@ -24,23 +25,20 @@ async function main() {
 
     if (!cognitoConfig) {
         console.error('Failed to fetch cognito configuration.');
-        // return;
+        return;
     }
     
     const app = createApp(App);
     app.config.globalProperties.$cognitoConfig = cognitoConfig;
     app.use(router).mount('#app')
-
-    Amplify.configure({
-        Auth: {
-            mandatorySignIn: true,
-            region: 'us-east-2',
-            userPoolId: cognitoConfig.userPoolId,
-            userPoolWebClientId: cognitoConfig.cognitoClientId,
-        }
-    });
 }
 
 axios.defaults.baseURL = 'http://localhost:3000';
+
+const app = createApp(App);
+
+app.use(router);
+
+app.mount('#app')
 
 main();
