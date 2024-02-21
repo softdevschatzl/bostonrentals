@@ -12,9 +12,7 @@ async function fetchCognitoConfig() {
     try {
         const response = await fetch('http://localhost:8080/api/cognito-config');
         const config = await response.json();
-        this.cognitoClientId = config.cognitoClientId;
-        this.cognitoDomain = config.cognitoDomain;
-        this.redirectUri = config.redirectUri;
+        return config;
     } catch (error) {
         console.error('Failed to fetch cognito configuration.', error);
     }
@@ -34,11 +32,5 @@ async function main() {
 }
 
 axios.defaults.baseURL = 'http://localhost:3000';
-
-const app = createApp(App);
-
-app.use(router);
-
-app.mount('#app')
 
 main();

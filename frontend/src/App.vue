@@ -31,12 +31,25 @@ export default {
     resetInactivityTimer() {
       clearTimeout(this.inactivityTimer);
       this.inactivityTimer = setTimeout(() => {
-        this.$router.push('/logout');
+        this.redirectToCognitoUI();
       }, 600000);
     },
     handleInactivity() {
-      this.$router.push('/logout');
-    }
+      this.redirectToCognitoUI();
+    },
+    async redirectToCognitoUI() {
+      try {
+        const response = await fetch('http://localhost:3000/api/login');
+        if (response.ok) {
+          const data = await response.json();
+          window.location.href = data.url;
+        } else {
+          console.error('Login failed.');
+        }
+      } catch (error) {
+        console.error('Login failed:', error.message);
+      }
+    },
   }
 }
 </script>

@@ -7,6 +7,7 @@
  */
 require('dotenv').config();
 const { CognitoUserPool, CognitoUser, AuthenticationDetails } = require('amazon-cognito-identity-js');
+
 const userPoolId = process.env.COGNITO_USER_POOL_ID;
 const appClientId =   process.env.COGNITO_CLIENT_ID;
 
@@ -55,7 +56,7 @@ function redirectToCognitoUI() {
   const callbackUrl = 'http://localhost:8080/'; // change to alexandersrentals.com.
   const responseType = 'code';
 
-  const loginUrl = `${cognitoDomain}/login?response_type=${responseType}&client_id=${clientId}&redirect_uri=${callbackUrl}`;
+  const loginUrl = `${cognitoDomain}/login?response_type=${responseType}&client_id=${clientId}&redirect_uri=${callbackUrl}&scope=openid+email+profile`;
 
   return loginUrl;
 }

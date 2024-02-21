@@ -31,21 +31,6 @@ const routes = [
     {
         path: '/my-account', name: 'MyAccount', component: MyAccount
     },
-    {
-        path: '/login', name: 'Login', 
-        beforeEnter() {
-            const cognitoClientId = this.$cognitoConfig.cognitoClientId;
-            const cognitoDomain = this.$cognitoConfig.cognitoDomain;
-            const redirectUri = this.$cognitoConfig.redirectUri;
-
-            if (!cognitoClientId || !cognitoDomain) {
-                console.error('Cognito configuration is missing.');
-                return;
-            }
-
-            window.location.href = `${cognitoDomain}/login?response_type=code&client_id=${cognitoClientId}&redirect_uri=${redirectUri}`;
-        }
-    },
 ];
 
 const router = createRouter({
@@ -54,5 +39,3 @@ const router = createRouter({
 });
 
 export default router;
-
-

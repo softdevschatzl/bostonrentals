@@ -15,6 +15,8 @@ const querystring = require('querystring');
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
 const jwksClient = require('jwks-rsa');
+const { CognitoIdentityProviderClient, GetUserCommand } = require('@aws-sdk/client-cognito-identity-provider');
+const AWS = require('aws-sdk');
 
 const app = express();
 const PORT = 3000;
@@ -22,6 +24,12 @@ const PORT = 3000;
 app.use(cookieParser());
 
 app.use(express.json());
+
+const cognitoISP = new CognitoIdentityProviderClient({
+    region: process.env.AWS_REGION
+});
+
+const cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
 
 // Only allowing access from certain origin points.
 const allowedOrigins = [
@@ -42,6 +50,12 @@ app.use(cors({
     },
     credentials: true
 }));
+
+// Creates endpoint for Cognito login.
+app.get('/api/login', (req, res) => {
+    const url = redirectToCognitoUI();
+    res.json({ url });
+});
 
 // Login logic.
 app.post('/api/login', (req, res) => {
@@ -70,13 +84,13 @@ app.post('/api/token', async (req, res) => {
         const tokens = response.data;
 
         // Set tokens in HTTP-only cookies.
-        const tenMinutes = 1000 * 60 * 10;
+        const fifteenMinutes = 1000 * 60 * 15;
         const isLocal = process.env.NODE_ENV === 'development';
         res.cookie('access_token', tokens.access_token, { 
             httpOnly: true, 
             secure: !isLocal, // Just set this to true in production.
             sameSite: 'Lax', 
-            maxAge: tenMinutes
+            maxAge: fifteenMinutes
         });
         res.cookie('id_token', tokens.id_token, { 
             httpOnly: true, 
@@ -175,6 +189,30 @@ app.get('/api/check-login-status', (req, res) => {
     }
 });
 
+app.get('/api/user', async (req, res) => {
+    const accessToken = req.cookies.access_token;
+    console.log("Access token from index:", accessToken);
+    if (!accessToken) {
+        return res.status(401).json({ error: 'No access token found' });
+    }
+    // Validate the access token and fetch user data from Cognito.
+    // Return the user data as a response.
+
+    const params = {
+        AccessToken: accessToken
+    };
+    
+    cognitoidentityserviceprovider.getUser(params, function(err, data) {
+        if (err) {
+            console.error("Error fetching user:", err);
+            res.status(500).json({ error: 'Failed to fetch user' });
+        } else {
+            console.log("User data:", data);
+            res.json(data);
+        }
+    });
+});
+
 app.get('/api/logout', (req, res) => {
     res.clearCookie('accessToken', { path: '/', domain: 'http://localhost:8080/'}); // Change this for production.
     res.clearCookie('idToken', { path: '/', domain: 'http://localhost:8080/'}); // Change this for production.
@@ -184,7 +222,9 @@ app.get('/api/logout', (req, res) => {
 // Endpoint for fetching cognito client id and domain.
 app.get('/api/cognito-config', (req, res) => {
     res.json({
+        cognitoRegion: 'us-east-2',
         cognitoClientId: process.env.COGNITO_CLIENT_ID,
+        cognitoUserPoolId: process.env.COGNITO_USER_POOL_ID,
         cognitoDomain: process.env.COGNITO_DOMAIN,
         redirectUri: 'http://localhost:8080/'
     });
@@ -283,12 +323,6 @@ app.get('/api/location', async (req, res) => {
         return res.status(500).json({ error: "Failed to fetch user location." });
     }
 });
-
-// Creates endpoint for Cognito login.
-app.get('/api/login', (req, res) => {
-    const url = redirectToCognitoUI();
-    res.json({ url });
-})
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
