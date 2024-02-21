@@ -190,27 +190,20 @@ app.get('/api/check-login-status', (req, res) => {
 });
 
 app.get('/api/user', async (req, res) => {
-    const accessToken = req.cookies.access_token;
-    console.log("Access token from index:", accessToken);
-    if (!accessToken) {
-        return res.status(401).json({ error: 'No access token found' });
+    const idToken = req.cookies.id_token;
+    console.log("ID Token:", idToken);
+    if (!idToken) {
+        return res.status(401).json({ error: 'No ID token found' });
     }
-    // Validate the access token and fetch user data from Cognito.
-    // Return the user data as a response.
 
-    const params = {
-        AccessToken: accessToken
-    };
-    
-    cognitoidentityserviceprovider.getUser(params, function(err, data) {
-        if (err) {
-            console.error("Error fetching user:", err);
-            res.status(500).json({ error: 'Failed to fetch user' });
-        } else {
-            console.log("User data:", data);
-            res.json(data);
-        }
-    });
+    try {
+        const decodedToken = jwt.decode(idToken);
+        console.log("Decoded Token:", decodedToken);
+        res.json({ user: decodedToken });
+    } catch (error) {
+        console.error('Failed to decode token:', error);
+        res.status(500).json({ error: 'Failed to decode token' });
+    }
 });
 
 app.get('/api/logout', (req, res) => {
