@@ -210,6 +210,7 @@ app.get('/api/logout', (req, res) => {
     res.clearCookie('accessToken', { path: '/', domain: 'http://localhost:8080/'}); // Change this for production.
     res.clearCookie('idToken', { path: '/', domain: 'http://localhost:8080/'}); // Change this for production.
     res.json({ message: 'Logged out successfully.' });
+    window.alert('You have been logged out.');
 });
 
 // Endpoint for fetching cognito client id and domain.

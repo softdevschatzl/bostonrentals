@@ -1,48 +1,62 @@
 <template>
   <div class="account-page">
     <div class="my-account" ref="my-account">
-      <div class="container">
-        <h1>My Account</h1>
-        <div v-if="Object.keys(userAttributes).length > 0" class="account-info">
-          <h2>Account Information</h2>
-          <!-- <ul>
-            <li v-for="(value, key) in userAttributes" :key="key">
-              <strong>{{ key }}:</strong> {{ value }}
-            </li>
-          </ul> -->
-          <ul>
-            <li>
-              <strong>Name:</strong> {{ userAttributes.name }}
-            </li>
-            <li>
-              <strong>Email:</strong> {{ userAttributes.email }}
-              <span v-if="userAttributes.email_verified">&#10003;</span>
-            </li>
-            <li>
-              <strong>Phone Number:</strong> {{ userAttributes.phone_number }}
-            </li>
-          </ul>
-          <button @click="handleLogout">Logout</button>
-          <button @click="redirectToCognitoUI">Change Password</button>
-        </div>
-        <div v-else>
-          <p>Loading...</p>
-        </div>
-      </div>
-      <div class="additional-info">
-        <h2>Additional Information</h2>
-        <div class="pre-approval-form">
-          <label for="ethnicity">Ethnicity:</label>
-          <input type="text" id="ethnicity" v-model="ethnicity">
+      <div class="top-row">
+      <h1>My Account</h1>
+        <div class="container">
+          <div class="account-info acc-object" v-if="Object.keys(userAttributes).length > 0">
+            <h2 class="info-title">Account Information</h2>
+            <!-- <ul>
+              <li v-for="(value, key) in userAttributes" :key="key">
+                <strong>{{ key }}:</strong> {{ value }}
+              </li>
+            </ul> -->
+            <ul>
+              <li>
+                <strong>Name:</strong> {{ userAttributes.name }}
+              </li>
+              <li>
+                <strong>Email:</strong> {{ userAttributes.email }}
+                <span v-if="userAttributes.email_verified">&#10003;</span>
+              </li>
+              <li>
+                <strong>Phone Number:</strong> {{ userAttributes.phone_number }}
+              </li>
+            </ul>
+            <div class="btn-row">
+              <button class="btn-logout" @click="handleLogout">Logout</button>
+              <button class="btn-pass" @click="redirectToCognitoUI">Change Password</button>
+            </div>
+          </div>
+          <div v-else>
+            <p>Loading...</p>
+          </div>
+          <div class="additional-info acc-object">
+            <div class="add-info-title">
+              <h2>Additional Information</h2>
+              <p>Optional form for pre-approval</p>
+            </div>
+            <div class="pre-approval-form">
+              <label for="income">Income:</label>
+              <input type="number" id="income" v-model="income">
 
-          <label for="income">Income:</label>
-          <input type="number" id="income" v-model="income">
+              <label for="creditScore">Credit Score:</label>
+              <input type="number" id="creditScore" v-model="creditScore">
 
-          <label for="pets">Pets:</label>
-          <input type="text" id="pets" v-model="pets">
+              <label for="pets">Pets:</label>
+              <input type="text" id="pets" v-model="pets">
 
-          <label for="student">Student:</label>
-          <input type="checkbox" id="student" v-model="isStudent">
+              <label for="student">Student:</label>
+              <input type="checkbox" id="student" v-model="isStudent">
+
+              <label for="employed">Apartment Preferences:</label>
+              <input placeholder="Describe your dream apartment..." type="text" id="apartmentPreferences" v-model="apartmentPreferences">
+
+              <label for="broker">Are you aware that you would be working with a brokerage, there could be a fee for our service?</label>
+              <input type="checkbox" id="broker" v-model="isBroker">
+            </div>
+            <button class="submit-form" @click="submitForm">Submit</button>
+          </div>
         </div>
       </div>
     </div>
@@ -112,45 +126,63 @@ export default {
       } else {
         console.error("Failed to logout.");
       }
+    },
+    submitForm() {
+      console.log("Submitting form...");
+      // implement this to submit and save to DB.
     }
   }
 };
 </script>
 
 <style scoped>
-.my-account {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-  align-items: center;
-  background: black;
-  border-radius: 5px;
-  box-shadow: -10px -10px 20px #252525, 10px 10px 20px #505050;
-  padding: 20px;
-  max-width: 100%;
+/* General Styles */
+* {
+  box-sizing: border-box;
 }
 
-.container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+body {
+  font-family: Arial, sans-serif;
+  background-color: black; /* Light background for neumorphic effect */
 }
 
-h1 {
-  color: white;
-}
-h2 {
-  margin-bottom: 20px;
+/* Account Page Styles */
+.account-page {
+  font-size: 16px;
   color: #333;
 }
 
+/* My Account Styles */
+.my-account {
+  background: #363636;
+  border-radius: 20px;
+  box-shadow: 8px 8px 15px #a7a7a7, -8px -8px 15px #ffffff;
+  padding: 40px;
+  margin: 20px;
+}
+
+/* Top Row Styles */
+.top-row h1 {
+  color: #333;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+/* Container Styles */
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+/* Account Information Styles */
 .account-info {
-  background: #bbbbbb;
-  border-radius: 10px;
-  box-shadow: -5px -5px 10px #c9c9c9, 5px 5px 10px #999999;
+  background: #E0E5EC;
+  border-radius: 20px;
+  box-shadow: inset 5px 5px 10px #a7a7a7, inset -5px -5px 10px #ffffff;
   padding: 20px;
   margin-top: 20px;
+  width: 300px;
 }
 
 .account-info ul {
@@ -159,37 +191,62 @@ h2 {
 }
 
 .account-info li {
-  background: #bbbbbb;
-  border-radius: 10px;
-  box-shadow: inset -5px -5px 10px #c9c9c9, inset 5px 5px 10px #999999;
   padding: 10px;
   margin-bottom: 10px;
 }
 
-.account-info li strong {
-  color: #333;
-}
-
-.saved-lists {
-  background: #bbbbbb;
-  border-radius: 10px;
-  box-shadow: -5px -5px 10px #c9c9c9, 5px 5px 10px #999999;
-  padding: 20px;
-  margin-top: 20px;
-}
-
+/* Additional Information Styles */
 .additional-info {
-  background: #bbbbbb;
-  border-radius: 10px;
-  box-shadow: -5px -5px 10px #c9c9c9, 5px 5px 10px #999999;
+  background: #E0E5EC;
+  border-radius: 20px;
+  box-shadow: inset 5px 5px 10px #a7a7a7, inset -5px -5px 10px #ffffff;
   padding: 20px;
   margin-top: 20px;
+  width: 300px;
 }
 
+/* Form Styles */
 .pre-approval-form {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
 }
+
+.pre-approval-form input[type='text'],
+.pre-approval-form input[type='number'],
+.pre-approval-form input[type='checkbox'] {
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px 0;
+  background: #E0E5EC;
+  box-shadow: inset 2px 2px 5px #a7a7a7, inset -2px -2px 5px #ffffff;
+}
+
+/* Button Styles */
+.btn-logout, .btn-pass, .submit-form {
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+  margin-top: 20px;
+  background: #E0E5EC;
+  box-shadow: 3px 3px 6px #a7a7a7, -3px -3px 6px #ffffff;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-logout:hover, .btn-pass:hover, .submit-form:hover {
+  box-shadow: inset 3px 3px 6px #a7a7a7, inset -3px -3px 6px #ffffff;
+}
+
+/* Saved Lists Styles */
+.saved-lists {
+  background: #E0E5EC;
+  border-radius: 20px;
+  box-shadow: 8px 8px 15px #a7a7a7, -8px -8px 15px #ffffff;
+  padding: 20px;
+  margin-top: 20px;
+  text-align: center;
+}
+
 </style>
