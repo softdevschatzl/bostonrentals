@@ -10,7 +10,6 @@ TODO:
     - Add sort low-high/high-low for table headers.
 
     - Add some cool animation.
-    
         
 APIs/Technologies:
     - YouGotListings (better property data, more $)
