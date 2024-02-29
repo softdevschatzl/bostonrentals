@@ -34,7 +34,7 @@
           <div class="additional-info acc-object">
             <div class="add-info-title">
               <h2>Additional Information</h2>
-              <p>Optional form for pre-approval</p>
+              <p>Please fill out this form for rental pre-approval</p>
             </div>
             <div class="pre-approval-form">
               <label for="income">Income:</label>
@@ -46,14 +46,18 @@
               <label for="pets">Pets:</label>
               <input type="text" id="pets" v-model="pets">
 
-              <label for="student">Student:</label>
-              <input type="checkbox" id="student" v-model="isStudent">
+              <div class="checkbox">
+                <label for="student">Student:</label>
+                <input type="checkbox" id="student" v-model="isStudent">
+              </div>
 
               <label for="employed">Apartment Preferences:</label>
               <input placeholder="Describe your dream apartment..." type="text" id="apartmentPreferences" v-model="apartmentPreferences">
 
-              <label for="broker">Are you aware that you would be working with a brokerage, there could be a fee for our service?</label>
-              <input type="checkbox" id="broker" v-model="isBroker">
+              <div class="checkbox">
+                <label for="broker">Are you aware that you would be working with a brokerage and there could be a fee for our service?</label>
+                <input type="checkbox" id="broker" v-model="isBroker">
+              </div>
             </div>
             <button class="submit-form" @click="submitForm">Submit</button>
           </div>
@@ -163,7 +167,7 @@ body {
 
 /* Top Row Styles */
 .top-row h1 {
-  color: #333;
+  color: #ffffff;
   margin-bottom: 40px;
   text-align: center;
 }
@@ -183,6 +187,7 @@ body {
   padding: 20px;
   margin-top: 20px;
   width: 300px;
+  color: #333;
 }
 
 .account-info ul {
@@ -197,12 +202,21 @@ body {
 
 /* Additional Information Styles */
 .additional-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   background: #E0E5EC;
   border-radius: 20px;
   box-shadow: inset 5px 5px 10px #a7a7a7, inset -5px -5px 10px #ffffff;
   padding: 20px;
   margin-top: 20px;
   width: 300px;
+}
+.add-info-title {
+  text-align: center;
+  margin-bottom: 30px;
+  margin-top: 30px;
 }
 
 /* Form Styles */
@@ -212,8 +226,7 @@ body {
 }
 
 .pre-approval-form input[type='text'],
-.pre-approval-form input[type='number'],
-.pre-approval-form input[type='checkbox'] {
+.pre-approval-form input[type='number'] {
   border: none;
   border-radius: 10px;
   padding: 10px;
@@ -221,8 +234,27 @@ body {
   background: #E0E5EC;
   box-shadow: inset 2px 2px 5px #a7a7a7, inset -2px -2px 5px #ffffff;
 }
+.pre-approval-form input {
+  margin-bottom: 15px;
+}
+.checkbox {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  margin-bottom: 15px;
+  margin-top: 15px;
+}
+.checkbox label {
+  margin-bottom: 10px;
+}
 
 /* Button Styles */
+.btn-row {
+  display: flex;
+  justify-content: space-around;
+}
 .btn-logout, .btn-pass, .submit-form {
   border: none;
   border-radius: 20px;
