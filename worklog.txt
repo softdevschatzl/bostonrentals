@@ -18,3 +18,21 @@ APIs/Technologies:
 
 Upon Deployment: 
     - configure the web server in EC2 to always encrypt requests under HTTPS
+
+Deployment: 
+ TODO: 
+ Security Considerations
+    - Uncomment and Configure Helmet: You've commented out the Helmet middleware, which is crucial for securing your Express app by setting various HTTP headers. Ensure Helmet is correctly configured and enabled to enhance your application's security.
+
+    - Validate Input: Ensure all inputs, especially those coming from the client-side, are properly validated to prevent injection attacks and other common security vulnerabilities.
+
+    - Environment-Specific Configuration: Make sure sensitive information, especially API keys and database credentials, are not hardcoded in your source files. It looks like you're using dotenv for configuration, which is good. Ensure the .env file is never uploaded to version control.
+
+    - HTTPS for Production: Ensure that your application is served over HTTPS in production. This might involve configuring Nginx to use SSL/TLS certificates (Let's Encrypt can provide these for free) and redirecting all HTTP traffic to HTTPS.
+
+    - Performance and Reliability
+    - Use of PM2: Running your application with PM2 is a good choice for production as it helps manage and keep your app alive. Consider using PM2's ecosystem file to configure environment variables and other settings.
+
+    - Logging: Implement a robust logging solution like winston or morgan for Express. Proper logging can help diagnose issues, track application usage, and monitor for potential security breaches.
+
+    - Rate Limiting: To protect against brute-force attacks, consider adding rate limiting on your API endpoints.
