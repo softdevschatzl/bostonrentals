@@ -17,5 +17,4 @@ APIs/Technologies:
     - AWS EC2 and RDS
 
 Upon Deployment: 
-    - Switch userIp from hardcoded to req.ip in index.js.
     - configure the web server in EC2 to always encrypt requests under HTTPS

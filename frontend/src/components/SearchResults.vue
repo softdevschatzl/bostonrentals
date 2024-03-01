@@ -158,12 +158,14 @@ export default {
   border-right: 1px solid #cecece;
 }
 .listings th, .listings td {
-  width: calc(1/6*100%);
+  /* width: calc(1/6*100%); */
   box-sizing: border-box;
 }
 .listing td {
   padding: 15px;
   border-bottom: 2px solid #aaaaaa;
+  /* border-right: 1px solid #6e6e6e;
+  border-left: 1px solid #6e6e6e; */
 }
 
 .listing {

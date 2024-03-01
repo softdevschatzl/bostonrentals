@@ -88,18 +88,18 @@ app.post('/api/token', async (req, res) => {
         const isLocal = process.env.NODE_ENV === 'development';
         res.cookie('access_token', tokens.access_token, { 
             httpOnly: true, 
-            secure: !isLocal, // Just set this to true in production.
+            secure: true, 
             sameSite: 'Lax', 
             maxAge: fifteenMinutes
         });
         res.cookie('id_token', tokens.id_token, { 
             httpOnly: true, 
-            secure: !isLocal, // Just set this to true in production.
+            secure: true, 
             sameSite: 'Lax' 
         });
         res.cookie('refresh_token', tokens.refresh_token, {
             httpOnly: true,
-            secure: !isLocal, // Just set this to true in production.
+            secure: true, 
             sameSite: 'Lax',
             maxAge: 1000 * 60 * 60 * 24 * 30 // 30 days
         });
@@ -138,7 +138,7 @@ app.post('/api/refresh', async (req, res) => {
     const isLocal = process.env.NODE_ENV === 'development';
     res.cookie('access_token', tokens.access_token, {
         httpOnly: true,
-        secure: !isLocal, // Just set this to true in production.
+        secure: true, 
         sameSite: 'Lax',
         maxAge: 1000 * 60 * 10 // 10 minutes
     });
@@ -307,7 +307,7 @@ app.get('/api/location', async (req, res) => {
     // console.log("Location route hit.")
     try {
         // const userIp = '149.40.50.212'; // Coordinates returned: 42.3562, -71.0631
-        const userIp = '98.118.50.209'; // Coordinates returned: 42.2518, -71.0805
+        const userIp = req.ip; // Coordinates returned: 42.2518, -71.0805
         // const userIp = req.ip; 
         const response = await axios.get(`http://ip-api.com/json/${userIp}`);
         // console.log("Response data:", response.data)

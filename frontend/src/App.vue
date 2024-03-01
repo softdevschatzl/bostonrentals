@@ -15,9 +15,11 @@ export default {
   data() {
     return {
       inactivityTimer: null,
+      isLoggedIn: false,
     }
   },
   created() {
+    this.checkIfLoggedIn();
     this.resetInactivityTimer()
     window.addEventListener('mousemove', this.resetInactivityTimer);
     window.addEventListener('keypress', this.resetInactivityTimer);
@@ -30,9 +32,11 @@ export default {
   methods: {
     resetInactivityTimer() {
       clearTimeout(this.inactivityTimer);
-      this.inactivityTimer = setTimeout(() => {
-        this.redirectToCognitoUI();
-      }, 600000);
+      if (this.isLoggedIn) {
+        this.inactivityTimer = setTimeout(() => {
+          this.redirectToCognitoUI();
+        }, 600000);
+      }
     },
     handleInactivity() {
       this.redirectToCognitoUI();
@@ -50,7 +54,22 @@ export default {
         console.error('Login failed:', error.message);
       }
     },
-  }
+    async checkIfLoggedIn() {
+      try {
+        const response = await fetch('http://localhost:3000/api/user', {
+          method: 'GET',
+          credentials: 'include',
+        });
+        if (response.ok) {
+          this.isLoggedIn = true;
+        } else {
+          this.isLoggedIn = false;
+        }
+      } catch (error) {
+        console.error('Error checking if logged in:', error);
+      }
+    },
+  },
 }
 </script>
 
