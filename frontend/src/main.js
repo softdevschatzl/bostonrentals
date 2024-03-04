@@ -8,9 +8,11 @@ import App from './App.vue'
 import router from './router';
 import axios from 'axios';
 
+const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
+
 async function fetchCognitoConfig() {
     try {
-        const response = await fetch('http://localhost:8080/api/cognito-config');
+        const response = await fetch(`${apiBaseUrl}/api/cognito-config`);
         const config = await response.json();
         return config;
     } catch (error) {

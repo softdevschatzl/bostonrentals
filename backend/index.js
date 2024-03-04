@@ -37,6 +37,7 @@ const allowedOrigins = [
     'http://localhost:3000', 
     'https://softdevschatzl.github.io', 
     'https://alexandersrentals.com', 
+    'https://www.alexandersrentals.com',
     'https://d1lcia0inyjsq.cloudfront.net', 
     'https://alexanderrentals-login.auth.us-east-2.amazoncognito.com'
 ];

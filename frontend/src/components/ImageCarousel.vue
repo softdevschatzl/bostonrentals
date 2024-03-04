@@ -1,7 +1,7 @@
 <!-- Credit to @adaban on Codepen for this one. -->
 <template>
 <div id="slider">
-  <transition-group tag="div" :name="transitionName" class="slides-group" v-if="show">
+  <transition-group tag="div" class="slides-group" v-if="show">
     <div 
       class="slide" 
       :key="current" 
