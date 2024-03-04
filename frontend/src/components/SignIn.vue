@@ -16,7 +16,7 @@ export default {
   methods: {
     async handleLogin() {
       try {
-        const response = await fetch('http://localhost:3000/api/login');
+        const response = await fetch('/api/login');
         if (response.ok) {
           const data = await response.json();
           window.location.href = data.url;
@@ -31,7 +31,7 @@ export default {
       this.$router.push('/my-account');
     },
     checkLoginStatus() {
-      fetch('http://localhost:3000/api/check-login-status', {
+      fetch('/api/check-login-status', {
         method: 'GET',
         credentials: 'include'
       })
@@ -44,7 +44,7 @@ export default {
     },
     async handleAuthorizationCode(code) {
       try {
-        const response = await fetch('http://localhost:3000/api/token', {
+        const response = await fetch('/api/token', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -65,7 +65,7 @@ export default {
     },
     async refreshToken() {
       try {
-        const response = await fetch('http://localhost:3000/api/refresh', {
+        const response = await fetch('/api/refresh', {
           method: 'POST',
           credentials: 'include'
         });

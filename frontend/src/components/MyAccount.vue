@@ -88,7 +88,7 @@ export default {
   methods: {
     async redirectToCognitoUI() {
       try {
-        const response = await fetch('http://localhost:3000/api/login');
+        const response = await fetch('/api/login');
         if (response.ok) {
           const data = await response.json();
           window.location.href = data.url;
@@ -101,7 +101,7 @@ export default {
     },
     async fetchUserAttributes() {
       try {
-        const response = await fetch("http://localhost:3000/api/user", {
+        const response = await fetch("/api/user", {
           method: "GET",
           credentials: "include"
         });
@@ -117,7 +117,7 @@ export default {
     },
     async handleLogout() {
       // Make backend endpoint call to /api/logout and redirect user to home page.
-      const response = await fetch("http://localhost:3000/api/logout", {
+      const response = await fetch("/api/logout", {
         method: "GET",
         credentials: "include"
       });

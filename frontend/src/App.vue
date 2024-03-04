@@ -43,7 +43,7 @@ export default {
     },
     async redirectToCognitoUI() {
       try {
-        const response = await fetch('http://localhost:3000/api/login');
+        const response = await fetch('/api/login');
         if (response.ok) {
           const data = await response.json();
           window.location.href = data.url;
@@ -56,7 +56,7 @@ export default {
     },
     async checkIfLoggedIn() {
       try {
-        const response = await fetch('http://localhost:3000/api/user', {
+        const response = await fetch('/api/user', {
           method: 'GET',
           credentials: 'include',
         });

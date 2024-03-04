@@ -8,6 +8,7 @@ import App from './App.vue'
 import router from './router';
 import axios from 'axios';
 
+axios.defaults.baseURL = process.env.VUE_APP_API_BASE_URL;
 const apiBaseUrl = process.env.VUE_APP_API_BASE_URL;
 
 async function fetchCognitoConfig() {
@@ -32,7 +33,5 @@ async function main() {
     app.config.globalProperties.$cognitoConfig = cognitoConfig;
     app.use(router).mount('#app')
 }
-
-axios.defaults.baseURL = 'http://localhost:3000';
 
 main();
