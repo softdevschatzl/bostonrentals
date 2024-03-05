@@ -73,7 +73,7 @@ app.post('/api/token', async (req, res) => {
             grant_type: 'authorization_code',
             client_id: process.env.COGNITO_CLIENT_ID,
             code,
-            redirect_uri: 'https://alexandersrentals.com/',
+            redirect_uri: 'https://alexandersrentals.com',
         });
         
         const response = await axios.post(`https://alexandersrentals-nosms.auth.us-east-2.amazoncognito.com/oauth2/token`, postData, {
