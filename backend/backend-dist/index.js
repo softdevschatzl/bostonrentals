@@ -73,7 +73,7 @@ app.post('/api/token', async (req, res) => {
             grant_type: 'authorization_code',
             client_id: process.env.COGNITO_CLIENT_ID,
             code,
-            redirect_uri: 'http://localhost:8080/',
+            redirect_uri: 'https://alexandersrentals.com',
         });
         
         const response = await axios.post(`https://alexandersrentals-nosms.auth.us-east-2.amazoncognito.com/oauth2/token`, postData, {
@@ -86,22 +86,21 @@ app.post('/api/token', async (req, res) => {
 
         // Set tokens in HTTP-only cookies.
         const fifteenMinutes = 1000 * 60 * 15;
-        const isLocal = process.env.NODE_ENV === 'development';
         res.cookie('access_token', tokens.access_token, { 
             httpOnly: true, 
             secure: true, 
-            sameSite: 'Lax', 
+            sameSite: 'None; Secure', 
             maxAge: fifteenMinutes
         });
         res.cookie('id_token', tokens.id_token, { 
             httpOnly: true, 
             secure: true, 
-            sameSite: 'Lax' 
+            sameSite: 'None; Secure' 
         });
         res.cookie('refresh_token', tokens.refresh_token, {
             httpOnly: true,
             secure: true, 
-            sameSite: 'Lax',
+            sameSite: 'None; Secure',
             maxAge: 1000 * 60 * 60 * 24 * 30 // 30 days
         });
 
@@ -136,7 +135,6 @@ app.post('/api/refresh', async (req, res) => {
     const tokens = response.data;
 
     // Set the new access token in an HTTP-only cookie.
-    const isLocal = process.env.NODE_ENV === 'development';
     res.cookie('access_token', tokens.access_token, {
         httpOnly: true,
         secure: true, 
@@ -208,8 +206,8 @@ app.get('/api/user', async (req, res) => {
 });
 
 app.get('/api/logout', (req, res) => {
-    res.clearCookie('accessToken', { path: '/', domain: 'http://localhost:8080/'}); // Change this for production.
-    res.clearCookie('idToken', { path: '/', domain: 'http://localhost:8080/'}); // Change this for production.
+    res.clearCookie('accessToken', { path: '/', domain: 'https://alexandersrentals.com/'}); // Change this for production.
+    res.clearCookie('idToken', { path: '/', domain: 'https://alexandersrentals.com/'}); // Change this for production.
     res.json({ message: 'Logged out successfully.' });
     window.alert('You have been logged out.');
 });
@@ -221,31 +219,31 @@ app.get('/api/cognito-config', (req, res) => {
         cognitoClientId: process.env.COGNITO_CLIENT_ID,
         cognitoUserPoolId: process.env.COGNITO_USER_POOL_ID,
         cognitoDomain: process.env.COGNITO_DOMAIN,
-        redirectUri: 'http://localhost:8080/'
+        redirectUri: 'https://alexandersrentals.com/'
     });
 });
 
 // Setting CSP headers to allow Cognito scripts.
-// app.use('/auth-route', helmet.contentSecurityPolicy({
-//     directives: {
-//         defaultSrc: ["'self'"],
-//         scriptSrc: ["'self'", "'unsafe-inline'", "https://d1lcia0inyjsq.cloudfront.net", "https://alexanderrentals-login.auth.us-east-2.amazoncognito.com"]
-//     },
-//     reportOnly: true,
-//     reportUri: '/report-violation',
-// }));
+app.use('/auth-route', helmet.contentSecurityPolicy({
+    directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "https://d1lcia0inyjsq.cloudfront.net", "https://alexanderrentals-login.auth.us-east-2.amazoncognito.com"]
+    },
+    reportOnly: true,
+    reportUri: '/report-violation',
+}));
 
-// app.use(helmet.contentSecurityPolicy({
-//     directives: {
-//         defaultSrc: ["'self'"],
-//         scriptSrc: ["'self'", "https://d1lcia0inyjsq.cloudfront.net", "https://alexanderrentals-login.auth.us-east-2.amazoncognito.com"]
-//     },
-//     reportOnly: true,
-//     reportUri: '/report-violation',
-// }));
+app.use(helmet.contentSecurityPolicy({
+    directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "https://d1lcia0inyjsq.cloudfront.net", "https://alexanderrentals-login.auth.us-east-2.amazoncognito.com"]
+    },
+    reportOnly: true,
+    reportUri: '/report-violation',
+}));
 
 // Creating route to fetch data (YGL API)
-app.post('/properties', async (req, res) => {
+app.post('/api/properties', async (req, res) => {
     try {
         const { latitude_start, latitude_end, longitude_start, longitude_end, street_name, 
             city_neighborhood, zip, state = 'MA', beds, min_bed, max_bed, baths, min_bath, max_bath, 

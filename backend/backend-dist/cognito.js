@@ -53,7 +53,7 @@ function signIn(username, password, callback) {
 function redirectToCognitoUI() {
   const cognitoDomain = 'https://alexandersrentals-nosms.auth.us-east-2.amazoncognito.com';
   const clientId = process.env.COGNITO_CLIENT_ID;
-  const callbackUrl = 'http://localhost:8080/'; // change to alexandersrentals.com.
+  const callbackUrl = 'https://alexandersrentals.com';
   const responseType = 'code';
 
   const loginUrl = `${cognitoDomain}/login?response_type=${responseType}&client_id=${clientId}&redirect_uri=${callbackUrl}&scope=openid+email+profile`;
