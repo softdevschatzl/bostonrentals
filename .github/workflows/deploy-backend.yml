@@ -16,6 +16,12 @@ jobs:
       with:
         node-version: '18'
 
+    - name: Set Up SSH Key
+      run: |
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > $HOME/.ssh/id_rsa
+        chmod 600 $HOME/.ssh/id_rsa
+        ssh-keyscan -H ${{ secrets.HOST }} >> $HOME/.ssh/known_hosts
+
     - name: Transfer Selected Files to EC2
       uses: appleboy/ssh-action@master
       with:
