@@ -206,8 +206,8 @@ app.get('/api/user', async (req, res) => {
 });
 
 app.get('/api/logout', (req, res) => {
-    res.clearCookie('accessToken', { path: '/', domain: 'https://alexandersrentals.com/'}); // Change this for production.
-    res.clearCookie('idToken', { path: '/', domain: 'https://alexandersrentals.com/'}); // Change this for production.
+    res.clearCookie('accessToken', { path: '/', domain: 'https://alexandersrentals.com'}); // Change this for production.
+    res.clearCookie('idToken', { path: '/', domain: 'https://alexandersrentals.com'}); // Change this for production.
     res.json({ message: 'Logged out successfully.' });
     window.alert('You have been logged out.');
 });
@@ -219,7 +219,7 @@ app.get('/api/cognito-config', (req, res) => {
         cognitoClientId: process.env.COGNITO_CLIENT_ID,
         cognitoUserPoolId: process.env.COGNITO_USER_POOL_ID,
         cognitoDomain: process.env.COGNITO_DOMAIN,
-        redirectUri: 'https://alexandersrentals.com/'
+        redirectUri: 'https://alexandersrentals.com'
     });
 });
 
