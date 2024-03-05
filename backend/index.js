@@ -223,6 +223,8 @@ app.get('/api/cognito-config', (req, res) => {
     });
 });
 
+//Test
+
 // Setting CSP headers to allow Cognito scripts.
 app.use('/auth-route', helmet.contentSecurityPolicy({
     directives: {
