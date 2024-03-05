@@ -122,7 +122,7 @@ export default {
         }
 
         // API call with preprocessed criteria
-        const response = await axios.post('/properties', criteria);
+        const response = await axios.post('/api/properties', criteria);
         
         console.log('API Query: ', criteria);
         console.log('API Response: ', response.data.listings);

@@ -86,22 +86,21 @@ app.post('/api/token', async (req, res) => {
 
         // Set tokens in HTTP-only cookies.
         const fifteenMinutes = 1000 * 60 * 15;
-        const isLocal = process.env.NODE_ENV === 'development';
         res.cookie('access_token', tokens.access_token, { 
             httpOnly: true, 
             secure: true, 
-            sameSite: 'Lax', 
+            sameSite: 'None; Secure', 
             maxAge: fifteenMinutes
         });
         res.cookie('id_token', tokens.id_token, { 
             httpOnly: true, 
             secure: true, 
-            sameSite: 'Lax' 
+            sameSite: 'None; Secure' 
         });
         res.cookie('refresh_token', tokens.refresh_token, {
             httpOnly: true,
             secure: true, 
-            sameSite: 'Lax',
+            sameSite: 'None; Secure',
             maxAge: 1000 * 60 * 60 * 24 * 30 // 30 days
         });
 
@@ -244,7 +243,7 @@ app.use(helmet.contentSecurityPolicy({
 }));
 
 // Creating route to fetch data (YGL API)
-app.post('/properties', async (req, res) => {
+app.post('/api/properties', async (req, res) => {
     try {
         const { latitude_start, latitude_end, longitude_start, longitude_end, street_name, 
             city_neighborhood, zip, state = 'MA', beds, min_bed, max_bed, baths, min_bath, max_bath, 
