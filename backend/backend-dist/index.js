@@ -206,8 +206,8 @@ app.get('/api/user', async (req, res) => {
 });
 
 app.get('/api/logout', (req, res) => {
-    res.clearCookie('accessToken', { path: '/', domain: 'https://alexandersrentals.com/'}); // Change this for production.
-    res.clearCookie('idToken', { path: '/', domain: 'https://alexandersrentals.com/'}); // Change this for production.
+    res.clearCookie('accessToken', { path: '/', domain: 'https://alexandersrentals.com'}); // Change this for production.
+    res.clearCookie('idToken', { path: '/', domain: 'https://alexandersrentals.com'}); // Change this for production.
     res.json({ message: 'Logged out successfully.' });
     window.alert('You have been logged out.');
 });
@@ -222,6 +222,8 @@ app.get('/api/cognito-config', (req, res) => {
         redirectUri: 'https://alexandersrentals.com/'
     });
 });
+
+//Test
 
 // Setting CSP headers to allow Cognito scripts.
 app.use('/auth-route', helmet.contentSecurityPolicy({

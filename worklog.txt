@@ -36,3 +36,25 @@ Deployment:
     - Logging: Implement a robust logging solution like winston or morgan for Express. Proper logging can help diagnose issues, track application usage, and monitor for potential security breaches.
 
     - Rate Limiting: To protect against brute-force attacks, consider adding rate limiting on your API endpoints.
+
+Deployment flow:
+
+Backend: cd /var/www/arentals
+         rm -rf backend-dist (repackage backend-dist in windows before uploading)
+
+
+Frontend: cd /var/www/html
+          rm -rf dist (rebuild dist in vscode before uploading)
+
+Windows CMD: 
+    Backend: pscp -r -i "C:\Users\cinna\Desktop\Productivity\ARSSHKey\Alexander's Rentals Key-PairEC2.ppk" "C:\Users\cinna\workspace\GitHub\Vue\ApartmentsClone\Apartments\bostonrentals\backend\backend-dist" ec2-user@ec2-52-15-84-55.us-east-2.compute.amazonaws.com:/var/www/arentals
+    Frontend: pscp -r -i "C:\Users\cinna\Desktop\Productivity\ARSSHKey\Alexander's Rentals Key-PairEC2.ppk" "C:\Users\cinna\workspace\GitHub\Vue\ApartmentsClone\Apartments\bostonrentals\frontend\dist" ec2-user@ec2-52-15-84-55.us-east-2.compute.amazonaws.com:/var/www/html
+
+After everything: sudo systemctl reload nginx
+                  pm2 restart all
+                  
+If edited package.json for either front or backends:
+    frontend: cd /var/www/html
+              npm install
+    backend:  cd /var/www/arentals/backend-dist
+              npm install
