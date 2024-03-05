@@ -33,6 +33,7 @@ jobs:
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         port: ${{ secrets.PORT }}
         script: |
+          echo "Deployment Script Content:"
           scp -P ${{ secrets.PORT }} -i ${{ secrets.SSH_PRIVATE_KEY }} ./backend/{cognito.js,index.js,package-lock.json,package.json,.env} ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/var/www/arentals/backend-dist
           ssh -p ${{ secrets.PORT }} -i ${{ secrets.SSH_PRIVATE_KEY }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} <<EOF
             cd /var/www/arentals/backend-dist
