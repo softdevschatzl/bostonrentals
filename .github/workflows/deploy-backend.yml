@@ -22,6 +22,7 @@ jobs:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
+        passphrase: ${{ secrets.SSH_PASSPHRASE }}
         port: ${{ secrets.PORT }}
         script: |
           scp -P ${{ secrets.PORT }} -i ${{ secrets.SSH_PRIVATE_KEY }} ./backend/{cognito.js,index.js,package-lock.json,package.json,.env} ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/var/www/arentals/backend-dist
