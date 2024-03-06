@@ -12,6 +12,7 @@ jobs:
 
       - name: Build Application
         run: |
+          cd frontend # Change the working directory to frontend
           npm install  # Install dependencies locally
           npm run build  # Build the project (assuming it creates a 'dist' directory)
 
