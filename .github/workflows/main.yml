@@ -20,17 +20,17 @@ jobs:
         uses: easingthemes/ssh-deploy@v2.1.5 
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          ARGS: ""  # Flags for recursive upload, remove old files
+          ARGS: "-vrz --delete"  # Flags for recursive upload, remove old files
           SOURCE: "."  # Upload the entire project directory
-          REMOTE_HOST: $({ secrets.HOST })   
-          REMOTE_USER: $({ secrets.USERNAME )}   # Adjust if your EC2 user is different
+          REMOTE_HOST: "18.216.109.114"  
+          REMOTE_USER: "ec2-user"   # Adjust if your EC2 user is different
           TARGET: "~/bostonrentals"  
 
       - name: Install and Build on EC2 (Backend Only)
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.HOST }}
-          username: $({ secrets.USERNAME })   # Adjust if necessary
+          host: "18.216.109.114"
+          username: "ec2-user"   # Adjust if necessary
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script: |
