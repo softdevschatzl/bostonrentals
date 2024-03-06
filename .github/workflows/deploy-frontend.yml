@@ -42,6 +42,9 @@ jobs:
         chmod 600 $HOME/.ssh/id_rsa
         cat $HOME/.ssh/id_rsa
         ssh-keyscan -H ${{ secrets.HOST }} >> $HOME/.ssh/known_hosts
+
+    - name: Debug Secret
+      run: echo "${{ secrets.EC2_DEPLOY_KEY }}"
     
     - name: List Build Artifacts
       run: ls -l dist/
