@@ -20,7 +20,7 @@ jobs:
         uses: easingthemes/ssh-deploy@v2.1.5 
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          ARGS: "-vrz --delete"  # Flags for recursive upload, remove old files
+          ARGS: ""  # Flags for recursive upload, remove old files
           SOURCE: "."  # Upload the entire project directory
           REMOTE_HOST: $({ secrets.HOST })   
           REMOTE_USER: $({ secrets.USERNAME )}   # Adjust if your EC2 user is different
