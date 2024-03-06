@@ -38,7 +38,7 @@ jobs:
     - name: Set Up SSH Key
       run: |
         mkdir -p $HOME/.ssh
-        echo "${{ secrets.EC2_DEPLOY_KEY }}" > $HOME/.ssh/id_rsa
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > $HOME/.ssh/id_rsa
         chmod 600 $HOME/.ssh/id_rsa
         cat $HOME/.ssh/id_rsa
         ssh-keyscan -H ${{ secrets.HOST }} >> $HOME/.ssh/known_hosts
@@ -55,7 +55,7 @@ jobs:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         key: |
-          ${{ secrets.EC2_DEPLOY_KEY }}
+          ${{ secrets.SSH_PRIVATE_KEY }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         port: ${{ secrets.PORT }}
         source: "dist/*"
@@ -66,7 +66,7 @@ jobs:
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.EC2_DEPLOY_KEY }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         port: ${{ secrets.PORT }}
         script: |
