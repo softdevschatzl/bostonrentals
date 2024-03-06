@@ -219,7 +219,7 @@ app.get('/api/cognito-config', (req, res) => {
         cognitoClientId: process.env.COGNITO_CLIENT_ID,
         cognitoUserPoolId: process.env.COGNITO_USER_POOL_ID,
         cognitoDomain: process.env.COGNITO_DOMAIN,
-        redirectUri: 'https://alexandersrentals.com'
+        redirectUri: 'https://alexandersrentals.com/'
     });
 });
 
