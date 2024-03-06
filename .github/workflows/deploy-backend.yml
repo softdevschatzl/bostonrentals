@@ -19,7 +19,7 @@ jobs:
     - name: Set Up SSH Key
       run: |
         mkdir -p $HOME/.ssh
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > $HOME/.ssh/id_rsa
+        echo "${{ secrets.EC2_DEPLOY_KEY }}" > $HOME/.ssh/id_rsa
         chmod 600 $HOME/.ssh/id_rsa
         ssh-keyscan -H ${{ secrets.HOST }} >> $HOME/.ssh/known_hosts
 
@@ -29,13 +29,13 @@ jobs:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         key: | 
-          ${{ secrets.SSH_PRIVATE_KEY }}
+          ${{ secrets.EC2_DEPLOY_KEY }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         port: ${{ secrets.PORT }}
         script: |
           echo "Deployment Script Content:"
-          scp -P ${{ secrets.PORT }} -i ${{ secrets.SSH_PRIVATE_KEY }} ./backend/{cognito.js,index.js,package-lock.json,package.json,.env} ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/var/www/arentals/backend-dist
-          ssh -p ${{ secrets.PORT }} -i ${{ secrets.SSH_PRIVATE_KEY }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} <<EOF
+          scp -P ${{ secrets.PORT }} -i ${{ secrets.EC2_DEPLOY_KEY }} ./backend/{cognito.js,index.js,package-lock.json,package.json,.env} ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/var/www/arentals/backend-dist
+          ssh -p ${{ secrets.PORT }} -i ${{ secrets.EC2_DEPLOY_KEY }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} <<EOF
             cd /var/www/arentals/backend-dist
             npm install
             pm2 restart all
