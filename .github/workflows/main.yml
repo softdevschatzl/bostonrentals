@@ -32,7 +32,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: $({ secrets.USERNAME })   # Adjust if necessary
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          passphrase: ${{ secrets.SSH_KEY_PASSPHRASE }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script: |
             cd ~/bostonrentals/backend
             npm install  # Install dependencies on the server
