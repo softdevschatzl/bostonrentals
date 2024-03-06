@@ -6,8 +6,6 @@ Ultimate Source for Renting in Boston!
 
 Advanced Filters: 🔍 Tailor your search with filters like price, size, and amenities.
 
-User Reviews: 🌟 Dive into genuine reviews and get to know about prospective neighborhoods and properties.
-
 Favorites & Wishlists: ❤️ Keep track of the apartments you love.
 
 💡 Quickstart
@@ -26,20 +24,18 @@ npm start
 
 📊 Tech Stack
 Frontend: Vue.js and Sass
-Backend: Node.js, Express, and MongoDB
-Authentication: Passport.js
+Backend: Node.js, Express, and PostgreSQL
+Authentication: Amazon Cognito
 
 📸 Screenshots
 Home	Listings	Detail
 Home Page	Listings Page	Detail Page
 🤝 Contributing
 
-We are always open to collaborations. If you have a feature suggestion, bug report, or want to contribute to the code, please feel free to open an issue or submit a pull request.
-
 📜 License
-This project is not licensed whatsoever!
+Don't blatantly steal my code please and thank you!
 
 📞 Contact & Support
-Feel free to reach out to the maintainer: johnschatzl@yahoo.com.
+Feel free to reach out to the maintainer: johncschatzl@gmail.com
 
 Happy Home Hunting in Boston! 🏠✨
