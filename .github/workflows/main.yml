@@ -21,7 +21,7 @@ jobs:
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           ARGS: "-vrz --delete"  # Flags for recursive upload, remove old files
-          SOURCE: "frontend/dist/ backend!(node_modules/**)"  # Include frontend/dist, backend folder excluding node_modules
+          SOURCE: "."  # Upload the entire project directory
           REMOTE_HOST: $({ secrets.HOST })   
           REMOTE_USER: $({ secrets.USERNAME )}   # Adjust if your EC2 user is different
           TARGET: "~/bostonrentals"  
