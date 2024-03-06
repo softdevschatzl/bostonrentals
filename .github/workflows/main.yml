@@ -25,6 +25,8 @@ jobs:
           REMOTE_HOST: "18.216.109.114"  
           REMOTE_USER: "ec2-user"   # Adjust if your EC2 user is different
           TARGET: "~/bostonrentals"  
+        with:
+          command: 'echo "Hello from EC2? -v'
 
       - name: Install and Build on EC2 (Backend Only)
         uses: appleboy/ssh-action@master
