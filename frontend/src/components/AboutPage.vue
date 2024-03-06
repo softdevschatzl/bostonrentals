@@ -54,7 +54,7 @@ export default {
   },
 };
 
-// Test workflows. Again. Again. Again.
+// Test workflows. Again. Again. Again. Again.
 </script>
 
 <style scoped>
