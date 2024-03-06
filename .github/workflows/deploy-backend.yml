@@ -21,6 +21,7 @@ jobs:
         mkdir -p $HOME/.ssh
         echo "${{ secrets.EC2_DEPLOY_KEY }}" > $HOME/.ssh/id_rsa
         chmod 600 $HOME/.ssh/id_rsa
+        cat $HOME/.ssh/id_rsa
         ssh-keyscan -H ${{ secrets.HOST }} >> $HOME/.ssh/known_hosts
 
     - name: Transfer Selected Files to EC2
