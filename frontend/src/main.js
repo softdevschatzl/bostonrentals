@@ -18,20 +18,19 @@ async function fetchCognitoConfig() {
         return config;
     } catch (error) {
         console.error('Failed to fetch cognito configuration.', error);
+        throw error;
     }
 }
 
 async function main() {
-    const cognitoConfig = await fetchCognitoConfig();
-
-    if (!cognitoConfig) {
-        console.error('Failed to fetch cognito configuration.');
-        return;
+    try {
+        const cognitoConfig = await fetchCognitoConfig();
+        const app = createApp(App);
+        app.config.globalProperties.$cognitoConfig = cognitoConfig;
+        app.use(router).mount('#app')
+    } catch (error) {
+        console.error('Failed to initialize application.', error);
     }
-    
-    const app = createApp(App);
-    app.config.globalProperties.$cognitoConfig = cognitoConfig;
-    app.use(router).mount('#app')
 }
 
 main();
