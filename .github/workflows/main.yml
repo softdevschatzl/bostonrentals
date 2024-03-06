@@ -1,0 +1,38 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches: [ prod ]  # Trigger on push to 'prod' branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build Application
+        run: |
+          npm install  # Install dependencies locally
+          npm run build  # Build the project (assuming it creates a 'dist' directory)
+
+      - name: Upload Project Files (Frontend & Backend)
+        uses: easingthemes/ssh-deploy@v2.1.5 
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          ARGS: "-vrz --delete"  # Flags for recursive upload, remove old files
+          SOURCE: "frontend/dist/ backend!(node_modules/**)"  # Include frontend/dist, backend folder excluding node_modules
+          REMOTE_HOST: $({ secrets.HOST })   
+          REMOTE_USER: $({ secrets.USERNAME )}   # Adjust if your EC2 user is different
+          TARGET: "~/bostonrentals"  
+
+      - name: Install and Build on EC2 (Backend Only)
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: $({ secrets.USERNAME })   # Adjust if necessary
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SSH_KEY_PASSPHRASE }}
+          script: |
+            cd ~/bostonrentals/backend
+            npm install  # Install dependencies on the server
+
