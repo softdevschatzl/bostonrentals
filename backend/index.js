@@ -235,14 +235,14 @@ app.use('/auth-route', helmet.contentSecurityPolicy({
     reportUri: '/report-violation',
 }));
 
-app.use(helmet.contentSecurityPolicy({
-    directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "https://d1lcia0inyjsq.cloudfront.net", "https://alexanderrentals-login.auth.us-east-2.amazoncognito.com"]
-    },
-    reportOnly: true,
-    reportUri: '/report-violation',
-}));
+// app.use(helmet.contentSecurityPolicy({
+//     directives: {
+//         defaultSrc: ["'self'"],
+//         scriptSrc: ["'self'", "https://d1lcia0inyjsq.cloudfront.net", "https://alexanderrentals-login.auth.us-east-2.amazoncognito.com"]
+//     },
+//     reportOnly: true,
+//     reportUri: '/report-violation',
+// }));
 
 // Creating route to fetch data (YGL API)
 app.post('/api/properties', async (req, res) => {
