@@ -32,7 +32,6 @@ jobs:
           host: "18.216.109.114"
           username: "ec2-user"   # Adjust if necessary
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script: |
             cd ~/bostonrentals/backend
             npm install  # Install dependencies on the server
