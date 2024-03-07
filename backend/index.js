@@ -226,14 +226,14 @@ app.get('/api/cognito-config', (req, res) => {
 //Test
 
 // Setting CSP headers to allow Cognito scripts.
-app.use('/auth-route', helmet.contentSecurityPolicy({
-    directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "https://d1lcia0inyjsq.cloudfront.net", "https://alexanderrentals-login.auth.us-east-2.amazoncognito.com"]
-    },
-    reportOnly: true,
-    reportUri: '/report-violation',
-}));
+// app.use('/auth-route', helmet.contentSecurityPolicy({
+//     directives: {
+//         defaultSrc: ["'self'"],
+//         scriptSrc: ["'self'", "https://d1lcia0inyjsq.cloudfront.net", "https://alexanderrentals-login.auth.us-east-2.amazoncognito.com"]
+//     },
+//     reportOnly: true,
+//     reportUri: '/report-violation',
+// }));
 
 // app.use(helmet.contentSecurityPolicy({
 //     directives: {
