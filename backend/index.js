@@ -17,6 +17,8 @@ const jwt = require('jsonwebtoken');
 const jwksClient = require('jwks-rsa');
 const { CognitoIdentityProviderClient, GetUserCommand } = require('@aws-sdk/client-cognito-identity-provider');
 const AWS = require('aws-sdk');
+const path = require('path');
+
 
 const app = express();
 const PORT = 3000;
@@ -51,6 +53,11 @@ app.use(cors({
     },
     credentials: true
 }));
+
+// Defines the root path to serve my frontend from.
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'frontend/dist/index.html'));
+});
 
 // Creates endpoint for Cognito login.
 app.get('/api/login', (req, res) => {
