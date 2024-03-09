@@ -24,7 +24,7 @@ jobs:
           SOURCE: "frontend/dist"  # Upload the entire project directory
           REMOTE_HOST: "18.216.109.114"  
           REMOTE_USER: "ec2-user"   # Adjust if your EC2 user is different
-          TARGET: "~/bostonrentals"  
+          TARGET: "~/bostonrentals/dist"  
 
       - name: Install and Build on EC2 (Backend Only)
         uses: appleboy/ssh-action@master
