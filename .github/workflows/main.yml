@@ -20,8 +20,8 @@ jobs:
         uses: easingthemes/ssh-deploy@v2.1.5 
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          ARGS: "-vvvrz --delete --exclude 'frontend/node_modules' --exclude 'backend/node_modules'"  # Flags for recursive upload, remove old files
-          SOURCE: "."  # Upload the entire project directory
+          ARGS: "-vvvrz --exclude 'frontend/node_modules' --exclude 'backend/node_modules'"  # Flags for recursive upload, remove old files
+          SOURCE: "frontend/dist"  # Upload the entire project directory
           REMOTE_HOST: "18.216.109.114"  
           REMOTE_USER: "ec2-user"   # Adjust if your EC2 user is different
           TARGET: "~/bostonrentals"  
