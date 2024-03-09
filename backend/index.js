@@ -5,9 +5,13 @@
 require('dotenv').config();
 const express = require('express');
 // helmet is for csp headers and general web security.
-// const helmet = require('helmet');
+const helmet = require('helmet');
 const axios = require('axios');
-const apiKey = process.env.YGL_API_KEY;
+
+const apiKey = await getParameter('YGL_API_KEY');
+const clientId = await getParameter('COGNITO_CLIENT_ID');
+const userPoolId = await getParameter('COGNITO_USER_POOL_ID');
+
 const cors = require('cors');
 const { redirectToCognitoUI } = require('./cognito');
 const { signIn } = require('./cognito');
@@ -17,8 +21,16 @@ const jwt = require('jsonwebtoken');
 const jwksClient = require('jwks-rsa');
 const { CognitoIdentityProviderClient, GetUserCommand } = require('@aws-sdk/client-cognito-identity-provider');
 const AWS = require('aws-sdk');
+const ssm = new AWS.SSM({ region: 'us-east-2' });
 const path = require('path');
 
+const { validateInt, escape } = require('validator');
+
+const getParameter = async (name) => {
+    const params = { Name: name, WithDecryption: true };
+    const data = await ssm.getParameter(params).promise();
+    return data.Parameter.Value;
+}
 
 const app = express();
 const PORT = 3000;
@@ -28,7 +40,7 @@ app.use(cookieParser());
 app.use(express.json());
 
 const cognitoISP = new CognitoIdentityProviderClient({
-    region: process.env.AWS_REGION
+    region: 'us-east-2',
 });
 
 const cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
@@ -78,7 +90,7 @@ app.post('/api/token', async (req, res) => {
         // Exchange code for tokens
         const postData = querystring.stringify({
             grant_type: 'authorization_code',
-            client_id: process.env.COGNITO_CLIENT_ID,
+            client_id: clientId,
             code,
             redirect_uri: 'https://alexandersrentals.com',
         });
@@ -96,18 +108,18 @@ app.post('/api/token', async (req, res) => {
         res.cookie('access_token', tokens.access_token, { 
             httpOnly: true, 
             secure: true, 
-            sameSite: 'None; Secure', 
+            sameSite: 'Strict', 
             maxAge: fifteenMinutes
         });
         res.cookie('id_token', tokens.id_token, { 
             httpOnly: true, 
             secure: true, 
-            sameSite: 'None; Secure' 
+            sameSite: 'Strict' 
         });
         res.cookie('refresh_token', tokens.refresh_token, {
             httpOnly: true,
             secure: true, 
-            sameSite: 'None; Secure',
+            sameSite: 'Strict',
             maxAge: 1000 * 60 * 60 * 24 * 30 // 30 days
         });
 
@@ -131,7 +143,7 @@ app.post('/api/refresh', async (req, res) => {
         // Replace the URL and headers with the correct values.
         const response = await axios.post('https://alexandersrentals-nosms.auth.us-east-2.amazoncognito.com/oauth2/token', querystring.stringify({
             grant_type: 'refresh_token',
-            client_id: process.env.COGNITO_CLIENT_ID,
+            client_id: await getParameter('COGNITO_CLIENT_ID'),
             refresh_token: refreshToken,
         }), {
             headers: {
@@ -160,7 +172,7 @@ app.post('/api/refresh', async (req, res) => {
 
 // We validate the token using the public key provided by Cognito.
 const client = jwksClient({
-    jwksUri: `https://cognito-idp.us-east-2.amazonaws.com/${process.env.COGNITO_USER_POOL_ID}/.well-known/jwks.json`
+    jwksUri: `https://cognito-idp.us-east-2.amazonaws.com/${userPoolId}/.well-known/jwks.json`
 });
 
 function getKey(header, callback) {
@@ -223,9 +235,9 @@ app.get('/api/logout', (req, res) => {
 app.get('/api/cognito-config', (req, res) => {
     res.json({
         cognitoRegion: 'us-east-2',
-        cognitoClientId: process.env.COGNITO_CLIENT_ID,
-        cognitoUserPoolId: process.env.COGNITO_USER_POOL_ID,
-        cognitoDomain: process.env.COGNITO_DOMAIN,
+        cognitoClientId: clientId,
+        cognitoUserPoolId: userPoolId,
+        cognitoDomain: 'https://alexandersrentals-nosms.auth.us-east-2.amazoncognito.com',
         redirectUri: 'https://alexandersrentals.com/'
     });
 });
@@ -233,23 +245,23 @@ app.get('/api/cognito-config', (req, res) => {
 //Test
 
 // Setting CSP headers to allow Cognito scripts.
-// app.use('/auth-route', helmet.contentSecurityPolicy({
-//     directives: {
-//         defaultSrc: ["'self'"],
-//         scriptSrc: ["'self'", "https://d1lcia0inyjsq.cloudfront.net", "https://alexanderrentals-login.auth.us-east-2.amazoncognito.com"]
-//     },
-//     reportOnly: true,
-//     reportUri: '/report-violation',
-// }));
+app.use('/auth-route', helmet.contentSecurityPolicy({
+    directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "https://d1lcia0inyjsq.cloudfront.net", "https://alexanderrentals-login.auth.us-east-2.amazoncognito.com"]
+    },
+    reportOnly: true,
+    reportUri: '/report-violation',
+}));
 
-// app.use(helmet.contentSecurityPolicy({
-//     directives: {
-//         defaultSrc: ["'self'"],
-//         scriptSrc: ["'self'", "https://d1lcia0inyjsq.cloudfront.net", "https://alexanderrentals-login.auth.us-east-2.amazoncognito.com"]
-//     },
-//     reportOnly: true,
-//     reportUri: '/report-violation',
-// }));
+app.use(helmet.contentSecurityPolicy({
+    directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "https://d1lcia0inyjsq.cloudfront.net", "https://alexanderrentals-login.auth.us-east-2.amazoncognito.com"]
+    },
+    reportOnly: true,
+    reportUri: '/report-violation',
+}));
 
 // Creating route to fetch data (YGL API)
 app.post('/api/properties', async (req, res) => {
@@ -268,6 +280,8 @@ app.post('/api/properties', async (req, res) => {
             request_type: 'JSON', 
         };
 
+        // Use escape to sanitize the input.
+        // Use validateInt to check if the input is a valid integer.
         // Add parameters to the request if they are not blank.
         // Coordinate parameters for ApartmentList.
         if (latitude_start) params.latitude_start = latitude_start;
