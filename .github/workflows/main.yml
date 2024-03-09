@@ -20,9 +20,8 @@ jobs:
         env: 
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }} # Your EC2 region
-        run: |
-          python update_security_group.py  # We'll create this script
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+        run: python update_security_group.py 
 
       - name: Upload Project Files (Frontend & Backend)
         uses: easingthemes/ssh-deploy@v2.1.5 
