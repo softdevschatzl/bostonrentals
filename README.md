@@ -9,18 +9,7 @@ Advanced Filters: 🔍 Tailor your search with filters like price, size, and ame
 Favorites & Wishlists: ❤️ Keep track of the apartments you love.
 
 💡 Quickstart
-Clone the repository and view the site:
-bash
-Copy code
-git clone https://github.com/theschatzinator/bostonrentals.git
-Navigate to the project directory and install dependencies:
-bash
-Copy code
-cd bostonrentals -> frontend
-npm install
-Run the application:
-Copy code
-npm start
+Navigate to alexandersrentals.com
 
 📊 Tech Stack
 Frontend: Vue.js and Sass
