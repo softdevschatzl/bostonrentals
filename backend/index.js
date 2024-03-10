@@ -2,7 +2,7 @@
  * @fileoverview This is the main file for the backend. It contains the API calls to the YGL API.
  * It also contains the route to fetch the user's IP address and the route to fetch properties based on latitude and longitude.
  */
-/* Test workflow. */
+/* Test workflow */
 require('dotenv').config();
 const express = require('express');
 // helmet is for csp headers and general web security.
