@@ -16,15 +16,25 @@ jobs:
           npm install  # Install dependencies locally
           npm run build  # Build the project (assuming it creates a 'dist' directory)
 
-      - name: Upload Project Files (Frontend & Backend)
+      - name: Upload Project Files (Frontend)
         uses: easingthemes/ssh-deploy@v2.1.5 
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          ARGS: "-vvvrz --exclude 'frontend/node_modules' --exclude 'backend/node_modules'"  # Flags for recursive upload, remove old files
-          SOURCE: "frontend/dist"  # Upload the entire project directory
+          ARGS: "-vvvrz --exclude 'frontend/node_modules'"  # Extended logging, exclude node_modules.
+          SOURCE: "frontend/dist"  # Upload the frontend/dist directory
           REMOTE_HOST: "18.119.120.153"  
-          REMOTE_USER: "ec2-user"   # Adjust if your EC2 user is different
+          REMOTE_USER: "ec2-user"   
           TARGET: "~/bostonrentals/frontend/dist"  
+
+      - name: Upload Project Files (Backend)
+        uses: easingthemes/ssh-deploy@v2.1.5
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          ARGS: "-vvvrz --exclude 'backend/node_modules'" # Exclude node modules, extended logging.
+          SOURCE: "backend" # Upload the backend directory
+          REMOTE_HOST: "18.119.120.153"
+          REMOTE_USER: "ec2-user" 
+          TARGET: "~/bostonrentals/backend"
 
       - name: Install and Build on EC2 (Backend Only)
         uses: appleboy/ssh-action@master
