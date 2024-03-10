@@ -36,7 +36,7 @@ jobs:
           REMOTE_USER: "ec2-user" 
           TARGET: "~/bostonrentals/backend"
 
-      - name: Install and Build on EC2 (Backend Only)
+      - name: Install and Build on EC2
         uses: appleboy/ssh-action@master
         with:
           host: "18.119.120.153"
@@ -44,5 +44,8 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd ~/bostonrentals/backend
+            ls -l # Debugging
             npm install  # Install dependencies on the server
+            cd ~/bostonrentals/frontend
+            npm install # Install dependencies on the server
 
