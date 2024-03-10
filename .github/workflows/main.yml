@@ -22,14 +22,14 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           ARGS: "-vvvrz --exclude 'frontend/node_modules' --exclude 'backend/node_modules'"  # Flags for recursive upload, remove old files
           SOURCE: "frontend/dist"  # Upload the entire project directory
-          REMOTE_HOST: "18.216.109.114"  
+          REMOTE_HOST: "18.119.120.153"  
           REMOTE_USER: "ec2-user"   # Adjust if your EC2 user is different
-          TARGET: "~/bostonrentals/dist"  
+          TARGET: "~/bostonrentals/frontend/dist"  
 
       - name: Install and Build on EC2 (Backend Only)
         uses: appleboy/ssh-action@master
         with:
-          host: "18.216.109.114"
+          host: "18.119.120.153"
           username: "ec2-user"   # Adjust if necessary
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
