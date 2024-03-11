@@ -44,8 +44,9 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd ~/bostonrentals/backend
-            ls -l # Debugging
             npm install  # Install dependencies on the server
+            ls -l # Debug permissions and edit times
             cd ~/bostonrentals/frontend
             npm install # Install dependencies on the server
+            ls -l # Debug
 
