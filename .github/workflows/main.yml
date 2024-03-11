@@ -21,7 +21,7 @@ jobs:
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           ARGS: "-vvvrz --exclude 'frontend/node_modules'"  # Extended logging, exclude node_modules.
-          SOURCE: "frontend/dist"  # Upload the frontend/dist directory
+          SOURCE: "/frontend/dist"  # Upload the frontend/dist directory
           REMOTE_HOST: "18.119.120.153"  
           REMOTE_USER: "ec2-user"   
           TARGET: "~/bostonrentals/frontend/dist"  
@@ -31,7 +31,7 @@ jobs:
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           ARGS: "-vvvrz --exclude 'backend/node_modules'" # Exclude node modules, extended logging.
-          SOURCE: "backend" # Upload the backend directory
+          SOURCE: "/backend" # Upload the backend directory
           REMOTE_HOST: "18.119.120.153"
           REMOTE_USER: "ec2-user" 
           TARGET: "~/bostonrentals/backend"
@@ -44,8 +44,8 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd ~/bostonrentals/backend
-            ls -l # Debugging
             npm install  # Install dependencies on the server
+            ls -l # Debug permissions and edit times
             cd ~/bostonrentals/frontend
             npm install # Install dependencies on the server
 
