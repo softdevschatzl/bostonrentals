@@ -8,3 +8,6 @@ worklog.txt
 worklog.txt
 worklog.txt
 update_security_group.py
+config.yaml
+deploy-ec2.py
+deploy.log

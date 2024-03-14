@@ -18,7 +18,8 @@ const jwt = require('jsonwebtoken');
 const jwksClient = require('jwks-rsa');
 const { CognitoIdentityProviderClient, GetUserCommand } = require('@aws-sdk/client-cognito-identity-provider');
 const AWS = require('aws-sdk');
-import { SecretsManagerClient, GetSecretValueCommand, } from "@aws-sdk/client-secrets-manager";const path = require('path');
+const { SecretsManagerClient, GetSecretValueCommand, } = require("@aws-sdk/client-secrets-manager");
+const path = require('path');
 
 const { validateInt, escape } = require('validator');
 
@@ -173,10 +174,16 @@ app.post('/api/refresh', async (req, res) => {
 });
 
 // We validate the token using the public key provided by Cognito.
-const { cognitoClientId, cognitoUserPoolId } = await getSecrets();
-const client = jwksClient({
-    jwksUri: `https://cognito-idp.us-east-2.amazonaws.com/${cognitoUserPoolId}/.well-known/jwks.json`
-});
+async function setUpClient () {
+    const secrets = await getSecrets();
+    const cognitoUserPoolId = secrets.COGNITO_USER_POOL_ID;
+
+    const client = jwksClient({
+        jwksUri: `https://cognito-idp.us-east-2.amazonaws.com/${cognitoUserPoolId}/.well-known/jwks.json`
+    });
+}
+
+setUpClient();
 
 function getKey(header, callback) {
     client.getSigningKey(header.kid, function(err, key) {
