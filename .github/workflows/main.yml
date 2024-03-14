@@ -16,6 +16,24 @@ jobs:
           npm install  # Install dependencies locally
           npm run build  # Build the project (assuming it creates a 'dist' directory)
 
+      - name: Fix Frontend Ownership
+        uses: appleboy/ssh-action@master
+        with:
+          host: "18.119.120.153"
+          username: "ec2-user"
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            sudo chown -R ec2-user:ec2-user ~/bostonrentals/frontend
+      
+      - name: Fix Backend Ownership
+        uses: appleboy/ssh-action@master
+        with:
+          host: "18.119.120.153"
+          username: "ec2-user"
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            sudo chown -R ec2-user:ec2-user ~/bostonrentals/backend
+
       - name: Upload Project Files (Frontend)
         uses: easingthemes/ssh-deploy@v2.1.5 
         env:
