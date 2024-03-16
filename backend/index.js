@@ -4,7 +4,6 @@
  */
 
 /* Forced change to test workflow. */
-require('dotenv').config();
 const express = require('express');
 // helmet is for csp headers and general web security.
 const helmet = require('helmet');
