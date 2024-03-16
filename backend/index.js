@@ -74,7 +74,8 @@ app.get('/', (req, res) => {
 // Creates endpoint for Cognito login.
 app.get('/api/login', (req, res) => {
     const url = redirectToCognitoUI();
-    res.redirect(url);
+    // Return the url
+    res.json({ url });
 });
 
 app.post('/api/token', async (req, res) => {
