@@ -22,8 +22,8 @@ export default {
         if (!response.ok) {
           console.error('Login failed:', response.status, await response.text());
         } else {
-          const data = await response.json();
-          window.location.href = data.url; // Redirects to Cognito UI
+          const loginUrl = await response.text();
+          window.location.href = loginUrl; // Redirects to Cognito UI
         }
       } catch (error) {
         console.error('Login failed:', error.message);
