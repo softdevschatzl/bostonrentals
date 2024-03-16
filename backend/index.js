@@ -3,14 +3,12 @@
  * It also contains the route to fetch the user's IP address and the route to fetch properties based on latitude and longitude.
  */
 
-/* Forced change to test workflow. */
 const express = require('express');
 // helmet is for csp headers and general web security.
 const helmet = require('helmet');
 const axios = require('axios');
 const cors = require('cors');
 const { redirectToCognitoUI } = require('./cognito');
-const { signIn } = require('./cognito');
 const querystring = require('querystring');
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
@@ -23,8 +21,10 @@ const path = require('path');
 const { validateInt, escape } = require('validator');
 
 const secretName = "AlexandersRentalsSecrets";
-const region = "us-east-2";
-const secretClient = new SecretsManagerClient({ region: region });
+const secretClient = new SecretsManagerClient({ region: 'us-east-2' });
+
+const cognito = require('./cognito');
+cognito.init();
 
 // Implement SecretsManager
 async function getSecrets() {
@@ -74,13 +74,7 @@ app.get('/', (req, res) => {
 // Creates endpoint for Cognito login.
 app.get('/api/login', (req, res) => {
     const url = redirectToCognitoUI();
-    res.json({ url });
-});
-
-// Login logic.
-app.post('/api/login', (req, res) => {
-    const { username, password } = req.body;
-    console.log('Login request received:', username, password);
+    res.redirect(url);
 });
 
 app.post('/api/token', async (req, res) => {

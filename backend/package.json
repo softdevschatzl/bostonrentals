@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "commonjs",
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
@@ -15,7 +16,7 @@
     "@aws-sdk/client-cognito-identity-provider": "^3.515.0",
     "@aws-sdk/client-secrets-manager": "^3.529.1",
     "amazon-cognito-identity-js": "^6.3.7",
-    "aws-sdk": "^2.1574.0",
+    "aws-sdk": "^2.1579.0",
     "axios": "^1.5.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",

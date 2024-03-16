@@ -17,11 +17,8 @@ export default {
     async handleLogin() {
       try {
         const response = await fetch('/api/login');
-        if (response.ok) {
-          const data = await response.json();
-          window.location.href = data.url;
-        } else {
-          console.error('Login failed.');
+        if (!response.ok) {
+          console.error('Login failed:', response.status, await response.text());
         }
       } catch (error) {
         console.error('Login failed:', error.message);

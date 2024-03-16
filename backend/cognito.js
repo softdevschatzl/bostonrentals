@@ -5,19 +5,42 @@
  * Implements Cognito authentication.
  * 
  */
-require('dotenv').config();
 const { CognitoUserPool, CognitoUser, AuthenticationDetails } = require('amazon-cognito-identity-js');
+const AWS = require('aws-sdk');
+const { SecretsManagerClient, GetSecretValueCommand } = require('@aws-sdk/client-secrets-manager');
 
-const userPoolId = process.env.COGNITO_USER_POOL_ID;
-const appClientId =   process.env.COGNITO_CLIENT_ID;
+const secretName = "AlexandersRentalsSecrets";
+const region = "us-east-2";
 
-const poolData = {
-  UserPoolId: userPoolId,
-  ClientId: appClientId
-};
+const secretsManagerClient = new SecretsManagerClient({ region: region });
 
-function getUserPool() {
+async function getSecrets() {
+  try {
+    const response = await secretsManagerClient.send(new GetSecretValueCommand({ SecretId: secretName }));
+    const secrets = JSON.parse(response.SecretString);
+    return secrets;
+  } catch (err) {
+    console.error('getSecrets error:', err);
+    throw err;
+  }
+}
+
+async function initializeCognito() {
+  const secrets = await getSecrets();
+  
+  const poolData = {
+    UserPoolId: secrets.COGNITO_USER_POOL_ID,
+    ClientId: secrets.COGNITO_CLIENT_ID,
+  };
   return new CognitoUserPool(poolData);
+}
+
+let userPool = initializeCognito();
+
+async function init() {
+  if (!userPool) {
+    userPool = await initializeCognito();
+  }
 }
 
 // Implements Cognito authentication.
@@ -30,7 +53,7 @@ function signIn(username, password, callback) {
 
   const userData = {
     Username: username,
-    Pool: getUserPool(),
+    Pool: userPool,
   };
   const cognitoUser = new CognitoUser(userData);
 
@@ -50,19 +73,22 @@ function signIn(username, password, callback) {
   });
 }
 
-function redirectToCognitoUI() {
+async function redirectToCognitoUI() {
+  const secrets = await getSecrets();
+
   const cognitoDomain = 'https://alexandersrentals-nosms.auth.us-east-2.amazoncognito.com';
-  const clientId = process.env.COGNITO_CLIENT_ID;
+  const clientId = secrets.COGNITO_CLIENT_ID;
   const callbackUrl = 'https://alexandersrentals.com';
   const responseType = 'code';
 
   const loginUrl = `${cognitoDomain}/login?response_type=${responseType}&client_id=${clientId}&redirect_uri=${callbackUrl}&scope=openid+email+profile`;
 
+  console.log('loginUrl:', loginUrl);
   return loginUrl;
 }
 
 module.exports = {
-  getUserPool,
+  init,
   signIn,
   redirectToCognitoUI,
 };
