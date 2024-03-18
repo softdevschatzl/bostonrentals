@@ -357,7 +357,7 @@ export default {
     }
   },
   data() {
-    const isMobile = window.innerWidth < 768;
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) && window.innerWidth < 768;
     return {
       downArrow,
       openGroups: { 

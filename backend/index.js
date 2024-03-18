@@ -72,12 +72,12 @@ app.get('/', (req, res) => {
 });
 
 // Creates endpoint for Cognito login.
-app.options('/api/login', cors());
-
-app.get('/api/login', cors(), async (req, res) => {
+app.get('/api/login', async (req, res) => {
     try {
         const url = await redirectToCognitoUI();
         res.redirect(url);
+        res.setHeader('Access-Control-Allow-Origin', 'https://alexandersrentals.com');
+        res.send({ success: true });
     } catch (error) {
         console.error('Failed to redirect to Cognito:', error);
         res.status(500).json({ error: 'Failed to redirect to Cognito' });
@@ -243,7 +243,10 @@ app.get('/api/logout', (req, res) => {
 
 // Endpoint for fetching cognito client id and domain.
 app.get('/api/cognito-config', async (req, res) => {
-    const { cognitoClientId, cognitoUserPoolId } = await getSecrets();
+    const secrets = await getSecrets();
+    const cognitoClientId = secrets.COGNITO_CLIENT_ID;
+    const cognitoUserPoolId = secrets.COGNITO_USER_POOL_ID;
+
     res.json({
         cognitoRegion: 'us-east-2',
         cognitoClientId: cognitoClientId,
@@ -276,7 +279,8 @@ app.use(helmet.contentSecurityPolicy({
 
 // Creating route to fetch data (YGL API)
 app.post('/api/properties', async (req, res) => {
-    const { apiKey } = await getSecrets();
+    const secrets = await getSecrets();
+    const YGL_API_KEY = secrets.YGL_API_KEY;
     try {
         const { latitude_start, latitude_end, longitude_start, longitude_end, street_name, 
             city_neighborhood, zip, state = 'MA', beds, min_bed, max_bed, baths, min_bath, max_bath, 
@@ -286,7 +290,7 @@ app.post('/api/properties', async (req, res) => {
         // Needed a workaround for the API to work with blank query params.
         // If the query param is blank, it will not be included in the API call.
         let params = { 
-            key: apiKey, 
+            key: YGL_API_KEY, 
             state, 
             detail_level: 2,
             request_type: 'JSON', 
@@ -326,9 +330,7 @@ app.post('/api/properties', async (req, res) => {
 
         // console.log("Full Params:", params)
 
-        console.log('API Key:', apiKey);
-
-        const response = await axios.post(`https://www.yougotlistings.com/api/rentals/search.php?key=${apiKey}`, params);
+        const response = await axios.post(`https://www.yougotlistings.com/api/rentals/search.php?key=${YGL_API_KEY}`, params);
                 
         return res.json(response.data);
 
@@ -345,7 +347,6 @@ app.get('/api/location', async (req, res) => {
         // const userIp = '149.40.50.212'; // Coordinates returned: 42.3562, -71.0631
         const userIp = req.headers['x-real-ip']?.split(',').shift(); 
         const response = await axios.get(`http://ip-api.com/json/${userIp}`);
-        console.log("Response data:", response.data)
         return res.json(response.data);
     } catch (error) {
         console.error("Failed to fetch user location:", error.message);
