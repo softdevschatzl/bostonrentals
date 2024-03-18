@@ -31,6 +31,7 @@ async function getSecrets() {
     try {
     const response = await secretClient.send(new GetSecretValueCommand({ SecretId: secretName }));
     const secrets = JSON.parse(response.SecretString);
+    console.log("Secrets:", secrets);
     return secrets;
     } catch (error) {
         console.error("Failed to fetch secrets:", error);
@@ -49,11 +50,10 @@ app.use(express.json());
 const allowedOrigins = [
     'http://localhost:8080', 
     'http://localhost:3000', 
-    'https://softdevschatzl.github.io', 
     'https://alexandersrentals.com', 
     'https://www.alexandersrentals.com',
     'https://d1lcia0inyjsq.cloudfront.net', 
-    'https://alexanderrentals-login.auth.us-east-2.amazoncognito.com'
+    'https://alexandersrentals-nosms.auth.us-east-2.amazoncognito.com',
 ];
 app.use(cors({
     origin: function (origin, callback) {
@@ -72,9 +72,16 @@ app.get('/', (req, res) => {
 });
 
 // Creates endpoint for Cognito login.
-app.get('/api/login', (req, res) => {
-    const url = redirectToCognitoUI();
-    res.redirect(url);
+app.options('/api/login', cors());
+
+app.get('/api/login', cors(), async (req, res) => {
+    try {
+        const url = await redirectToCognitoUI();
+        res.redirect(url);
+    } catch (error) {
+        console.error('Failed to redirect to Cognito:', error);
+        res.status(500).json({ error: 'Failed to redirect to Cognito' });
+    }
 });
 
 app.post('/api/token', async (req, res) => {
@@ -153,7 +160,7 @@ app.post('/api/refresh', async (req, res) => {
     res.cookie('access_token', tokens.access_token, {
         httpOnly: true,
         secure: true, 
-        sameSite: 'Lax',
+        sameSite: 'Strict',
         maxAge: 1000 * 60 * 10 // 10 minutes
     });
     
@@ -319,6 +326,8 @@ app.post('/api/properties', async (req, res) => {
 
         // console.log("Full Params:", params)
 
+        console.log('API Key:', apiKey);
+
         const response = await axios.post(`https://www.yougotlistings.com/api/rentals/search.php?key=${apiKey}`, params);
                 
         return res.json(response.data);
@@ -334,10 +343,9 @@ app.get('/api/location', async (req, res) => {
     // console.log("Location route hit.")
     try {
         // const userIp = '149.40.50.212'; // Coordinates returned: 42.3562, -71.0631
-        const userIp = req.ip; // Coordinates returned: 42.2518, -71.0805
-        // const userIp = req.ip; 
+        const userIp = req.headers['x-real-ip']?.split(',').shift(); 
         const response = await axios.get(`http://ip-api.com/json/${userIp}`);
-        // console.log("Response data:", response.data)
+        console.log("Response data:", response.data)
         return res.json(response.data);
     } catch (error) {
         console.error("Failed to fetch user location:", error.message);

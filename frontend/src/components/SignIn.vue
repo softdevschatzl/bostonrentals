@@ -16,9 +16,24 @@ export default {
   methods: {
     async handleLogin() {
       try {
-        const response = await fetch('/api/login');
+        const response = await fetch('/api/login', {
+          method: 'GET',
+          headers: {
+            'Origin': 'https://alexandersrentals.com'
+          },
+          credentials: 'include'
+        });
+        // Check for errors or redirect
         if (!response.ok) {
-          console.error('Login failed:', response.status, await response.text());
+            console.error('Login failed:', response.status, await response.text());
+        } else if (response.redirected) {
+            // Log redirect details
+            console.log('Redirecting to:', response.url);
+
+            // Modify redirect behavior
+            window.location.href = response.url;
+        } else {
+            console.error('Unexpected response from backend'); 
         }
       } catch (error) {
         console.error('Login failed:', error.message);
