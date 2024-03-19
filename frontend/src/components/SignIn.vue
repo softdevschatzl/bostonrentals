@@ -16,14 +16,16 @@ export default {
   methods: {
     async handleLogin() {
       try {
+        console.log('Fetching /api/login...');
         const response = await fetch('/api/login', {
           method: 'GET',
+          credentials: 'include'
         });
+        console.log('Login response:', response);
         if (!response.ok) {
           console.error('Login failed:', response.status, await response.text());
         } else {
-          const loginUrl = await response.text();
-          window.location.href = loginUrl; // Redirects to Cognito UI
+          console.log('Redirect successful.');
         }
       } catch (error) {
         console.error('Login failed:', error.message);

@@ -78,10 +78,10 @@ async function redirectToCognitoUI() {
 
   const cognitoDomain = 'https://alexandersrentals-nosms.auth.us-east-2.amazoncognito.com';
   const clientId = secrets.COGNITO_CLIENT_ID;
-  const callbackUrl = 'https://alexandersrentals.com';
+  const callbackUrl = 'https://alexandersrentals.com/';
   const responseType = 'code';
 
-  const loginUrl = `${cognitoDomain}/login?response_type=${responseType}&client_id=${clientId}&redirect_uri=${callbackUrl}&scope=openid+email+profile`;
+  const loginUrl = `${cognitoDomain}/login?client_id=${clientId}&response_type=${responseType}&scope=email+openid+profile&redirect_uri=${callbackUrl}`;
 
   console.log('loginUrl:', loginUrl);
   return loginUrl;

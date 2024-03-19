@@ -45,26 +45,29 @@ app.use(cookieParser());
 
 app.use(express.json());
 
+app.use(cors());
+
 // Only allowing access from certain origin points.
-const allowedOrigins = [
-    'http://localhost:8080', 
-    'http://localhost:3000', 
-    'https://softdevschatzl.github.io', 
-    'https://alexandersrentals.com', 
-    'https://www.alexandersrentals.com',
-    'https://d1lcia0inyjsq.cloudfront.net', 
-    'https://alexanderrentals-login.auth.us-east-2.amazoncognito.com'
-];
-app.use(cors({
-    origin: function (origin, callback) {
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    credentials: true
-}));
+// const allowedOrigins = [
+//     'http://localhost:8080', 
+//     'http://localhost:3000', 
+//     'https://softdevschatzl.github.io', 
+//     'https://alexandersrentals.com', 
+//     'https://alexandersrentals.com/',
+//     'https://www.alexandersrentals.com',
+//     'https://d1lcia0inyjsq.cloudfront.net', 
+//     'https://alexandersrentals-nosms.auth.us-east-2.amazoncognito.com'
+// ];
+// app.use(cors({
+//     origin: function (origin, callback) {
+//         if (!origin || allowedOrigins.includes(origin)) {
+//             callback(null, true);
+//         } else {
+//             callback(new Error('Not allowed by CORS'));
+//         }
+//     },
+//     credentials: true
+// }));
 
 // Defines the root path to serve my frontend from.
 app.get('/', (req, res) => {
@@ -74,8 +77,10 @@ app.get('/', (req, res) => {
 // Creates endpoint for Cognito login.
 app.get('/api/login', async (req, res) => {
     try {
+        console.log('Received login request.')
         const loginUrl = await redirectToCognitoUI();
-        res.json(loginUrl);
+        console.log('Redirecting to Cognito:', loginUrl);
+        res.redirect(loginUrl);
     } catch (error) {
         console.error('Failed to redirect to Cognito:', error);
         res.status(500).json({ error: 'Failed to redirect to Cognito' });
@@ -92,7 +97,7 @@ app.post('/api/token', async (req, res) => {
             grant_type: 'authorization_code',
             client_id: cognitoClientId,
             code,
-            redirect_uri: 'https://alexandersrentals.com',
+            redirect_uri: 'https://alexandersrentals.com/',
         });
         
         const response = await axios.post(`https://alexandersrentals-nosms.auth.us-east-2.amazoncognito.com/oauth2/token`, postData, {
@@ -241,7 +246,10 @@ app.get('/api/logout', (req, res) => {
 
 // Endpoint for fetching cognito client id and domain.
 app.get('/api/cognito-config', async (req, res) => {
-    const { cognitoClientId, cognitoUserPoolId } = await getSecrets();
+    const secrets = await getSecrets();
+    const cognitoClientId = secrets.COGNITO_CLIENT_ID;
+    const cognitoUserPoolId = secrets.COGNITO_USER_POOL_ID;
+    
     res.json({
         cognitoRegion: 'us-east-2',
         cognitoClientId: cognitoClientId,
@@ -274,7 +282,8 @@ app.use(helmet.contentSecurityPolicy({
 
 // Creating route to fetch data (YGL API)
 app.post('/api/properties', async (req, res) => {
-    const { apiKey } = await getSecrets();
+    const secrets = await getSecrets();
+    const apiKey = secrets.YGL_API_KEY;
     try {
         const { latitude_start, latitude_end, longitude_start, longitude_end, street_name, 
             city_neighborhood, zip, state = 'MA', beds, min_bed, max_bed, baths, min_bath, max_bath, 
@@ -339,7 +348,7 @@ app.get('/api/location', async (req, res) => {
     // console.log("Location route hit.")
     try {
         // const userIp = '149.40.50.212'; // Coordinates returned: 42.3562, -71.0631
-        const userIp = req.ip; // Coordinates returned: 42.2518, -71.0805
+        const userIp = req.headers['x-real-ip']?.split(',').shift(); // Coordinates returned: 42.2518, -71.0805
         // const userIp = req.ip; 
         const response = await axios.get(`http://ip-api.com/json/${userIp}`);
         // console.log("Response data:", response.data)
