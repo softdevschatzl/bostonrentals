@@ -45,13 +45,14 @@ app.use(cookieParser());
 
 app.use(express.json());
 
+app.use(express.urlencoded({ extended: true }));
+
 app.use(cors());
 
 // Only allowing access from certain origin points.
 // const allowedOrigins = [
 //     'http://localhost:8080', 
 //     'http://localhost:3000', 
-//     'https://softdevschatzl.github.io', 
 //     'https://alexandersrentals.com', 
 //     'https://alexandersrentals.com/',
 //     'https://www.alexandersrentals.com',
@@ -74,33 +75,22 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'frontend/dist/index.html'));
 });
 
-// Creates endpoint for Cognito login.
-app.get('/api/login', async (req, res) => {
-    try {
-        console.log('Received login request.')
-        const loginUrl = await redirectToCognitoUI();
-        console.log('Redirecting to Cognito:', loginUrl);
-        res.redirect(loginUrl);
-    } catch (error) {
-        console.error('Failed to redirect to Cognito:', error);
-        res.status(500).json({ error: 'Failed to redirect to Cognito' });
-    }
-});
-
 app.post('/api/token', async (req, res) => {
-    const { cognitoClientId } = await getSecrets();
-    const {code} = req.body;
+    console.log("Received request:", req);
+    const secrets = await getSecrets();
+    const cognitoClientId = secrets.COGNITO_CLIENT_ID;
+    const { code } = req.body;
 
     try {
         // Exchange code for tokens
-        const postData = querystring.stringify({
+        const urlSearchParams = new URLSearchParams({
             grant_type: 'authorization_code',
             client_id: cognitoClientId,
             code,
-            redirect_uri: 'https://alexandersrentals.com/',
+            redirect_uri: 'https://alexandersrentals.com',
         });
         
-        const response = await axios.post(`https://alexandersrentals-nosms.auth.us-east-2.amazoncognito.com/oauth2/token`, postData, {
+        const response = await axios.post(`https://alexandersrentals-nosms.auth.us-east-2.amazoncognito.com/oauth2/token?${urlSearchParams}`, null, {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },

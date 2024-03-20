@@ -15,21 +15,8 @@ export default {
   },
   methods: {
     async handleLogin() {
-      try {
-        console.log('Fetching /api/login...');
-        const response = await fetch('/api/login', {
-          method: 'GET',
-          credentials: 'include'
-        });
-        console.log('Login response:', response);
-        if (!response.ok) {
-          console.error('Login failed:', response.status, await response.text());
-        } else {
-          console.log('Redirect successful.');
-        }
-      } catch (error) {
-        console.error('Login failed:', error.message);
-      }
+      // Redirect to Cognito Hosted UI.
+      window.location.href = 'https://alexandersrentals-nosms.auth.us-east-2.amazoncognito.com/login?client_id=6srn63ccr7im4tagroi8sjs4sv&response_type=code&scope=email+openid+profile&redirect_uri=https%3A%2F%2Falexandersrentals.com';
     },
     goToMyAccount() {
       this.$router.push('/my-account');
@@ -48,14 +35,18 @@ export default {
     },
     async handleAuthorizationCode(code) {
       try {
+        const formData = new URLSearchParams();
+        formData.append('code', code);
+
         const response = await fetch('/api/token', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
+          header: {
+            'Content-Type': 'application/x-www-form-urlencoded'
           },
-          body: JSON.stringify({ code }),
+          body: formData,
           credentials: 'include'
         });
+        
         if (response.ok) {
           const data = await response.json();
           console.log('Token response:', data);
