@@ -174,11 +174,14 @@ async function setUpClient () {
     const client = jwksClient({
         jwksUri: `https://cognito-idp.us-east-2.amazonaws.com/${cognitoUserPoolId}/.well-known/jwks.json`
     });
+
+    return client;
 }
 
 setUpClient();
 
-function getKey(header, callback) {
+async function getKey(header, callback) {
+    const client = await setUpClient();
     client.getSigningKey(header.kid, function(err, key) {
         if (err) {
             callback(err, null);
