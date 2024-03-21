@@ -125,7 +125,6 @@ export default {
         const response = await axios.post('/api/properties', criteria);
         
         console.log('API Query: ', criteria);
-        console.log('API Response: ', response.data.listings);
 
         // Calculate the score of each listing.
         const scoredListings = response.data.listings.map(listing => ({
@@ -138,6 +137,7 @@ export default {
 
         // Update your component's listings data with the sorted, scored listings
         this.listings = scoredListings;
+        console.log('Listings:', this.listings);
       } catch (error) {
         console.error('Error fetching listings:', error);
       } finally {
