@@ -7,7 +7,17 @@
         <div class="info-group location-input">
           <button class="toggle-btn" data-group="locationInput" @click="toggleGroup('locationInput')">Location Filters </button>
           <div v-show="openGroups.locationInput" class="location-input-group inner-group"> <!-- v-show="openGroups.locationInput" -->
-            <input class="value" type="text" v-model="localSearchCriteria.street_name" placeholder="Street Name..." />
+            <ValidationProvider
+              name="street_name"
+              v-slot="{ errors }">
+              <input 
+                class="value" 
+                type="text" 
+                v-model="localSearchCriteria.street_name" 
+                placeholder="Street Name..." 
+                :rules="streetNameRules"
+              />
+              <span v-if="errors.length > 0" class="error">{{ errors[0] }}</span> </ValidationProvider>
             <input class="value" type="text" v-model="localSearchCriteria.zip" placeholder="Zip Code..." />
             <div class="multi-container">
               <VueMultiselect
@@ -71,8 +81,20 @@
         <div class="info-group min-max-rent">
           <button class="toggle-btn" data-group="minMaxRent" @click="toggleGroup('minMaxRent')">Min/Max Rent/Fee Filters</button>
           <div v-show="openGroups.minMaxRent" class="min-max-rent-group inner-group"> <!-- v-show="openGroups.minMaxRent" -->
-            <input class="value" type="text" v-model="localSearchCriteria.min_rent" placeholder="Min Rent..." />
-            <input class="value" type="text" v-model="localSearchCriteria.max_rent" placeholder="Max Rent..." />        
+            <input 
+              class="value" 
+              type="text" 
+              v-model="localSearchCriteria.min_rent" 
+              placeholder="Min Rent..." 
+              :rules="minRentRules"
+            />
+            <input 
+              class="value" 
+              type="text" 
+              v-model="localSearchCriteria.max_rent" 
+              placeholder="Max Rent..." 
+              :rules="maxRentRules"
+            />        
             <div class="multi-container">
               <VueMultiselect
                 class="multiselect"
@@ -91,8 +113,20 @@
         <div class="info-group laundry-parking-pet">
           <button class="toggle-btn" data-group="laundryParkingPet" @click="toggleGroup('laundryParkingPet')">Min/Max Sqft/Pet Filters</button>
           <div v-show="openGroups.laundryParkingPet" class="laundry-parking-pet-group inner-group"> <!-- v-show="openGroups.laundryParkingPet" -->
-            <input class="value" type="text" v-model="localSearchCriteria.square_footage_min" placeholder="Minimum Square Feet..." />
-            <input class="value" type="text" v-model="localSearchCriteria.square_footage_max" placeholder="Maximum Square Feet..." />
+            <input 
+              class="value" 
+              type="text" 
+              v-model="localSearchCriteria.square_footage_min" 
+              placeholder="Minimum Square Feet..." 
+              :rules="minSqftRules"
+            />
+            <input 
+              class="value" 
+              type="text" 
+              v-model="localSearchCriteria.square_footage_max" 
+              placeholder="Maximum Square Feet..." 
+              :rules="maxSqftRules"
+            />
             <div class="multi-container">
               <VueMultiselect
                 class="multiselect"
@@ -467,6 +501,14 @@ input::placeholder {
 }
 .multiselect {
   width: 100%;
+}
+
+.error {
+  color: red
+}
+
+.value.error {
+  box-shadow: 0 0 8px red;
 }
 
 .search-container {

@@ -1,6 +1,6 @@
 <template>
     <div>
-      <SearchBar />
+      <SearchBar :searchCriteria="searchCriteria"/>
       <ApartmentList :apartments="apartments" :location="location" :loading="loading" />
       <RentalTools />
       <FooterPage />
@@ -28,6 +28,32 @@
         location: '',
         userCoords: { latitude: null, longitude: null },
         loading: false,
+        searchCriteria: {
+          street_name: null, // Street names, No Addresses!!!
+          min_bed: null, // How many beds.
+          max_bed: null, // How many beds.
+          beds: null, // How many beds.
+          min_bath: null, // How many baths.
+          max_bath: null, // How many baths.
+          baths: null, // How many baths.
+          city_neighborhood: null, // Specific cities/neighborhoods.
+          state: 'MA', // State.
+          zip: null, // Zip code.
+          min_rent: null, // Minimum rent.
+          max_rent: null, // Maximum rent.
+          avail_from: null, // Available from.
+          avail_to: null, // Available to.
+          pet: null, // Pet friendly, or not.
+          photo: null, // Photos or virtual tours.
+          features: null, // Laundry in unit.
+          parking: null, // Parking available.
+          listing_fee: null, // no co-broke
+          status: null, // Active, or not.
+          square_footage_maximum: null, // Maximum square footage.
+          square_footage_minimum: null, // Minimum square footage.
+          tours: null, // Virtual tours, or not.
+          laundry: null,
+        }
       };
     },
     async mounted() {
