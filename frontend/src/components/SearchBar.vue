@@ -5,24 +5,35 @@
       <p>Let's take the hassle out of finding a home.</p>
     </div>
     <div class="search-bar">
-      <input class="search-input" type="text" placeholder="Search for rentals..." v-model="query" />
+      <input class="search-input" type="text" placeholder="Search for neighborhoods..." v-model="query" />
       <button class="search-button" @click="search">Search</button>
     </div>
   </div>
 </template>
 
 <script>
+import { allNeighborhoods } from '@/utils/dataSets.js';
+
 
 export default {
   data() {
     return {
-      query: ''
+      query: '',
     };
   },
   methods: {
     search() {
-      if (this.query.trim()) {
-        this.$router.push({ name: 'Search', query: { q: this.query } });
+      const lowerCaseQuery = this.query.trim().toLowerCase();
+      const lowerCaseNeighborhoods = Object.keys(allNeighborhoods).map(key => key.toLowerCase());
+
+      console.log('Lowercase Query:', lowerCaseQuery);
+      console.log('Lowercase Neighborhoods:', lowerCaseNeighborhoods);
+
+      if (lowerCaseNeighborhoods.includes(lowerCaseQuery)) {
+        const apiQuery = allNeighborhoods[this.query.trim()];
+        this.$router.push({ name: 'Search', query: { q: apiQuery } });
+      } else {
+        console.error('Neighborhood not found.');
       }
     }
   }
@@ -32,6 +43,10 @@ export default {
 <style scoped>
   h1 {
     color: #ffffff;
+    font-size: 3rem;
+  }
+  p {
+    font-size: 1.8rem;
   }
   .search-section {
     display: flex;
@@ -94,8 +109,11 @@ export default {
 
   /* Mobile */
   @media only screen and (max-width: 768px) {
-    .search-header {
-      font-size: 1.2rem;
+    h1 {
+      font-size: 2.2rem;
+    }
+    p {
+      font-size: 1.5rem;
     }
     .search-button {
       padding: 10px;

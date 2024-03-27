@@ -156,7 +156,7 @@ body {
 .my-account {
   background: #363636;
   border-radius: 20px;
-  box-shadow: 8px 8px 15px #a7a7a7, -8px -8px 15px #ffffff;
+  border: 4px #a7a7a7;
   padding: 40px;
   margin: 20px;
 }
@@ -179,7 +179,7 @@ body {
 .account-info {
   background: #E0E5EC;
   border-radius: 20px;
-  box-shadow: inset 5px 5px 10px #a7a7a7, inset -5px -5px 10px #ffffff;
+  border: 4px #a7a7a7;
   padding: 20px;
   margin-top: 20px;
   width: 300px;

@@ -7,7 +7,8 @@
         <div class="info-group location-input">
           <button class="toggle-btn" data-group="locationInput" @click="toggleGroup('locationInput')">Location Filters </button>
           <div v-show="openGroups.locationInput" class="location-input-group inner-group"> <!-- v-show="openGroups.locationInput" -->
-            <input class="value" type="text" v-model="localSearchCriteria.street_name" placeholder="Street Name..." />
+            <input class="value" type="text" v-model="localSearchCriteria.street_name" placeholder="Street Name..." @input="validateStreetName" />
+            <p class="error-message" v-if="streetNameError">{{ streetNameError }}</p>
             <input class="value" type="text" v-model="localSearchCriteria.zip" placeholder="Zip Code..." />
             <div class="multi-container">
               <VueMultiselect
@@ -227,6 +228,15 @@ export default {
     }
   },
   methods: {
+    // Input validation methods.
+    validateStreetName() {
+      const streetNameRegex = /^[a-zA-Z0-9\s.'-]+$/;
+      if (!streetNameRegex.test(this.streetName)) {
+        this.streetNameError = 'Please enter a valid street name.';
+      } else {
+        this.streetNameError = null;
+      }
+    },
     // Searches for listings using the search criteria.
     searchListings() {
       if (this.localSearchCriteria.max_rent <= 1500 && this.localSearchCriteria.max_rent !== '' && this.localSearchCriteria.max_rent !== null) {
@@ -380,6 +390,9 @@ export default {
       featureMapping,
       laundryMapping,
       tourMapping,
+
+      streetName: '',
+      streetNameError: null,
     };
   },
   mounted() {
@@ -462,6 +475,12 @@ input::placeholder {
   outline: 0; /* Remove default focus outline */
   box-shadow: 0 0 8px rgba(102, 175, 233, 0.6); /* Similar focus shadow */
 }
+.error-message {
+  color: red;
+  font-size: 0.8rem;
+  margin: 0.2rem 0;
+}
+
 .multi-container {
   width: 100%;
 }
