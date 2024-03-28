@@ -20,7 +20,7 @@ const path = require('path');
 
 // import allNeighborhoods from '../frontend/src/utils/dataSets.js';
 // allNeighborhoods is an array that is exported from that file.
-const allNeighborhoods = require('./dataSets');
+const { allNeighborhoods } = require('./dataSets');
 
 const secretName = "AlexandersRentalsSecrets";
 const secretClient = new SecretsManagerClient({ region: 'us-east-2' });
@@ -74,7 +74,7 @@ app.use(cors());
 
 // Defines the root path to serve my frontend from.
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'frontend/dist/index.html'));
+    res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
 });
 
 app.post('/api/token', async (req, res) => {
@@ -307,61 +307,60 @@ app.post('/api/properties', async (req, res) => {
         if (longitude_start) params.longitude_start = longitude_start;
         if (longitude_end) params.longitude_end = longitude_end;
         // Other parameters.
-        if (street_name !== null) {
-            if (!validator.isAlpha(street_name)) return res.status(400).json({ error: "Invalid street name." });
-                if (street_name) params.street_name = xssFilters.inHTMLData(street_name);
-        }
+        if (street_name && !validator.isAlpha(street_name)) return res.status(400).json({ error: "Invalid street name.", message: "Invalid street name." });
+            if (street_name) params.street_name = xssFilters.inHTMLData(street_name);
 
         // if city_neighborhood is not found in allNeighborhoods, return 400 error.
-        if (!allNeighborhoods.find(neighborhood => neighborhood.apiValue === city_neighborhood)) return res.status(400).json({ error: "Invalid neighborhood." });
+        const neighborhood = allNeighborhoods.find(neighborhood => neighborhood.apiValue === city_neighborhood);
+        if (!neighborhood) return res.status(400).json({ error: "Invalid neighborhood.", message: "Invalid neighborhood." });
             if (city_neighborhood) params.city_neighborhood = city_neighborhood;
 
-        if (zip && !validator.isPostalCode(zip)) return res.status(400).json({ error: "Invalid zip code." });
+        if (zip && !validator.isPostalCode(zip)) return res.status(400).json({ error: "Invalid zip code.", message: "Invalid zip code."});
             if (zip) params.zip = xssFilters.inHTMLData(zip);
 
-        if (beds && !validator.isInt(beds)) return res.status(400).json({ error: "Invalid number of beds." });
+        if (beds && !validator.isInt(beds)) return res.status(400).json({ error: "Invalid number of beds.", message: "Invalid number of beds."});
             if (beds) params.beds = beds;
 
-        if (min_bed && !validator.isInt(min_bed)) return res.status(400).json({ error: "Invalid number of minimum beds." });
+        if (min_bed && !validator.isInt(min_bed)) return res.status(400).json({ error: "Invalid number of minimum beds.", message: "Invalid number of minimum beds."});
             if (min_bed) params.min_bed = min_bed;
 
-        if (max_bed && !validator.isInt(max_bed)) return res.status(400).json({ error: "Invalid number of maximum beds." });
+        if (max_bed && !validator.isInt(max_bed)) return res.status(400).json({ error: "Invalid number of maximum beds.", message: "Invalid number of maximum beds."});
             if (max_bed) params.max_bed = max_bed;
 
-        if (baths && !validator.isInt(baths)) return res.status(400).json({ error: "Invalid number of baths." });
+        if (baths && !validator.isInt(baths)) return res.status(400).json({ error: "Invalid number of baths.", message: "Invalid number of baths."});
             if (baths) params.baths = baths;
 
-        if (min_bath && !validator.isInt(min_bath)) return res.status(400).json({ error: "Invalid number of minimum baths." });
+        if (min_bath && !validator.isInt(min_bath)) return res.status(400).json({ error: "Invalid number of minimum baths.", message: "Invalid number of minimum baths."});
             if (min_bath) params.min_bath = min_bath;
 
-        if (max_bath && !validator.isInt(max_bath)) return res.status(400).json({ error: "Invalid number of maximum baths." });
+        if (max_bath && !validator.isInt(max_bath)) return res.status(400).json({ error: "Invalid number of maximum baths.", message: "Invalid number of maximum baths."});
             if (max_bath) params.max_bath = max_bath;
 
-        if (square_footage_min && !validator.isInt(square_footage_min)) return res.status(400).json({ error: "Invalid minimum square footage." });
+        if (square_footage_min && !validator.isInt(square_footage_min)) return res.status(400).json({ error: "Invalid minimum square footage.", message: "Invalid minimum square footage."});
             if (square_footage_min) params.square_footage_min = square_footage_min;
 
-        if (square_footage_max && !validator.isInt(square_footage_max)) return res.status(400).json({ error: "Invalid maximum square footage." });
+        if (square_footage_max && !validator.isInt(square_footage_max)) return res.status(400).json({ error: "Invalid maximum square footage.", message: "Invalid maximum square footage."});
             if (square_footage_max) params.square_footage_max = square_footage_max;
 
         // if (pet && !validator.isIn(pet, ['Cats', 'Dogs', 'Friendly', ''])) return res.status(400).json({ error: "Invalid pet value." });
             if (pet) params.pet = pet;
-        if (parking && !validator.isIn(parking, ['Y', ''])) return res.status(400).json({ error: "Invalid parking value." });
+        if (parking && !validator.isIn(parking, ['Y', ''])) return res.status(400).json({ error: "Invalid parking value.", message: "Invalid parking value."});
             if (parking) params.parking = parking;
 
-        if (max_rent && !validator.isInt(max_rent)) return res.status(400).json({ error: "Invalid maximum rent." });
+        if (max_rent && !validator.isInt(max_rent)) return res.status(400).json({ error: "Invalid maximum rent.", message: "Invalid maximum rent."});
         if (max_rent) params.max_rent = xssFilters.inHTMLData(max_rent);
-        if (min_rent && !validator.isInt(min_rent)) return res.status(400).json({ error: "Invalid minimum rent." });
+        if (min_rent && !validator.isInt(min_rent)) return res.status(400).json({ error: "Invalid minimum rent.", message: "Invalid minimum rent."});
         if (min_rent) params.min_rent = xssFilters.inHTMLData(min_rent);
         if (listing_fee) params.listing_fee = xssFilters.inHTMLData(listing_fee);
         if (avail_from) params.avail_from = xssFilters.inHTMLData(avail_from);
         if (avail_to) params.avail_to = xssFilters.inHTMLData(avail_to);
-        if (photo && !validator.isIn(photo, ['Y', ''])) return res.status(400).json({ error: "Invalid photo value." });
+        if (photo && !validator.isIn(photo, ['Y', ''])) return res.status(400).json({ error: "Invalid photo value.", message: "Invalid photo value."});
             if (photo) params.photo = xssFilters.inHTMLData(photo);
-        if (tours && !validator.isIn(tours, ['Y', ''])) return res.status(400).json({ error: "Invalid tours value." });
+        if (tours && !validator.isIn(tours, ['Y', ''])) return res.status(400).json({ error: "Invalid tours value.", message: "Invalid tours value."});
             if (tours) params.tours = xssFilters.inHTMLData(tours);
-        if (features && !validator.isAlpha(features)) return res.status(400).json({ error: "Invalid features value." });
+        if (features && !validator.isAlpha(features)) return res.status(400).json({ error: "Invalid features value.", message: "Invalid features value."});
             if (features) params.features = xssFilters.inHTMLData(features);
-        if (laundry && !validator.isIn(laundry, ['In Unit', 'On Site', 'None', ''])) return res.status(400).json({ error: "Invalid laundry value." });
+        if (laundry && !validator.isIn(laundry, ['In Unit', 'On Site', 'None', ''])) return res.status(400).json({ error: "Invalid laundry value.", message: "Invalid laundry value."});
             if (laundry) params.laundry = xssFilters.inHTMLData(laundry);
 
         console.log("Full Params:", params)
