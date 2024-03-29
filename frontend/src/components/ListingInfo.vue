@@ -412,12 +412,15 @@ th {
     display: flex;
     justify-content: center;
   }
+  h2 {
+    margin-bottom: -30px
+  }
   .header {
     justify-content: space-between;
   }
   .container {
     width: 100%;
-    height: 100%;
+    height: 93.5%;
     top: 5%;
     border-radius: 0;
   }
@@ -439,7 +442,7 @@ th {
     width: 33%;
   }
   .table-container {
-    height: 30%;
+    height: 40%;
   }
   .btn-close, .save {
     scale: 0.8;

@@ -179,6 +179,31 @@ const allNeighborhoods = [
     apiValue: neighborhood.value
 }));
 
+const featureMapping = [
+    'Microwave',
+    'A/C',
+    'Dishwasher',
+    'Pool',
+    'Refrigerator',
+    'Fireplace',
+    'Balcony',
+    'Patio',
+    'Fitness Center',
+    'Laundry',
+    'Elevator',
+    'Hardwood Floors',
+    'Carpet',
+    'Concierge',
+    'Disposal',
+    'Garage Parking',
+    'Oven/Range',
+    'Storage',
+    'Yard',
+    'Deck',
+].map(feature => ({ name: feature }));
+
+
 module.exports = {
     allNeighborhoods,
+    featureMapping,
 }

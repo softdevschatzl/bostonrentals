@@ -46,16 +46,22 @@
               <label for="pets">Pets:</label>
               <input type="text" id="pets" v-model="pets">
 
-              <label for="student">Student:</label>
-              <input type="checkbox" id="student" v-model="isStudent">
+              <div class="checkbox-group">
+                <label for="student">Student:</label>
+                <input class="checkbox" type="checkbox" id="student" v-model="isStudent">
+              </div>
 
               <label for="employed">Apartment Preferences:</label>
               <input placeholder="Describe your dream apartment..." type="text" id="apartmentPreferences" v-model="apartmentPreferences">
 
-              <label for="broker">Are you aware that you would be working with a brokerage, there could be a fee for our service?</label>
-              <input type="checkbox" id="broker" v-model="isBroker">
+              <div class="checkbox-group">
+                <label for="broker">Are you aware that you would be working with a brokerage, there could be a fee for our service?</label>
+                <input class="checkbox" type="checkbox" id="broker" v-model="isBroker">
+              </div>
             </div>
-            <button class="submit-form" @click="submitForm">Submit</button>
+            <div class="btn-row">
+              <button class="submit-form" @click="submitForm">Submit</button>
+            </div>
           </div>
         </div>
       </div>
@@ -69,12 +75,27 @@
 
 <script>
 import configureAWS from "../utils/aws-config.js";
+import { required, minLength, maxLength, minValue, maxValue } from 'vuelidate/lib/validators';
 
 export default {
   data() {
     return {
-      userAttributes: []
+      userAttributes: [],
+      income: '',
+      creditScore: '',
+      pets: '',
+      isStudent: false,
+      apartmentPreferences: '',
+      isBroker: false
     };
+  },
+  validations: {
+    income: { required, minValue: minValue(0) },
+    creditScore: { required, minValue: minValue(300), maxValue: maxValue(850) },
+    pets: { required, minLength: minLength(1), maxLength: maxLength(50) },
+    isStudent: { required },
+    apartmentPreferences: { required, minLength: minLength(1), maxLength: maxLength(500) },
+    isBroker: { required }
   },
   async created() {
     try {
@@ -156,14 +177,14 @@ body {
 .my-account {
   background: #363636;
   border-radius: 20px;
-  border: 4px #a7a7a7;
+  border: 4px solid #a7a7a7;
   padding: 40px;
   margin: 20px;
 }
 
 /* Top Row Styles */
 .top-row h1 {
-  color: #333;
+  color: #fff;
   margin-bottom: 40px;
   text-align: center;
 }
@@ -195,6 +216,13 @@ body {
   margin-bottom: 10px;
 }
 
+.button-row {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 /* Additional Information Styles */
 .additional-info {
   background: #E0E5EC;
@@ -204,6 +232,10 @@ body {
   margin-top: 20px;
   width: 300px;
 }
+.add-info-title {
+  margin-bottom: 20px;
+  text-align: center;
+}
 
 /* Form Styles */
 .pre-approval-form {
@@ -212,14 +244,27 @@ body {
 }
 
 .pre-approval-form input[type='text'],
-.pre-approval-form input[type='number'],
-.pre-approval-form input[type='checkbox'] {
+.pre-approval-form input[type='number'] {
   border: none;
   border-radius: 10px;
   padding: 10px;
   margin: 10px 0;
   background: #E0E5EC;
   box-shadow: inset 2px 2px 5px #a7a7a7, inset -2px -2px 5px #ffffff;
+}
+.pre-approval-form input[type='checkbox'] {
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px 0;
+  background: #E0E5EC;
+}
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  margin-top: 10px
 }
 
 /* Button Styles */
@@ -243,7 +288,7 @@ body {
 .saved-lists {
   background: #E0E5EC;
   border-radius: 20px;
-  box-shadow: 8px 8px 15px #a7a7a7, -8px -8px 15px #ffffff;
+  border: 4px solid #333333;
   padding: 20px;
   margin-top: 20px;
   text-align: center;

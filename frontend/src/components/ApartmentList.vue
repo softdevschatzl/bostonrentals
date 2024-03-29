@@ -49,6 +49,7 @@ export default {
     return {
       selectedApartment: null,
       showApartmentInfo: false,
+      index: '',
     };
   },
   props: {

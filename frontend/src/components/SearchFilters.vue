@@ -10,6 +10,7 @@
             <input class="value" type="text" v-model="localSearchCriteria.street_name" placeholder="Street Name..." @input="validateStreetName" />
             <p class="error-message" v-if="streetNameError">{{ streetNameError }}</p>
             <input class="value" type="text" v-model="localSearchCriteria.zip" placeholder="Zip Code..." />
+            <p class="error-message" v-if="zipCodeError">{{ zipCodeError }}</p>
             <div class="multi-container">
               <VueMultiselect
                 class="multiselect"
@@ -231,10 +232,18 @@ export default {
     // Input validation methods.
     validateStreetName() {
       const streetNameRegex = /^[a-zA-Z0-9\s.'-]+$/;
-      if (!streetNameRegex.test(this.streetName)) {
-        this.streetNameError = 'Please enter a valid street name.';
-      } else {
+      if (streetNameRegex.test(this.localSearchCriteria.street_name)) {
         this.streetNameError = null;
+      } else if (streetNameRegex && !streetNameRegex.test(this.localSearchCriteria.street_name)) {
+        this.streetNameError = 'Please enter a valid street name';
+      }
+    },
+    validateZipCode() {
+      const zipCodeRegex = /^\d{5}(?:[-\s]\d{4})?$/;
+      if (zipCodeRegex.test(this.localSearchCriteria.zip)) {
+        this.zipCodeError = null;
+      } else if (zipCodeRegex && !zipCodeRegex.test(this.localSearchCriteria.zip)) {
+        this.zipCodeError = 'Please enter a valid zip code';
       }
     },
     // Searches for listings using the search criteria.
@@ -393,6 +402,8 @@ export default {
 
       streetName: '',
       streetNameError: null,
+      zipCode: '',
+      zipCodeError: null,
     };
   },
   mounted() {
