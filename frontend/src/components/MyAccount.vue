@@ -290,7 +290,7 @@ body {
   border-radius: 20px;
   border: 4px solid #333333;
   padding: 20px;
-  margin-top: 20px;
+  margin: 20px;
   text-align: center;
 }
 

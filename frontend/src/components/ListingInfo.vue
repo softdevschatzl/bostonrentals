@@ -2,9 +2,9 @@
   <div class="listing-info" v-if="visible && listing">
     <div class="container">
       <div class="header">
-        <button v-if="!isMobile" class="contact-btn">Contact Agent</button>
-        <h1>Rental Information</h1>
         <button class="save">Save to List</button>
+        <h1>Rental Information</h1>
+        <div v-if="!isMobile" class="right"></div>
         <!-- Credits: Cyril Lamotte on Codepen.
         https://codepen.io/cyril-lamotte/pen/bGVxjOr -->
         <button type="button" class="btn-close" @click="close">
@@ -106,7 +106,15 @@
       </div>
       <div class="image-container">
         <h2>Photos: ({{ listing.photos.length }})</h2>
-        <Carousel :images="listingImages"/>
+        <!-- <Carousel :images="listingImages" /> -->
+        <img :src="this.listing.photos[0] || defaultImage" 
+             alt="Listing Image" style="width: 50%; height: 50%;" 
+             @click="enlarged = true"
+             :data-tooltip="enlarged ? 'Click to minimize' : 'Click to view photos'"
+        />
+      </div>
+      <div class="enlarged" v-if="enlarged" @click="enlarged = false" :data-tooltip="enlarged ? 'Click to minimize' : 'Click to view photos'">
+        <Carousel />
       </div>
     </div>
   </div>
@@ -118,6 +126,11 @@ import defaultImage from '../assets/no-image-found.jpg';
 import { statusMapping, squareFootageMapping, feeResultsMapping, parkingResultsKeyMapping, parkingResultsValueMapping } from '../utils/dataSets';
 
 export default {
+  data() {
+    return {
+      enlarged: false,
+    }
+  },
   components: {
     Carousel,
   },
@@ -406,14 +419,29 @@ th {
   align-items: center;
 }
 
+.enlarged-image {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  cursor: pointer;
+}
+.enlarged-image img {
+  max-width: 90%;
+  max-height: 90%;
+}
+
 @media only screen and (max-width: 768px) {
   h1 {
     font-size: 1.2rem;
     display: flex;
     justify-content: center;
-  }
-  h2 {
-    margin-bottom: -30px
   }
   .header {
     justify-content: space-between;

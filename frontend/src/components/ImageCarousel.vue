@@ -6,15 +6,21 @@
       class="slide" 
       :key="current" 
       @click="enlarged = true" 
-      :data-tooltip="enlarged ? 'Click to minimize' : 'Click to enlarge'"
+      :data-tooltip="enlarged ? 'Click to minimize' : 'Click to view photos'"
     >
       <img :src="displayedImages[current]" alt="Listing Image" class="image">
     </div>
   </transition-group>
-  <div class="btn btn-prev" aria-label="Previous slide" @click="slide(-1)">
+  <div class="btn btn-prev" 
+       aria-label="Previous slide" 
+       @click="slide(-1)"
+       >
     &#10094;
   </div>
-  <div class="btn btn-next" aria-label="Next slide" @click="slide(1)">
+  <div class="btn btn-next" 
+       aria-label="Next slide" 
+       @click="slide(1)"
+       >
     &#10095;
   </div>
   <div class="enlarged-image" v-if="enlarged" @click="enlarged = false" :data-tooltip="enlarged ? 'Click to minimize' : 'Click to enlarge'">
@@ -31,7 +37,7 @@ export default {
     images: {
       type: Array,
       default: () => []
-    }
+    },
   },
   data() {
     return {

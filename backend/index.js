@@ -278,10 +278,20 @@ app.use(helmet.contentSecurityPolicy({
 app.post('/submit-preapproval', async (req, res) => {
     const {income, creditScore, pets, isStudent, apartmentPreferences, isBroker } = req.body;
 
+    // Basic Validation.
     if (!validator.isInt(income)) return res.status(400).json({ error: "Invalid income." });
     if (!validator.isInt(creditScore)) return res.status(400).json({ error: "Invalid credit score."}); 
     if (!validator.isLength(pets, { max: 50})) return res.status(400).json({ error: "Invalid pets." });
-    // Continue vaidation...
+    if (!validator.isBoolean(isStudent)) return res.status(400).json({ error: "Invalid student status." });
+    if (!validator.isLength(apartmentPreferences, { max: 500}) || !validator.isAlphanumeric(apartmentPreferences)) return res.status(400).json({ error: "Invalid apartment preferences." });
+    if (!validator.isBoolean(isBroker)) return res.status(400).json({ error: "Invalid broker status." });
+
+    const sanitizedIncome = xssFilters.inHTMLData(income);
+    const sanitizedCreditScore = xssFilters.inHTMLData(creditScore);
+    const sanitizedPets = xssFilters.inHTMLData(pets);
+    const sanitizedApartmentPreferences = xssFilters.inHTMLData(apartmentPreferences);
+    
+    // Implement form submission here...
 });
 
 // Creating route to fetch data (YGL API)
