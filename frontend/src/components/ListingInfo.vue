@@ -106,6 +106,7 @@
       </div>
       <div class="image-container">
         <h2>Photos: ({{ listing.photos.length }})</h2>
+        <h4>(Click to view photos)</h4>
         <Carousel :images="listingImages" />
       </div>
     </div>
@@ -235,11 +236,16 @@ export default {
 h1 {
   color: #fff;
   margin-bottom: 20px;
-  margin-left: 10%;
+  // margin-left: 10%;
   text-align: center;
 }
 h2 {
   color: #fff;
+}
+h4 {
+  color: #fff;
+  text-align: center;
+  margin-top: 5px;
   margin-bottom: 10px;
 }
 th {
@@ -252,7 +258,7 @@ th {
 }
 
 .right {
-  width: 25%;
+  width: 10%;
 }
 
 .listing-info {
@@ -279,7 +285,7 @@ th {
   width: 100%;
   border-collapse: collapse;
   background: #e0e0e0;
-  box-shadow: 5px 5px 10px #a3a3a3, -5px -5px 10px #ffffff;
+  // box-shadow: 5px 5px 10px #a3a3a3, -5px -5px 10px #ffffff;
 }
 
 .info-table th, .info-table td {
@@ -400,12 +406,9 @@ th {
     box-shadow: 2px 2px 5px #3b3b50,
                 -2px -2px 5px #5c5c7c;
 }
-.save {
-  margin-right: 10%;
-}
 
 .image-container {
-  height: 50%;
+  height: 100%;
   width: 80%;
   display: flex;
   justify-content: center;
@@ -413,19 +416,16 @@ th {
   align-items: center;
 }
 
+/* Mobile */
 @media only screen and (max-width: 768px) {
   h1 {
     font-size: 1.2rem;
     display: flex;
     justify-content: center;
   }
-  .header {
-    justify-content: space-between;
-  }
   .container {
     width: 100%;
-    height: 93.5%;
-    top: 5%;
+    height: 85%;
     border-radius: 0;
   }
 
@@ -435,10 +435,10 @@ th {
 
   .image-container {
     width: 90%;
-    height: 50%;
+    height: 40%;
   }
   .right {
-    width: 35%;
+    width: 15%;
   }
   .table-container {
     height: 40%;
@@ -448,7 +448,7 @@ th {
   }
   .save {
     font-size: 12px;
-    width: 33%;
+    width: 30%;
   }
 }
 </style>

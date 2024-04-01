@@ -11,20 +11,43 @@
       <img :src="displayedImages[current]" alt="Listing Image" class="image">
     </div>
   </transition-group>
-  <div class="btn btn-prev" 
-       aria-label="Previous slide" 
-       @click="slide(-1)"
-       >
-    &#10094;
-  </div>
-  <div class="btn btn-next" 
-       aria-label="Next slide" 
-       @click="slide(1)"
-       >
-    &#10095;
-  </div>
-  <div class="enlarged-image" v-if="enlarged" @click="enlarged = false" :data-tooltip="enlarged ? 'Click to minimize' : 'Click to enlarge'">
+  <div class="enlarged-image" v-if="enlarged && isMobile">
+    <div class="enlarged-header">
+      <h4>Photo: {{ current + 1 }}</h4>
+      <button type="button" class="btn-close" @click="enlarged = false">
+        <span class="icon-cross"></span>
+        <span class="visually-hidden">Close</span>
+      </button>
+    </div>
     <img :src="displayedImages[current]" alt="Enlarged Image">
+  </div>
+  <div class="enlarged-image-desktop" v-if="enlarged && !isMobile">
+    <div class="enlarged-header">
+      <h4>Photo: {{ current + 1 }}</h4>
+      <button type="button" class="btn-close" @click="enlarged = false">
+        <span class="icon-cross"></span>
+        <span class="visually-hidden">Close</span>
+      </button>
+    </div>
+    <img :src="displayedImages[current]" alt="Enlarged Image">
+  </div>
+  <div class="btn-group" v-if="enlarged">
+    <div 
+      class="btn btn-prev" 
+      v-if="enlarged"
+      aria-label="Previous slide" 
+      @click="slide(-1)"
+    >
+      &#10094;
+    </div>
+    <div 
+      class="btn btn-next" 
+      v-if="enlarged"
+      aria-label="Next slide" 
+      @click="slide(1)"
+    >
+      &#10095;
+    </div>
   </div>
 </div>
 </template>
@@ -57,7 +80,10 @@ export default {
 
       const images = this.images.map(image => image || defaultImage);
       return images;
-    }
+    },
+    isMobile() {
+      return window.innerWidth < 768;
+    },
   },
   methods: {
     slide(dir) {
@@ -75,8 +101,92 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 @import url("https://fonts.googleapis.com/css?family=Crimson+Text");
+
+// Display a cross with CSS only.
+//
+// Cool close button.
+//
+// Credits: Cyril Lamotte on Codepen.
+// https://codepen.io/cyril-lamotte/pen/bGVxjOr
+//
+// $size  : px or em
+// $color : color
+// $thickness : px
+@mixin cross($size: 20px, $color: currentColor, $thickness: 1px) {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  position: relative;
+  width: $size;
+  height: $size;
+
+  &:before,
+  &:after {
+    content: '';
+    position: absolute;
+    top: calc(($size - $thickness) / 2);
+    left: 0;
+    right: 0;
+    height: $thickness;
+    background: $color;
+    border-radius: $thickness;
+  }
+
+  &:before {
+    transform: rotate(45deg);
+  }
+
+  &:after {
+    transform: rotate(-45deg);
+  }
+
+  span {
+    display: block;
+  }
+
+}
+.btn-close {
+  // position: absolute;
+  // top: 225px;
+  // right: 15px;
+  margin: 0;
+  border: 0;
+  padding: 0;
+  background: #333;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 150ms;
+  
+  .icon-cross {
+    @include cross(30px, #afc6d2, 6px);   
+  }
+  
+  &:hover,
+  &:focus {
+    transform: rotateZ(90deg);
+    background: #444444;
+  }
+
+}
+// For screen readers.
+.visually-hidden {
+  position: absolute !important;
+  clip: rect(1px, 1px, 1px, 1px);
+  padding: 0 !important;
+  border: 0 !important;
+  height: 1px !important;
+  width: 1px !important;
+  overflow: hidden;
+}
 
 /* FADE IN */
 .fade-enter-active {
@@ -128,8 +238,8 @@ export default {
   width: auto;
   height: 100%;
   object-fit: contain;
-  max-width: 40vw;
-  max-height: 40vh;
+  max-width: 60vw;
+  max-height: 60vh;
 }
 .slide:hover::after, .enlarged-image:hover::after {
   content: attr(data-tooltip);
@@ -155,6 +265,13 @@ body {
   color: #fff;
 }
 
+h4 {
+  color: #ffffff;
+  // margin-bottom: 40px;
+  top: 10%;
+  font-size: 24px;
+}
+
 #slider {
   width: 60%;
   height: 100%;
@@ -173,7 +290,7 @@ body {
 }
 
 .btn {
-  z-index: 10;
+  z-index: 101;
   cursor: pointer;
   border: 3px solid #fff;
   display: flex;
@@ -181,9 +298,9 @@ body {
   align-items: center;
   width: 70px;
   height: 70px;
-  position: absolute;
-  top: calc(50% - 35px);
-  left: 1%;
+  // position: absolute;
+  // top: calc(50%);
+  // left: 1%;
   transition: transform 0.3s ease-in-out;
   user-select: none;
   color: #ffffff;
@@ -199,6 +316,14 @@ body {
   transform: scale(1.1);
 }
 
+.btn-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 90%;
+  gap: 40px;
+}
+
 .enlarged-image {
   position: fixed;
   top: 0;
@@ -207,6 +332,7 @@ body {
   height: 100%;
   background: #000;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   z-index: 100;
@@ -214,15 +340,57 @@ body {
 }
 .enlarged-image img {
   max-width: 90%;
-  max-height: 90%;
+  max-height: 70%;
+  margin-bottom: 40px
+}
+
+.enlarged-image-desktop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  cursor: pointer;
+}
+.enlarged-image-desktop img {
+  max-width: 60%;
+  max-height: 60%;
+  margin-bottom: 40px
+}
+
+.enlarged-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 40px;
+  width: 100%;
+  padding: 20px;
+  color: #fff;
+  font-size: 24px;
+  margin-bottom: 40px;
+  margin-left: 80px;
+}
+
+@media only screen and (min-width: 768px) {
+  .btn-close {
+    top: 165px;
+    right: 183px;
+  }
 }
 
 @media only screen and (max-width: 768px) {
-  .image {
-    width: 100%;
-  }
   #slider {
     width: 100%;
+  }
+  .btn-group {
+    margin-top: 70%;
   }
 }
 
