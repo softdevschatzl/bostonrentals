@@ -320,7 +320,7 @@ h4 {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 90%;
+  margin-top: 50vh;
   gap: 40px;
 }
 

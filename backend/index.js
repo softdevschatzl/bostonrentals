@@ -279,12 +279,12 @@ app.post('/submit-preapproval', async (req, res) => {
     const {income, creditScore, pets, isStudent, apartmentPreferences, isBroker } = req.body;
 
     // Basic Validation.
-    if (!validator.isInt(income)) return res.status(400).json({ error: "Invalid income." });
-    if (!validator.isInt(creditScore)) return res.status(400).json({ error: "Invalid credit score."}); 
-    if (!validator.isLength(pets, { max: 50})) return res.status(400).json({ error: "Invalid pets." });
-    if (!validator.isBoolean(isStudent)) return res.status(400).json({ error: "Invalid student status." });
+    if (!income || !validator.isNumeric(income) || income < 0) return res.status(400).json({ error: "Invalid income." });
+    if (!creditScore || !validator.isInt(creditScore, { min: 300, max: 850 })) return res.status(400).json({ error: "Invalid credit score."}); 
+    if (!validator.isAlphanumeric(pets) || !validator.isLength(pets, { max: 50})) return res.status(400).json({ error: "Invalid pets." });
+    if (typeof isStudent !== 'boolean') return res.status(400).json({ error: "Invalid student status." });
     if (!validator.isLength(apartmentPreferences, { max: 500}) || !validator.isAlphanumeric(apartmentPreferences)) return res.status(400).json({ error: "Invalid apartment preferences." });
-    if (!validator.isBoolean(isBroker)) return res.status(400).json({ error: "Invalid broker status." });
+    if (typeof isBroker !== 'boolean') return res.status(400).json({ error: "Invalid broker status." });
 
     const sanitizedIncome = xssFilters.inHTMLData(income);
     const sanitizedCreditScore = xssFilters.inHTMLData(creditScore);
@@ -323,10 +323,18 @@ app.post('/api/properties', async (req, res) => {
         // Use validateInt to check if the input is a valid integer.
         // Add parameters to the request if they are not blank.
         // Coordinate parameters for ApartmentList.
-        if (latitude_start) params.latitude_start = latitude_start;
-        if (latitude_end) params.latitude_end = latitude_end;
-        if (longitude_start) params.longitude_start = longitude_start;
-        if (longitude_end) params.longitude_end = longitude_end;
+        if (latitude_start && !validator.isDecimal(latitude_start.toString())) return res.status(400).json({ error: "Invalid latitude_start.", message: "Invalid latitude_start." });
+            else if (latitude_start) params.latitude_start = latitude_start;
+
+        if (latitude_end && !validator.isDecimal(latitude_end.toString())) return res.status(400).json({ error: "Invalid latitude_end.", message: "Invalid latitude_end." });
+        else if (latitude_end) params.latitude_end = latitude_end;
+
+        if (longitude_start && !validator.isDecimal(longitude_start.toString())) return res.status(400).json({ error: "Invalid longitude_start.", message: "Invalid longitude_start." });
+            else if (longitude_start) params.longitude_start = longitude_start;
+
+        if (longitude_end && !validator.isDecimal(longitude_end.toString())) return res.status(400).json({ error: "Invalid longitude_end.", message: "Invalid longitude_end." });
+            else if (longitude_end) params.longitude_end = longitude_end;
+
         // Other parameters.
         if (street_name && !validator.isAlpha(street_name)) return res.status(400).json({ error: "Invalid street name.", message: "Invalid street name." });
            else if (street_name) params.street_name = xssFilters.inHTMLData(street_name);

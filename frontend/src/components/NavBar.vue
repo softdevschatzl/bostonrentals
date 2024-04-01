@@ -53,7 +53,7 @@
   }
 
   .logo {
-    width: 100%;
+    width: 75%;
     height: auto;
   }
 
@@ -102,6 +102,9 @@
   .user-sign {
     margin-left: 24vw
   }
+  .logo {
+    width: 100%;
+  }
 }
  
 /* Desktop styles */
@@ -118,11 +121,10 @@
     font-size: 24px;
   }
 }
-/* * Larger desktop screens. */
+
 @media only screen and (min-width: 1100px) {
   .logo {
-    height: 80%;
-    width: 55%;
+    width: 60%;
   }
 }
 </style>

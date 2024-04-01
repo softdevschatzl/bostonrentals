@@ -9,7 +9,7 @@
           <div v-show="openGroups.locationInput" class="location-input-group inner-group"> <!-- v-show="openGroups.locationInput" -->
             <input class="value" type="text" v-model="localSearchCriteria.street_name" placeholder="Street Name..." @input="validateStreetName" />
             <p class="error-message" v-if="streetNameError">{{ streetNameError }}</p>
-            <input class="value" type="text" v-model="localSearchCriteria.zip" placeholder="Zip Code..." />
+            <input class="value" type="text" v-model="localSearchCriteria.zip" placeholder="Zip Code..." @input="validateZipCode" />
             <p class="error-message" v-if="zipCodeError">{{ zipCodeError }}</p>
             <div class="multi-container">
               <VueMultiselect
@@ -73,8 +73,10 @@
         <div class="info-group min-max-rent">
           <button class="toggle-btn" data-group="minMaxRent" @click="toggleGroup('minMaxRent')">Min/Max Rent/Fee Filters</button>
           <div v-show="openGroups.minMaxRent" class="min-max-rent-group inner-group"> <!-- v-show="openGroups.minMaxRent" -->
-            <input class="value" type="text" v-model="localSearchCriteria.min_rent" placeholder="Min Rent..." />
-            <input class="value" type="text" v-model="localSearchCriteria.max_rent" placeholder="Max Rent..." />        
+            <input class="value" type="text" v-model="localSearchCriteria.min_rent" placeholder="Min Rent..." @input="validateMinRent"/>
+            <p class="error-message" v-if="minRentError">{{ minRentError }}</p>
+            <input class="value" type="text" v-model="localSearchCriteria.max_rent" placeholder="Max Rent..." @input="validateMaxRent"/>
+            <p class="error-message" v-if="maxRentError">{{ maxRentError }}</p>        
             <div class="multi-container">
               <VueMultiselect
                 class="multiselect"
@@ -93,8 +95,10 @@
         <div class="info-group laundry-parking-pet">
           <button class="toggle-btn" data-group="laundryParkingPet" @click="toggleGroup('laundryParkingPet')">Min/Max Sqft/Pet Filters</button>
           <div v-show="openGroups.laundryParkingPet" class="laundry-parking-pet-group inner-group"> <!-- v-show="openGroups.laundryParkingPet" -->
-            <input class="value" type="text" v-model="localSearchCriteria.square_footage_min" placeholder="Minimum Square Feet..." />
-            <input class="value" type="text" v-model="localSearchCriteria.square_footage_max" placeholder="Maximum Square Feet..." />
+            <input class="value" type="text" v-model="localSearchCriteria.square_footage_min" placeholder="Minimum Square Feet..." @input="validateMinSqft"/>
+            <p class="error-message" v-if="minSqftError">{{ minSqftError }}</p>
+            <input class="value" type="text" v-model="localSearchCriteria.square_footage_max" placeholder="Maximum Square Feet..." @input="validateMaxSqft"/>
+            <p class="error-message" v-if="maxSqftError">{{ maxSqftError }}</p>
             <div class="multi-container">
               <VueMultiselect
                 class="multiselect"
@@ -232,7 +236,7 @@ export default {
     // Input validation methods.
     validateStreetName() {
       const streetNameRegex = /^[a-zA-Z0-9\s.'-]+$/;
-      if (streetNameRegex.test(this.localSearchCriteria.street_name)) {
+      if (streetNameRegex.test(this.localSearchCriteria.street_name) || this.localSearchCriteria.street_name === '') {
         this.streetNameError = null;
       } else if (streetNameRegex && !streetNameRegex.test(this.localSearchCriteria.street_name)) {
         this.streetNameError = 'Please enter a valid street name';
@@ -240,10 +244,42 @@ export default {
     },
     validateZipCode() {
       const zipCodeRegex = /^\d{5}(?:[-\s]\d{4})?$/;
-      if (zipCodeRegex.test(this.localSearchCriteria.zip)) {
+      if (zipCodeRegex.test(this.localSearchCriteria.zip) || this.localSearchCriteria.zip === '') {
         this.zipCodeError = null;
       } else if (zipCodeRegex && !zipCodeRegex.test(this.localSearchCriteria.zip)) {
         this.zipCodeError = 'Please enter a valid zip code';
+      }
+    },
+    validateMinRent() {
+      const minRentRegex = /^\d+$/;
+      if (minRentRegex.test(this.localSearchCriteria.min_rent) || this.localSearchCriteria.min_rent === '') {
+        this.minRentError = null;
+      } else if (minRentRegex && !minRentRegex.test(this.localSearchCriteria.min_rent)) {
+        this.minRentError = 'Please enter a valid minimum rent';
+      }
+    },
+    validateMaxRent() {
+      const maxRentRegex = /^\d+$/;
+      if (maxRentRegex.test(this.localSearchCriteria.max_rent) || this.localSearchCriteria.max_rent === '') {
+        this.maxRentError = null;
+      } else if (maxRentRegex && !maxRentRegex.test(this.localSearchCriteria.max_rent)) {
+        this.maxRentError = 'Please enter a valid maximum rent';
+      }
+    },
+    validateMinSqft() {
+      const minSqftRegex = /^\d+$/;
+      if (minSqftRegex.test(this.localSearchCriteria.square_footage_min) || this.localSearchCriteria.square_footage_min === '') {
+        this.minSqftError = null;
+      } else if (minSqftRegex && !minSqftRegex.test(this.localSearchCriteria.square_footage_min)) {
+        this.minSqftError = 'Please enter a valid minimum square footage';
+      }
+    },
+    validateMaxSqft() {
+      const maxSqftRegex = /^\d+$/;
+      if (maxSqftRegex.test(this.localSearchCriteria.square_footage_max) || this.localSearchCriteria.square_footage_max === '') {
+        this.maxSqftError = null;
+      } else if (maxSqftRegex && !maxSqftRegex.test(this.localSearchCriteria.square_footage_max)) {
+        this.maxSqftError = 'Please enter a valid maximum square footage';
       }
     },
     // Searches for listings using the search criteria.
