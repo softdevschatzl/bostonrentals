@@ -11,6 +11,7 @@ import axios from 'axios';
 import SearchFilters from './SearchFilters.vue';
 import SearchResults from './SearchResults.vue';
 import { calculateCompletenessScore } from '@/utils/featuredApartmentAlgorithm';
+import { allNeighborhoods } from '../utils/dataSets.js';
 
 export default {
   components: {
@@ -18,6 +19,17 @@ export default {
     SearchResults,
   },
   data() {
+
+    const queryNeighborhood = this.$route.query.q;
+    let cityNeighborhood;
+
+    if (queryNeighborhood) {
+      const neighborhoodMatch = allNeighborhoods.find(neighborhood => neighborhood.name === queryNeighborhood);
+      cityNeighborhood = neighborhoodMatch ? [neighborhoodMatch] : [];
+    } else {
+      cityNeighborhood = [];
+    }
+
     return {
       searchCriteria: {
         street_name: null, // Street names, No Addresses!!!
@@ -27,7 +39,7 @@ export default {
         min_bath: null, // How many baths.
         max_bath: null, // How many baths.
         baths: null, // How many baths.
-        city_neighborhood: null, // Specific cities/neighborhoods.
+        city_neighborhood: cityNeighborhood, // Specific cities/neighborhoods.
         state: 'MA', // State.
         zip: null, // Zip code.
         min_rent: null, // Minimum rent.
@@ -60,7 +72,7 @@ export default {
 
         // Transform city_neighborhood array into a comma-separated string
         if (criteria.city_neighborhood && criteria.city_neighborhood.length > 0) {
-          criteria.city_neighborhood = criteria.city_neighborhood.map(item => item.apiValue.replace('-', ':')).join(',');
+          criteria.city_neighborhood = criteria.city_neighborhood.map(item => item.apiValue).join(',');
         } else {
           criteria.city_neighborhood = null; // Send null if the array is empty
         }
@@ -121,10 +133,9 @@ export default {
           criteria.tours = null; // Send null if the array is empty
         }
 
+        // console.log('API Query: ', criteria);
         // API call with preprocessed criteria
         const response = await axios.post('/api/properties', criteria);
-        
-        // console.log('API Query: ', criteria);
 
         // Calculate the score of each listing.
         const scoredListings = response.data.listings.map(listing => ({

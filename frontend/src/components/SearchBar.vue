@@ -5,8 +5,11 @@
       <p>Let's take the hassle out of finding a home.</p>
     </div>
     <div class="search-bar">
-      <input class="search-input" type="text" placeholder="Search for neighborhoods..." v-model="query" />
-      <button class="search-button" @click="search">Search</button>
+      <div class="search-bar-input">
+        <input class="search-input" type="text" placeholder="Search for neighborhoods..." v-model="query" @input="validateNeighborhood" />
+        <button class="search-button" @click="search">Search</button>
+      </div>
+      <p class="error-message" v-if="queryError">{{ queryError }}</p>
     </div>
   </div>
 </template>
@@ -19,18 +22,34 @@ export default {
   data() {
     return {
       query: '',
+      queryError: '',
     };
   },
   methods: {
+    validateNeighborhood() {
+      if (this.query) {
+        if (/^[a-zA-Z\s]+$/.test(this.query)) {
+          this.queryError = '';
+        } else {
+          this.queryError = 'Please enter a valid neighborhood.';
+        }
+      }
+    },
     search() {
+      this.validateNeighborhood();
+      if (this.queryError) return;
+
       const lowerCaseQuery = this.query.trim().toLowerCase();
-      const lowerCaseNeighborhoods = Object.keys(allNeighborhoods).map(key => key.toLowerCase());
 
-      console.log('Lowercase Query:', lowerCaseQuery);
-      console.log('Lowercase Neighborhoods:', lowerCaseNeighborhoods);
+      // console.log('Lowercase Query:', lowerCaseQuery);
 
-      if (lowerCaseNeighborhoods.includes(lowerCaseQuery)) {
-        const apiQuery = allNeighborhoods[this.query.trim()];
+      // const lowerCaseNeighborhoods = allNeighborhoods.map(neighborhood => neighborhood.name);
+      // console.log('Lowercase Neighborhoods:', lowerCaseNeighborhoods);
+
+      const neighborhoodMatch = allNeighborhoods.find(neighborhood =>  neighborhood.name.toLowerCase().includes(lowerCaseQuery));
+
+      if (neighborhoodMatch) {
+        const apiQuery = neighborhoodMatch.name;
         this.$router.push({ name: 'Search', query: { q: apiQuery } });
       } else {
         console.error('Neighborhood not found.');
@@ -94,6 +113,11 @@ export default {
   .search-bar {
     margin: 50px;
     display: flex;
+    flex-direction: column;
+  }
+
+  .search-bar-input {
+    display: flex;  
   }
 
   .search-header {
@@ -105,6 +129,12 @@ export default {
     align-items: center;
     justify-content: center;
     text-align: center;
+  }
+
+  .error-message {
+    color: red;
+    font-size: 1.4rem;
+    margin: 0.2rem 0;
   }
 
   /* Mobile */

@@ -341,9 +341,14 @@ app.post('/api/properties', async (req, res) => {
 
         // if city_neighborhood is not found in allNeighborhoods, return 400 error.
         if (city_neighborhood) {
-            const neighborhood = allNeighborhoods.find(neighborhood => neighborhood.apiValue === city_neighborhood);
-            if (!neighborhood) return res.status(400).json({ error: "Invalid neighborhood.", message: "Invalid neighborhood." });
-                if (city_neighborhood) params.city_neighborhood = city_neighborhood;
+            const neighborhoods = city_neighborhood.split(',');
+            const allValid = neighborhoods.every(neighborhood => {
+                const match = allNeighborhoods.find(n => n.apiValue === neighborhood.trim());
+                return match !== undefined;
+            });
+        
+            if (!allValid) return res.status(400).json({ error: "Invalid neighborhood.", message: "Invalid neighborhood." });
+            if (city_neighborhood) params.city_neighborhood = city_neighborhood;
         }
 
         if (zip && !validator.isPostalCode(zip, 'US')) return res.status(400).json({ error: "Invalid zip code.", message: "Invalid zip code."});

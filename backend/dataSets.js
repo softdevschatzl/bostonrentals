@@ -93,13 +93,13 @@ const allNeighborhoods = [
     { label: "Medford - Wellington", value: "Medford:Wellington" },
     { label: "Medford - West Medford", value: "Medford:West Medford" },
 
-    { label: "Needham", value: "Needham:MA,Needham:Birds Hill,Needham:Charles River Village,Needham:Needham Heights,Needham:Needham Junction" },
+    { label: "Needham", value: "Needham:Birds Hill,Needham:Charles River Village,Needham:Needham Heights,Needham:Needham Junction" },
     { label: "Needham - Birds Hill", value: "Needham:Birds Hill" },
     { label: "Needham - Charles River Village", value: "Needham:Charles River Village" },
     { label: "Needham - Needham Heights", value: "Needham:Needham Heights" },
     { label: "Needham - Needham Junction", value: "Needham:Needham Junction" },
 
-    { label: "Newton", value: "Newton:MA,Newton:Auburndale,Newton:Chestnut Hill,Newton:Eliot,Newton:Newton Center,Newton:Newton Corner,Newton:Newton Highlands,Newton:Newton Lower Falls,Newton:Newton Upper Falls,Newton:Newtonville,Newton:Nonantum,Newton:Thompsonville,Newton:Waban,Newton:West Newton,Newton:Woodland Station" },
+    { label: "Newton", value: "Newton:Auburndale,Newton:Chestnut Hill,Newton:Eliot,Newton:Newton Center,Newton:Newton Corner,Newton:Newton Highlands,Newton:Newton Lower Falls,Newton:Newton Upper Falls,Newton:Newtonville,Newton:Nonantum,Newton:Thompsonville,Newton:Waban,Newton:West Newton,Newton:Woodland Station" },
     { label: "Newton - Auburndale", value: "Newton:Auburndale" },
     { label: "Newton - Chestnut Hill", value: "Newton:Chestnut Hill" },
     { label: "Newton - Eliot", value: "Newton:Eliot" },
