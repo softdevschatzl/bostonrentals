@@ -6,7 +6,7 @@
     </div>
     <div class="search-bar">
       <div class="search-bar-input">
-        <input class="search-input" type="text" placeholder="Search for neighborhoods..." v-model="query" @input="validateNeighborhood" />
+        <input class="search-input" type="text" placeholder="Search for cities/neighborhoods..." v-model="query" @input="validateNeighborhood" />
         <button class="search-button" @click="search">Search</button>
       </div>
       <p class="error-message" v-if="queryError">{{ queryError }}</p>
