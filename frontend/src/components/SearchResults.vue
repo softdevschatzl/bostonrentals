@@ -11,7 +11,7 @@
         <th>Neighborhood</th>
         <th>Beds</th>
         <th>Baths</th>
-        <th>
+        <th class="price-header">
           Price
           <span class="price" @click="toggleSortPrice">
             <svg v-if="sortState === 'asc'" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up" viewBox="0 0 16 16">
@@ -146,6 +146,7 @@ export default {
 }
 .listings th, .listings td {
   text-align: left;
+  align-items: left;
   padding: 15px;
   border-bottom: 1px solid #bebebe;
 }
@@ -161,6 +162,13 @@ export default {
   /* width: calc(1/6*100%); */
   box-sizing: border-box;
 }
+
+.price-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .listing td {
   padding: 15px;
   border-bottom: 2px solid #aaaaaa;
