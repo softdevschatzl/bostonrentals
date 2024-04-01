@@ -4,7 +4,7 @@
       <div class="header">
         <button class="save">Save to List</button>
         <h1>Rental Information</h1>
-        <div v-if="!isMobile" class="right"></div>
+        <div class="right"></div>
         <!-- Credits: Cyril Lamotte on Codepen.
         https://codepen.io/cyril-lamotte/pen/bGVxjOr -->
         <button type="button" class="btn-close" @click="close">
@@ -106,15 +106,7 @@
       </div>
       <div class="image-container">
         <h2>Photos: ({{ listing.photos.length }})</h2>
-        <!-- <Carousel :images="listingImages" /> -->
-        <img :src="this.listing.photos[0] || defaultImage" 
-             alt="Listing Image" style="width: 50%; height: 50%;" 
-             @click="enlarged = true"
-             :data-tooltip="enlarged ? 'Click to minimize' : 'Click to view photos'"
-        />
-      </div>
-      <div class="enlarged" v-if="enlarged" @click="enlarged = false" :data-tooltip="enlarged ? 'Click to minimize' : 'Click to view photos'">
-        <Carousel />
+        <Carousel :images="listingImages" />
       </div>
     </div>
   </div>
@@ -241,7 +233,6 @@ export default {
 }
 
 h1 {
-  order: 2;
   color: #fff;
   margin-bottom: 20px;
   margin-left: 10%;
@@ -258,6 +249,10 @@ th {
 .info-row {
   border-top: 1px solid black;
   border-bottom: 1px solid black;
+}
+
+.right {
+  width: 25%;
 }
 
 .listing-info {
@@ -406,7 +401,6 @@ th {
                 -2px -2px 5px #5c5c7c;
 }
 .save {
-  order: 3;
   margin-right: 10%;
 }
 
@@ -417,24 +411,6 @@ th {
   justify-content: center;
   flex-direction: column;
   align-items: center;
-}
-
-.enlarged-image {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: #000;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 100;
-  cursor: pointer;
-}
-.enlarged-image img {
-  max-width: 90%;
-  max-height: 90%;
 }
 
 @media only screen and (max-width: 768px) {
@@ -461,13 +437,8 @@ th {
     width: 90%;
     height: 50%;
   }
-  .save {
-    order: 1;
-    margin-right: 0;
-  }
   .right {
-    order: 3;
-    width: 33%;
+    width: 35%;
   }
   .table-container {
     height: 40%;
@@ -477,6 +448,7 @@ th {
   }
   .save {
     font-size: 12px;
+    width: 33%;
   }
 }
 </style>

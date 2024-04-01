@@ -106,6 +106,10 @@
  
 /* Desktop styles */
 @media only screen and (min-width: 768px) {
+  nav {
+    height: 12vh;
+  }
+
   .user-sign {
     margin-left: 35vw;
   }
