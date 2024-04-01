@@ -92,8 +92,8 @@ export default {
       }
   },
   mounted() {
-    console.log('Listings: ', this.listings);
-    console.log('Listings Type: ', typeof this.listings);
+    // console.log('Listings: ', this.listings);
+    // console.log('Listings Type: ', typeof this.listings);
   },
   methods: {
     selectAllListings() {

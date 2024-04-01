@@ -100,7 +100,7 @@ export default {
   async created() {
     try {
       const userPool = await configureAWS();
-      console.log("User pool:", userPool);
+      // console.log("User pool:", userPool);
       this.fetchUserAttributes(userPool);
     } catch (error) {
       console.error("Error configuring AWS:", error);

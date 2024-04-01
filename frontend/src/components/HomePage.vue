@@ -52,9 +52,9 @@
           this.loading = true;
           try {
             const coords = calculateFullCoordinates(this.userCoords.latitude, this.userCoords.longitude);
-            console.log("Full coords: ", coords);
+            // console.log("Full coords: ", coords);
             const response = await axios.post('/api/properties', coords);
-            console.log("API Response For ApartmentItem: ", response.data);
+            // console.log("API Response For ApartmentItem: ", response.data);
             this.apartments = response.data; // Assuming this is an array.
           } catch (error) {
             console.error('Failed to fetch apartments:', error.message);

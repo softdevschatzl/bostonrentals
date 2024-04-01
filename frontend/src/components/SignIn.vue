@@ -29,7 +29,7 @@ export default {
       })
       .then(response => response.json())
       .then(data => {
-        console.log('Login status response:', data);
+        // console.log('Login status response:', data);
         this.isUserLoggedIn = data.isLoggedIn;
       })
       .catch(error => console.error('Error checking login status:', error));
@@ -50,7 +50,7 @@ export default {
         
         if (response.ok) {
           const data = await response.json();
-          console.log('Token response:', data);
+          // console.log('Token response:', data);
           this.checkLoginStatus();
         } else {
           console.error('Token exchange failed.');

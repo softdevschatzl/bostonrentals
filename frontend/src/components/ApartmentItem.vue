@@ -52,7 +52,7 @@
         },
       },
       mounted() {
-        console.log("Property data: ", this.propertyData);
+        // console.log("Property data: ", this.propertyData);
       },
       methods: {
         handleClick() {
