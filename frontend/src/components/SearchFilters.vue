@@ -671,6 +671,15 @@ input::placeholder {
     box-sizing: border-box;
   }
 
+  :deep(.multiselect__content),
+  :deep(.multiselect__tags),
+  :deep(input.multiselect__input) {
+    font-size: 0.8rem;
+  }
+  :deep(.multiselect__tags) {
+    padding: 14px 8px 8px 14px;
+  }
+
   .info-group {
     margin: 0;
     width: 150px;
