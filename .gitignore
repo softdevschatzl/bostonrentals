@@ -12,3 +12,4 @@ config.yaml
 deploy-ec2.py
 deploy.log
 deploy-ec2/
+backend/access.log

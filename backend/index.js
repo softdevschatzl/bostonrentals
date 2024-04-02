@@ -10,6 +10,8 @@ const validator = require('validator');
 const helmet = require('helmet');
 const axios = require('axios');
 const cors = require('cors');
+const rateLimit = require('express-rate-limit');
+const morgan = require('morgan');
 const querystring = require('querystring');
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
@@ -40,8 +42,23 @@ async function getSecrets() {
     }
 }
 
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+    message: 'Too many requests from this IP, please try again in a little while.',
+});
+
 const app = express();
 const PORT = 3000;
+
+app.use(limiter);
+
+// Logging middleware to an access.log file to monitor activity.
+const fs = require('fs');
+
+const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' });
+
+app.use(morgan('combined', { stream: accessLogStream }));
 
 app.use(cookieParser());
 
@@ -257,15 +274,6 @@ app.get('/api/cognito-config', async (req, res) => {
 //Test
 
 // Setting CSP headers to allow Cognito scripts.
-app.use('/auth-route', helmet.contentSecurityPolicy({
-    directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "https://d1lcia0inyjsq.cloudfront.net", "https://alexanderrentals-login.auth.us-east-2.amazoncognito.com"]
-    },
-    reportOnly: true,
-    reportUri: '/report-violation',
-}));
-
 app.use(helmet.contentSecurityPolicy({
     directives: {
         defaultSrc: ["'self'"],

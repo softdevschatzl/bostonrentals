@@ -52,6 +52,7 @@ export default {
         const apiQuery = neighborhoodMatch.name;
         this.$router.push({ name: 'Search', query: { q: apiQuery } });
       } else {
+        this.queryError = 'City or Neighborhood not found.';
         console.error('Neighborhood not found.');
       }
     }
