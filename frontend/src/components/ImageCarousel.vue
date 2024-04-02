@@ -20,6 +20,24 @@
       </button>
     </div>
     <img :src="displayedImages[current]" alt="Enlarged Image">
+    <div class="btn-group" v-if="enlarged">
+      <div 
+        class="btn btn-prev" 
+        v-if="enlarged"
+        aria-label="Previous slide" 
+        @click="slide(-1)"
+      >
+        &#10094;
+      </div>
+      <div 
+        class="btn btn-next" 
+        v-if="enlarged"
+        aria-label="Next slide" 
+        @click="slide(1)"
+      >
+        &#10095;
+      </div>
+    </div>
   </div>
   <div class="enlarged-image-desktop" v-if="enlarged && !isMobile">
     <div class="enlarged-header">
@@ -30,23 +48,23 @@
       </button>
     </div>
     <img :src="displayedImages[current]" alt="Enlarged Image">
-  </div>
-  <div class="btn-group" v-if="enlarged">
-    <div 
-      class="btn btn-prev" 
-      v-if="enlarged"
-      aria-label="Previous slide" 
-      @click="slide(-1)"
-    >
-      &#10094;
-    </div>
-    <div 
-      class="btn btn-next" 
-      v-if="enlarged"
-      aria-label="Next slide" 
-      @click="slide(1)"
-    >
-      &#10095;
+    <div class="btn-group" v-if="enlarged">
+      <div 
+        class="btn btn-prev" 
+        v-if="enlarged"
+        aria-label="Previous slide" 
+        @click="slide(-1)"
+      >
+        &#10094;
+      </div>
+      <div 
+        class="btn btn-next" 
+        v-if="enlarged"
+        aria-label="Next slide" 
+        @click="slide(1)"
+      >
+        &#10095;
+      </div>
     </div>
   </div>
 </div>
@@ -317,10 +335,10 @@ h4 {
 }
 
 .btn-group {
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 50vh;
   gap: 40px;
 }
 
@@ -361,7 +379,6 @@ h4 {
 .enlarged-image-desktop img {
   max-width: 60%;
   max-height: 60%;
-  margin-bottom: 40px
 }
 
 .enlarged-header {
@@ -374,7 +391,6 @@ h4 {
   padding: 20px;
   color: #fff;
   font-size: 24px;
-  margin-bottom: 40px;
   margin-left: 80px;
 }
 
@@ -383,6 +399,9 @@ h4 {
     top: 165px;
     right: 183px;
   }
+  .btn-group {
+    gap: 20vw;
+  }
 }
 
 @media only screen and (max-width: 768px) {
@@ -390,7 +409,7 @@ h4 {
     width: 100%;
   }
   .btn-group {
-    margin-top: 70%;
+    margin-top: 5vh;
   }
 }
 

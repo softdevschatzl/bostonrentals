@@ -425,7 +425,7 @@ th {
   }
   .container {
     width: 100%;
-    height: 85%;
+    height: 75%;
     border-radius: 0;
   }
 
