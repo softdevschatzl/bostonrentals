@@ -149,10 +149,10 @@ export default {
     .search-button {
       padding: 10px;
       border: none;
-      font-size: 16px;
+      font-size: 14px;
     }
     .search-input {
-      font-size: 18px;
+      font-size: 14px;
     }
   }
 </style>

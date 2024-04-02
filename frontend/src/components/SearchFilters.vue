@@ -5,8 +5,7 @@
     <!-- Search Filters -->
     <div class="filters">
         <div class="info-group location-input">
-          <button class="toggle-btn" data-group="locationInput" @click="toggleGroup('locationInput')">Location Filters </button>
-          <div v-show="openGroups.locationInput" class="location-input-group inner-group"> <!-- v-show="openGroups.locationInput" -->
+          <div class="location-input-group inner-group"> <!-- v-show="openGroups.locationInput" -->
             <input class="value" type="text" v-model="localSearchCriteria.street_name" placeholder="Street Name..." @input="validateStreetName" />
             <p class="error-message" v-if="streetNameError">{{ streetNameError }}</p>
             <input class="value" type="text" v-model="localSearchCriteria.zip" placeholder="Zip Code..." @input="validateZipCode" />
@@ -27,8 +26,7 @@
           </div>
         </div>
         <div class="info-group bed-bath-sqft">
-          <button class="toggle-btn" data-group="bedroomsBathrooms" @click="toggleGroup('bedroomsBathrooms')">Bed/Bath/Laundry Filters</button>
-          <div v-show="openGroups.bedroomsBathrooms" class="bedrooms-bathrooms-group inner-group">
+          <div class="bedrooms-bathrooms-group inner-group">
             <div class="multi-container">
               <VueMultiselect
                 class="multiselect"
@@ -71,8 +69,7 @@
           </div>
         </div>
         <div class="info-group min-max-rent">
-          <button class="toggle-btn" data-group="minMaxRent" @click="toggleGroup('minMaxRent')">Min/Max Rent/Fee Filters</button>
-          <div v-show="openGroups.minMaxRent" class="min-max-rent-group inner-group"> <!-- v-show="openGroups.minMaxRent" -->
+          <div class="min-max-rent-group inner-group"> <!-- v-show="openGroups.minMaxRent" -->
             <input class="value" type="text" v-model="localSearchCriteria.min_rent" placeholder="Min Rent..." @input="validateMinRent"/>
             <p class="error-message" v-if="minRentError">{{ minRentError }}</p>
             <input class="value" type="text" v-model="localSearchCriteria.max_rent" placeholder="Max Rent..." @input="validateMaxRent"/>
@@ -93,8 +90,7 @@
           </div>
         </div>
         <div class="info-group laundry-parking-pet">
-          <button class="toggle-btn" data-group="laundryParkingPet" @click="toggleGroup('laundryParkingPet')">Min/Max Sqft/Pet Filters</button>
-          <div v-show="openGroups.laundryParkingPet" class="laundry-parking-pet-group inner-group"> <!-- v-show="openGroups.laundryParkingPet" -->
+          <div class="laundry-parking-pet-group inner-group"> <!-- v-show="openGroups.laundryParkingPet" -->
             <input class="value" type="text" v-model="localSearchCriteria.square_footage_min" placeholder="Minimum Square Feet..." @input="validateMinSqft"/>
             <p class="error-message" v-if="minSqftError">{{ minSqftError }}</p>
             <input class="value" type="text" v-model="localSearchCriteria.square_footage_max" placeholder="Maximum Square Feet..." @input="validateMaxSqft"/>
@@ -115,8 +111,7 @@
           </div>
         </div>
         <div class="info-group photo-tour-feature">
-          <button class="toggle-btn" data-group="propertyStatusMedia" @click="toggleGroup('propertyStatusMedia')">Parking/Photo/Tours Filters</button>
-          <div v-show="openGroups.propertyStatusMedia" class="property-status-media-group inner-group">            
+          <div class="property-status-media-group inner-group">            
             <div class="multi-container">
               <VueMultiselect
                 class="multiselect"
@@ -159,8 +154,7 @@
           </div>
         </div>
       <div class="info-group">
-        <button class="toggle-btn" data-group="availDates" @click="toggleGroup('availDates')">Available Dates/Features Filters</button>
-        <div v-show="openGroups.availDates" class="avail-dates-group inner-group"> <!-- v-show="openGroups.availDates" -->
+        <div class="avail-dates-group inner-group"> <!-- v-show="openGroups.availDates" -->
           <div class="avail-dates">
             <Datepicker class="value datepicker" v-model="localSearchCriteria.avail_from" placeholder="From Date"></Datepicker> 
             <Datepicker class="value datepicker" v-model="localSearchCriteria.avail_to" placeholder="To Date"></Datepicker>
@@ -441,6 +435,10 @@ export default {
       streetNameError: null,
       zipCode: '',
       zipCodeError: null,
+      maxRentError: null,
+      minRentError: null,
+      minSqftError: null,
+      maxSqftError: null,
       
     };
   },
@@ -651,6 +649,39 @@ input::placeholder {
 @media only screen and (min-width: 768px) {
   .toggle-btn {
     display: none;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .filters input,
+  :deep(.multiselect__placeholder) {
+    font-size: 0.7rem
+  }
+
+  :deep(.dp__input) {
+    font-size: 0.7rem;
+  }
+
+  .filters input {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  :deep(.datepicker) {
+    box-sizing: border-box;
+  }
+
+  .info-group {
+    margin: 0;
+    width: 150px;
+  }
+  .filters {
+    margin: 10px;
+    width: 100%;
+  }
+
+  .search-btn {
+    font-size: 0.8rem;
   }
 }
 </style>

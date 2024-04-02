@@ -180,4 +180,13 @@
   .name, .address, .details, .price {
     color: #fff;
   }
+
+  @media only screen and (max-width: 768px) {
+    .name {
+      font-size: 1.1em;
+    }
+    .address, .details, .price {
+      font-size: 0.9em;
+    }
+  }
 </style>

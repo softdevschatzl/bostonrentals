@@ -180,6 +180,7 @@ export default {
     }
     .apartment-item {
       width: 25%;
+      height: 175px;
     }
     .apartments {
       width: 50%;

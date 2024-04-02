@@ -423,14 +423,27 @@ th {
     display: flex;
     justify-content: center;
   }
+  h2 {
+    font-size: 1.2rem;
+  }
+  h4 {
+    font-size: 1rem;
+  }
   .container {
     width: 100%;
-    height: 75%;
+    height: 82%;
+    margin-bottom: 25px;
     border-radius: 0;
   }
 
   .info-table th, .info-table td {
     padding: 5px;
+  }
+  .info-table th {
+    font-size: 1em;
+  }
+  .info-table td {
+    font-size: 0.8em;
   }
 
   .image-container {

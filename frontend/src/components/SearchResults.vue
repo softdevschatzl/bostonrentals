@@ -231,5 +231,15 @@ export default {
     margin-top: 50px;
     margin-bottom: 50px;
   }
+
+  .listings th {
+    font-size: 12px;
+    padding: 5px;
+  }
+
+  .listing td {
+    font-size: 12px;
+    padding: 10px;
+  }
 }
 </style>
