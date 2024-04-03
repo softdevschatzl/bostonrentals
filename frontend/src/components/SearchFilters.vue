@@ -492,7 +492,7 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  padding: 0 1rem;
+  padding: 12px 5px 5px 16px;
   font-size: 1rem;
   border-radius: 5px;
   width: 88.7%;
@@ -509,7 +509,7 @@ input::placeholder {
   align-items: center;
   width: 100%; /* Adjusted to match the full width like VueMultiselect */
   height: 48px; /* Match the height to VueMultiselect */
-  padding: 0.5rem 1rem; /* Padding to match VueMultiselect */
+  padding: 12px 5px 5px 16px; /* Padding to match VueMultiselect */
   color: black; /* Your existing color */
   font-size: 1rem; /* Match the font size to VueMultiselect */
   border: 1px solid #ccc; /* Similar border style */
