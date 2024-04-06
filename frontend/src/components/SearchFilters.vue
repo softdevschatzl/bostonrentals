@@ -156,8 +156,12 @@
       <div class="info-group">
         <div class="avail-dates-group inner-group"> <!-- v-show="openGroups.availDates" -->
           <div class="avail-dates">
-            <Datepicker class="value datepicker" v-model="localSearchCriteria.avail_from" placeholder="From Date"></Datepicker> 
-            <Datepicker class="value datepicker" v-model="localSearchCriteria.avail_to" placeholder="To Date"></Datepicker>
+            <div class="datepicker-container">
+              <Datepicker class="datepicker" v-model="localSearchCriteria.avail_from" placeholder="From Date"></Datepicker>
+            </div>
+            <div class="datepicker-container">
+              <Datepicker class="datepicker" v-model="localSearchCriteria.avail_to" placeholder="To Date"></Datepicker>
+            </div>
           </div>            
           <div class="multi-container">
             <VueMultiselect
@@ -495,19 +499,37 @@ export default {
   padding: 12px 5px 5px 16px;
   font-size: 1rem;
   border-radius: 5px;
-  width: 88.7%;
+  width: 100%;
   gap: 5px;
   align-items: center;
   font-family: inherit;
+  box-sizing: border-box;
 }
 input::placeholder {
   color: #adadad;
 }
 
+input,
+.multiselect {
+  height: 48px;
+}
+
+.datepicker-container {
+  height: 48px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  background-color: #fff;
+  border-radius: 5px;
+}
+
 .value {
   display: flex;
   align-items: center;
-  width: 100%; /* Adjusted to match the full width like VueMultiselect */
+  flex-wrap: wrap;
+  justify-content: center;
   height: 48px; /* Match the height to VueMultiselect */
   padding: 12px 5px 5px 16px; /* Padding to match VueMultiselect */
   color: black; /* Your existing color */
@@ -540,7 +562,6 @@ input::placeholder {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /** Neumorphic styling */
   background: rgb(40, 40, 40); /* Neumorphic background */
   padding: 2rem;
 }
@@ -630,6 +651,8 @@ input::placeholder {
 :deep(.multiselect__tags) {
   font-size: 1rem;
   padding: 12px 5px 5px 16px;
+  max-height: 48px;
+  overflow-y: scroll;
 }
 :deep(.multiselect__single) {
   height: 45px; /* Ensure the single select height matches your inputs */
@@ -677,6 +700,7 @@ input::placeholder {
     font-size: 0.8rem;
   }
   :deep(.multiselect__tags) {
+    font-size: 0.6rem;
     padding: 14px 8px 8px 14px;
   }
 

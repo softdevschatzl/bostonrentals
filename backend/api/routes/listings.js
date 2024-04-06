@@ -3,8 +3,6 @@ const router = express.Router();
 const { loadSavedListings } = require('../utils/savedListingsHelper');
 const axios = require('axios');
 
-// ... other routes for your /api/properties endpoint ...
-
 router.get('/get-saved-listings', async (req, res) => {
     const userId = req.user.id;
     const savedListings = loadSavedListings();

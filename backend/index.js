@@ -6,6 +6,7 @@
 const express = require('express');
 const xssFilters = require('xss-filters');
 const validator = require('validator');
+const listingsRouter = require('./api/routes/listings');
 // helmet is for csp headers and general web security.
 const helmet = require('helmet');
 const axios = require('axios');
@@ -67,6 +68,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cors());
+
+app.use('/api/listings', listingsRouter);
 
 // Only allowing access from certain origin points.
 // const allowedOrigins = [
