@@ -6,7 +6,9 @@
 const express = require('express');
 const xssFilters = require('xss-filters');
 const validator = require('validator');
-const listingsRouter = require('./api/routes/listings');
+const router = express.Router();
+const expressJwt = require('express-jwt');
+const jwksRsa = require('jwks-rsa');
 // helmet is for csp headers and general web security.
 const helmet = require('helmet');
 const axios = require('axios');
@@ -27,6 +29,7 @@ const { allNeighborhoods, featureMapping } = require('./dataSets');
 
 const secretName = "AlexandersRentalsSecrets";
 const secretClient = new SecretsManagerClient({ region: 'us-east-2' });
+const SecretsManager = new AWS.SecretsManager({ region: 'us-east-2' });
 
 const cognito = require('./cognito');
 cognito.init();
@@ -69,7 +72,69 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(cors());
 
-app.use('/api/listings', listingsRouter);
+let secrets;
+let checkJwt;
+
+// Checks JWT tokens.
+SecretsManager.getSecretValue({ SecretId: secretName }, (err, data) => {
+    if (err) {
+        console.error(err);
+    } else {
+        secrets = JSON.parse(data.SecretString);
+
+        const checkJwt = expressJwt({
+            secret: jwksRsa.expressJwtSecret({
+                cache: true,
+                rateLimit: true,
+                jwksRequestsPerMinute: 5,
+                jwksUri: `https://cognito-idp.us-east-2.amazonaws.com/${secrets.COGNITO_USER_POOL_ID}/.well-known/jwks.json`,
+            }),
+            audience: secrets.COGNITO_CLIENT_ID,
+            issuer: `https://cognito-idp.us-east-2.amazonaws.com/${secrets.COGNITO_USER_POOL_ID}`,
+            algorithms: ['RS256'],
+        });
+
+        const pool = require('./db');
+
+        // Saved lists endpoints.
+        router.post('/api/lists', checkJwt, async (req, res) => {
+            try {
+                const { listName, userId } = req.body;
+
+                const newList = await pool.createList(userId, listName);
+                res.status(201).json(newList);
+            } catch (error) {
+                console.error(error);
+                res.status(500).json({ message: 'Error creating list' });
+            }
+        });
+
+        // Get all lists for a user.
+        router.get('/api/lists', checkJwt, async (req, res) => {
+            try {
+                const userId = req.user.id;
+                const lists = await pool.getLists(userId);
+                res.json(lists);
+            } catch (error) {
+                console.error(error);
+                res.status(500).json({ message: 'Error fetching lists' });
+            }
+        })
+
+        // Add an item to a list.
+        router.post('/api/lists/:listId/items', checkJwt, async (req, res) => {
+            try {
+                const { listId } = req.params;
+                const { itemData } = req.body;
+                const newItem = await pool.addItemToList(listId, itemData);
+                res.status(201).json(newItem);
+            } catch (error) {
+                console.error(error);
+                res.status(500).json({ message: 'Error adding item' });
+            }
+        });
+    }
+});
 
 // Only allowing access from certain origin points.
 // const allowedOrigins = [
@@ -302,7 +367,7 @@ app.post('/submit-preapproval', async (req, res) => {
     const sanitizedPets = xssFilters.inHTMLData(pets);
     const sanitizedApartmentPreferences = xssFilters.inHTMLData(apartmentPreferences);
     
-    // Implement form submission here...
+    // FIXME: Implement form submission here...
 });
 
 // Creating route to fetch data (YGL API)
@@ -462,3 +527,7 @@ app.get('/api/location', async (req, res) => {
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
+
+module.exports = {
+    getSecrets,
+};
