@@ -82,7 +82,7 @@ SecretsManager.getSecretValue({ SecretId: secretName }, (err, data) => {
     } else {
         secrets = JSON.parse(data.SecretString);
 
-        const checkJwt = expressJwt({
+        checkJwt = expressJwt({
             secret: jwksRsa.expressJwtSecret({
                 cache: true,
                 rateLimit: true,
@@ -119,7 +119,7 @@ SecretsManager.getSecretValue({ SecretId: secretName }, (err, data) => {
                 console.error(error);
                 res.status(500).json({ message: 'Error fetching lists' });
             }
-        })
+        });
 
         // Add an item to a list.
         router.post('/api/lists/:listId/items', checkJwt, async (req, res) => {
