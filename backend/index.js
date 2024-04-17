@@ -75,12 +75,9 @@ app.use(cors());
 let secrets;
 let checkJwt;
 
-// Checks JWT tokens.
-SecretsManager.getSecretValue({ SecretId: secretName }, (err, data) => {
-    if (err) {
-        console.error(err);
-    } else {
-        secrets = JSON.parse(data.SecretString);
+async function initializeMiddleware() {
+    try {
+        secrets = await getSecrets();
 
         checkJwt = expressJwt({
             secret: jwksRsa.expressJwtSecret({
@@ -93,46 +90,50 @@ SecretsManager.getSecretValue({ SecretId: secretName }, (err, data) => {
             issuer: `https://cognito-idp.us-east-2.amazonaws.com/${secrets.COGNITO_USER_POOL_ID}`,
             algorithms: ['RS256'],
         });
+    } catch (error) {
+        console.error("Failed to initialize middleware:", error);
+    }
+}
 
-        const pool = require('./db');
+initializeMiddleware();
 
-        // Saved lists endpoints.
-        router.post('/api/lists', checkJwt, async (req, res) => {
-            try {
-                const { listName, userId } = req.body;
+const pool = require('./db');
 
-                const newList = await pool.createList(userId, listName);
-                res.status(201).json(newList);
-            } catch (error) {
-                console.error(error);
-                res.status(500).json({ message: 'Error creating list' });
-            }
-        });
+// Saved lists endpoints.
+router.post('/api/lists', checkJwt, async (req, res) => {
+    try {
+        const { listName, userId } = req.body;
 
-        // Get all lists for a user.
-        router.get('/api/lists', checkJwt, async (req, res) => {
-            try {
-                const userId = req.user.id;
-                const lists = await pool.getLists(userId);
-                res.json(lists);
-            } catch (error) {
-                console.error(error);
-                res.status(500).json({ message: 'Error fetching lists' });
-            }
-        });
+        const newList = await pool.createList(userId, listName);
+        res.status(201).json(newList);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error creating list' });
+    }
+});
 
-        // Add an item to a list.
-        router.post('/api/lists/:listId/items', checkJwt, async (req, res) => {
-            try {
-                const { listId } = req.params;
-                const { itemData } = req.body;
-                const newItem = await pool.addItemToList(listId, itemData);
-                res.status(201).json(newItem);
-            } catch (error) {
-                console.error(error);
-                res.status(500).json({ message: 'Error adding item' });
-            }
-        });
+// Get all lists for a user.
+router.get('/api/lists', checkJwt, async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const lists = await pool.getLists(userId);
+        res.json(lists);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error fetching lists' });
+    }
+});
+
+// Add an item to a list.
+router.post('/api/lists/:listId/items', checkJwt, async (req, res) => {
+    try {
+        const { listId } = req.params;
+        const { itemData } = req.body;
+        const newItem = await pool.addItemToList(listId, itemData);
+        res.status(201).json(newItem);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error adding item' });
     }
 });
 
