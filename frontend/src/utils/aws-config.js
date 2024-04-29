@@ -10,8 +10,6 @@ async function configureAWS() {
     const response = await fetch('/api/cognito-config');
     const config = await response.json();
 
-    console.log('Cognito config: ', config);
-
     AWS.config.update({
       region: config.cognitoRegion,
     });

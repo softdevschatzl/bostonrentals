@@ -2,7 +2,7 @@
   <div class="listing-info" v-if="visible && listing">
     <div class="container">
       <div class="header">
-        <button class="save">Save to List</button>
+        <button @click="addToList" class="save">Save to List</button>
         <h1>Rental Information</h1>
         <div class="right"></div>
         <!-- Credits: Cyril Lamotte on Codepen.
@@ -117,6 +117,7 @@
 import Carousel from './ImageCarousel.vue';
 import defaultImage from '../assets/no-image-found.jpg';
 import { statusMapping, squareFootageMapping, feeResultsMapping, parkingResultsKeyMapping, parkingResultsValueMapping } from '../utils/dataSets';
+import axios from 'axios';
 
 export default {
   data() {
@@ -134,6 +135,12 @@ export default {
   methods: {
     close() {
       this.$emit('close');
+    },
+    addToList() {
+      // Add to saved list.
+      axios.post('/api/lists/:listId/items', {
+        listingId: this.listing.id
+      })
     },
   },
   computed: {

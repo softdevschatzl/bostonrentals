@@ -7,7 +7,7 @@ const express = require('express');
 const xssFilters = require('xss-filters');
 const validator = require('validator');
 const router = express.Router();
-const expressJwt = require('express-jwt');
+const { expressjwt: jwt } = require('express-jwt');
 const jwksRsa = require('jwks-rsa');
 // helmet is for csp headers and general web security.
 const helmet = require('helmet');
@@ -17,7 +17,7 @@ const rateLimit = require('express-rate-limit');
 const morgan = require('morgan');
 const querystring = require('querystring');
 const cookieParser = require('cookie-parser');
-const jwt = require('jsonwebtoken');
+const jswt = require('jsonwebtoken');
 const jwksClient = require('jwks-rsa');
 const AWS = require('aws-sdk');
 const { SecretsManagerClient, GetSecretValueCommand, } = require("@aws-sdk/client-secrets-manager");
@@ -79,7 +79,7 @@ async function initializeMiddleware() {
     try {
         secrets = await getSecrets();
 
-        checkJwt = expressJwt({
+        checkJwt = jwt({
             secret: jwksRsa.expressJwtSecret({
                 cache: true,
                 rateLimit: true,
@@ -95,46 +95,46 @@ async function initializeMiddleware() {
     }
 }
 
-initializeMiddleware();
+initializeMiddleware().then(() => {
+    const pool = require('./db');
 
-const pool = require('./db');
+    // Saved lists endpoints.
+    router.post('/api/lists', checkJwt, async (req, res) => {
+        try {
+            const { listName, userId } = req.body;
 
-// Saved lists endpoints.
-router.post('/api/lists', checkJwt, async (req, res) => {
-    try {
-        const { listName, userId } = req.body;
+            const newList = await pool.createList(userId, listName);
+            res.status(201).json(newList);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Error creating list' });
+        }
+    });
 
-        const newList = await pool.createList(userId, listName);
-        res.status(201).json(newList);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Error creating list' });
-    }
-});
+    // Get all lists for a user.
+    router.get('/api/lists', checkJwt, async (req, res) => {
+        try {
+            const userId = req.user.id;
+            const lists = await pool.getLists(userId);
+            res.json(lists);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Error fetching lists' });
+        }
+    });
 
-// Get all lists for a user.
-router.get('/api/lists', checkJwt, async (req, res) => {
-    try {
-        const userId = req.user.id;
-        const lists = await pool.getLists(userId);
-        res.json(lists);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Error fetching lists' });
-    }
-});
-
-// Add an item to a list.
-router.post('/api/lists/:listId/items', checkJwt, async (req, res) => {
-    try {
-        const { listId } = req.params;
-        const { itemData } = req.body;
-        const newItem = await pool.addItemToList(listId, itemData);
-        res.status(201).json(newItem);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Error adding item' });
-    }
+    // Add an item to a list.
+    router.post('/api/lists/:listId/items', checkJwt, async (req, res) => {
+        try {
+            const { listId } = req.params;
+            const { itemData } = req.body;
+            const newItem = await pool.addItemToList(listId, itemData);
+            res.status(201).json(newItem);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Error adding item' });
+        }
+    });
 });
 
 // Only allowing access from certain origin points.
@@ -175,7 +175,7 @@ app.post('/api/token', async (req, res) => {
             grant_type: 'authorization_code',
             client_id: cognitoClientId,
             code,
-            redirect_uri: 'https://alexandersrentals.com',
+            redirect_uri: 'http://localhost:8080/', // Change this for production.
         });
         
         const response = await axios.post(`https://alexandersrentals-nosms.auth.us-east-2.amazoncognito.com/oauth2/token?${urlSearchParams}`, null, {
@@ -287,7 +287,7 @@ app.get('/api/check-login-status', (req, res) => {
     const accessToken = req.cookies.access_token;
 
     if (accessToken) {
-        jwt.verify(accessToken, getKey, { algorithm: ['RS256'] }, function(err, decoded) {
+        jswt.verify(accessToken, getKey, { algorithm: ['RS256'] }, function(err, decoded) {
             if (err) {
                 console.error("Token validation error:", err.message);
                 res.clearCookie('accessToken'); // Clear the invalid token
@@ -309,7 +309,7 @@ app.get('/api/user', async (req, res) => {
     }
 
     try {
-        const decodedToken = jwt.decode(idToken);
+        const decodedToken = jswt.decode(idToken);
         console.log("Decoded Token:", decodedToken);
         res.json({ user: decodedToken });
     } catch (error) {

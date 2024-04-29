@@ -17,7 +17,7 @@ export default {
     async handleLogin() {
       // Redirect to Cognito Hosted UI.
       // window.location.href = 'https://alexandersrentals-nosms.auth.us-east-2.amazoncognito.com/login?client_id=6srn63ccr7im4tagroi8sjs4sv&response_type=code&scope=email+openid+profile&redirect_uri=https%3A%2F%2Falexandersrentals.com';
-      window.location.href = 'https://alexandersrentals-nosms.auth.us-east-2.amazoncognito.com/login?client_id=6srn63ccr7im4tagroi8sjs4sv&response_type=code&scope=email+openid+profile&redirect_uri=http://localhost:8000/';
+      window.location.href = 'https://alexandersrentals-nosms.auth.us-east-2.amazoncognito.com/login?client_id=6srn63ccr7im4tagroi8sjs4sv&response_type=code&scope=email+openid+profile&redirect_uri=http://localhost:8080/';
     },
     goToMyAccount() {
       this.$router.push('/my-account');

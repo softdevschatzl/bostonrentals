@@ -34,12 +34,9 @@
           <div class="additional-info acc-object">
             <div class="add-info-title">
               <h2>Additional Information</h2>
-              <p>Optional form for pre-approval</p>
+              <p>Form to help pre-approval</p>
             </div>
             <div class="pre-approval-form">
-              <label for="income">Income:</label>
-              <input type="number" id="income" v-model="income">
-
               <label for="creditScore">Credit Score:</label>
               <input type="number" id="creditScore" v-model="creditScore">
 
@@ -68,7 +65,6 @@
     </div>
     <div class="saved-lists">
       <h2>Saved Lists</h2>
-      <p>Coming soon...</p>
     </div>
   </div>
 </template>
@@ -151,6 +147,28 @@ export default {
     submitForm() {
       console.log("Submitting form...");
       // implement this to submit and save to DB.
+    },
+    checkLoginStatus() {
+      fetch("/api/check-login-status", {
+        method: "GET",
+        credentials: "include"
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          // console.log('Login status response:', data);
+          this.isUserLoggedIn = data.isLoggedIn;
+        })
+        .catch((error) => console.error("Error checking login status:", error));
+    },
+  },
+  mounted() {
+    // Check for jwt token to verify user session is active at all times
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    if (code) {
+      this.handleAuthorizationCode(code);
+    } else {
+      this.checkLoginStatus();
     }
   }
 };
