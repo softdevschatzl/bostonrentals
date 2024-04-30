@@ -14,7 +14,7 @@ const routes = [
         path: '/', name: 'Home', component: HomePage
     },
     {
-        path: '/search', name: 'Search', component: SearchPage 
+        path: '/search', name: 'Search', component: SearchPage, props: true
     },
     {
         path: '/about', name: 'About', component: AboutPage
@@ -29,8 +29,12 @@ const routes = [
         path: '/terms-of-service', name: 'TermsOfService', component: TermsOfServicePage
     },
     {
-        path: '/my-account', name: 'MyAccount', component: MyAccount
+        path: '/my-account', name: 'MyAccount', component: MyAccount, props: true
     },
+    {
+        path: '/login', 
+        beforeEnter() { location.href = process.send.VUE_APP_COGNITO_URL }
+    }
 ];
 
 const router = createRouter({

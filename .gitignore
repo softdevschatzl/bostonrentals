@@ -13,3 +13,8 @@ deploy-ec2.py
 deploy.log
 deploy-ec2/
 backend/access.log
+backend/.env.development
+backend/.env.production
+frontend/.env.development
+frontend/.env.production
+frontend/.env.development

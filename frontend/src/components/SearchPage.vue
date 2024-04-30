@@ -3,7 +3,7 @@
   <!-- Search Filters -->
   <SearchFilters :searchCriteria="searchCriteria" @update-criteria="updateCriteria" @search="searchListings"/>
   <!-- Search Results -->
-  <SearchResults :listings="listings" :loading="loading" />
+  <SearchResults :listings="listings" :loading="loading" :isLoggedIn="isLoggedIn" />
 </template>
   
 <script>
@@ -14,6 +14,12 @@ import { calculateCompletenessScore } from '@/utils/featuredApartmentAlgorithm';
 import { allNeighborhoods } from '../utils/dataSets.js';
 
 export default {
+  props: {
+    isLoggedIn: {
+      type: Boolean,
+      required: true,
+    }
+  },
   components: {
     SearchFilters,
     SearchResults,

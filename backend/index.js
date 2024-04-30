@@ -22,6 +22,7 @@ const jwksClient = require('jwks-rsa');
 const AWS = require('aws-sdk');
 const { SecretsManagerClient, GetSecretValueCommand, } = require("@aws-sdk/client-secrets-manager");
 const path = require('path');
+require('dotenv').config();
 
 // import allNeighborhoods from '../frontend/src/utils/dataSets.js';
 // allNeighborhoods is an array that is exported from that file.
@@ -69,8 +70,6 @@ app.use(cookieParser());
 app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
-
-app.use(cors());
 
 let secrets;
 let checkJwt;
@@ -139,25 +138,25 @@ initializeMiddleware().then(() => {
 });
 
 // Only allowing access from certain origin points.
-// const allowedOrigins = [
-//     'http://localhost:8080', 
-//     'http://localhost:3000', 
-//     'https://alexandersrentals.com', 
-//     'https://alexandersrentals.com/',
-//     'https://www.alexandersrentals.com',
-//     'https://d1lcia0inyjsq.cloudfront.net', 
-//     'https://alexandersrentals-nosms.auth.us-east-2.amazoncognito.com'
-// ];
-// app.use(cors({
-//     origin: function (origin, callback) {
-//         if (!origin || allowedOrigins.includes(origin)) {
-//             callback(null, true);
-//         } else {
-//             callback(new Error('Not allowed by CORS'));
-//         }
-//     },
-//     credentials: true
-// }));
+const allowedOrigins = [
+    'http://localhost:8080', 
+    'http://localhost:3000', 
+    'https://alexandersrentals.com', 
+    'https://alexandersrentals.com/',
+    'https://www.alexandersrentals.com',
+    'https://d1lcia0inyjsq.cloudfront.net', 
+    'https://alexandersrentals-nosms.auth.us-east-2.amazoncognito.com'
+];
+app.use(cors({
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true
+}));
 
 // Defines the root path to serve my frontend from.
 app.get('/', (req, res) => {
@@ -170,13 +169,15 @@ app.post('/api/token', async (req, res) => {
     const cognitoClientId = secrets.COGNITO_CLIENT_ID;
     const { code } = req.body;
 
+    console.log("Code:", code);
+
     try {
         // Exchange code for tokens
         const urlSearchParams = new URLSearchParams({
             grant_type: 'authorization_code',
             client_id: cognitoClientId,
             code,
-            redirect_uri: 'http://localhost:8080/', // Change this for production.
+            redirect_uri: process.env.CALLBACK_URL, // Change this for production.
         });
         
         const response = await axios.post(`https://alexandersrentals-nosms.auth.us-east-2.amazoncognito.com/oauth2/token?${urlSearchParams}`, null, {
@@ -210,7 +211,7 @@ app.post('/api/token', async (req, res) => {
         res.json({ message: 'Authentication successful', tokens: response.data});
     } catch (error) {
         console.error('Failed to exchange code for tokens:', error);
-        res.status(500).json({ error: 'Failed to exchange code for tokens' });
+        res.status(error.response?.status || 500).json({ error: error.message });
     }
 });
 

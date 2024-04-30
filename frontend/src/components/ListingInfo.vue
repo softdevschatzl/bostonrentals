@@ -130,17 +130,36 @@ export default {
   },
   props: {
     listing: Object,
-    visible: Boolean
+    visible: Boolean,
+    isLoggedIn: Boolean,
   },
   methods: {
     close() {
       this.$emit('close');
     },
-    addToList() {
+    async addToList(itemId) {
+      if (!this.$store.state.isLoggedIn) {
+        this.$router.push('/login');
+        return;
+      }
       // Add to saved list.
-      axios.post(`/api/lists/${listId}/items`, {
-        listingId: this.listing.id
-      })
+      try {
+        const listId = this.selectedListId;
+
+        const userToken = this.userToken;
+
+        const response = await axios.post(`/api/lists/${listId}/items`, {
+          itemId: itemId
+        }, {
+          headers: {
+            Authorization: `Bearer ${userToken}`
+          }
+        });
+
+        this.$emit('listUpdated', response.data);
+      } catch (error) {
+        console.error('Failed to add item to list:', error.message);
+      }
     },
   },
   computed: {

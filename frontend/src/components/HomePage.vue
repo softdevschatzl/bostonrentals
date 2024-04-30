@@ -1,6 +1,6 @@
 <template>
     <div>
-      <SearchBar />
+      <SearchBar :isLoggedIn="isLoggedIn"/>
       <ApartmentList :apartments="apartments" :location="location" :loading="loading" />
       <RentalTools />
       <FooterPage />
@@ -28,6 +28,8 @@
         location: '',
         userCoords: { latitude: null, longitude: null },
         loading: false,
+        isLoggedIn: false,
+        inactivityTimer: null,
       };
     },
     async mounted() {
@@ -61,6 +63,47 @@
           } finally {
             this.loading = false;
           }
+        }
+      },
+
+      //Login methods.
+      resetInactivityTimer() {
+        clearTimeout(this.inactivityTimer);
+        if (this.isLoggedIn) {
+          this.inactivityTimer = setTimeout(() => {
+            this.redirectToCognitoUI();
+          }, 600000);
+        }
+      },
+      handleInactivity() {
+        this.redirectToCognitoUI();
+      },
+      async redirectToCognitoUI() {
+        try {
+          const response = await fetch('/api/login');
+          if (response.ok) {
+            const data = await response.json();
+            window.location.href = data.url;
+          } else {
+            console.error('Login failed.');
+          }
+        } catch (error) {
+          console.error('Login failed:', error.message);
+        }
+      },
+      async checkIfLoggedIn() {
+        try {
+          const response = await fetch('/api/user', {
+            method: 'GET',
+            credentials: 'include',
+          });
+          if (response.ok) {
+            this.isLoggedIn = true;
+          } else {
+            this.isLoggedIn = false;
+          }
+        } catch (error) {
+          console.error('Error checking if logged in:', error);
         }
       },
     },

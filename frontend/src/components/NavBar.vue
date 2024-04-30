@@ -4,7 +4,7 @@
     <nav>
       <div class="left">
         <div class="hamburger">
-          <Hamburger />
+          <Hamburger :isLoggedIn="isLoggedIn"/>
         </div>
       </div>
       <div class="title">
@@ -26,6 +26,12 @@
     components: {
       Hamburger,
       SignIn
+    },
+    props: {
+      isLoggedIn: {
+        type: Boolean,
+        required: true
+      }
     }
   }
 </script>

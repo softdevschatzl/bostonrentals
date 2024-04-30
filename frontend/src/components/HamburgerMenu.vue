@@ -10,7 +10,7 @@
             <div class="sidemenu__wrapper">
             <ul class="sidemenu__list">
                 <li class="sidemenu__item" @click.prevent="navigateAndClose('#home')"><router-link to="/">Home</router-link></li>
-                <li class="sidemenu__item" @click.prevent="navigateAndClose('#search')"><router-link to="/search">Search</router-link></li>
+                <li class="sidemenu__item" @click.prevent="navigateAndClose('#search')"><router-link :to="{ name: 'Search', params: { isLoggedIn: isLoggedIn } }">Search</router-link></li>
                 <li class="sidemenu__item" @click.prevent="navigateAndClose('#home')"><a href="">Renter Tools</a></li>
                 <li class="sidemenu__item" @click.prevent="navigateAndClose('#home')"><a href="">Lessor Tools</a></li>
             </ul>
@@ -22,6 +22,12 @@
 
 <script>
     export default {
+        props: {
+            isLoggedIn: {
+                type: Boolean,
+                required: true
+            }
+        },
         data() {
             return {
                 navOpen: false,
