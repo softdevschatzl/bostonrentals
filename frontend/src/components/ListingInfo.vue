@@ -138,7 +138,7 @@ export default {
     },
     addToList() {
       // Add to saved list.
-      axios.post('/api/lists/:listId/items', {
+      axios.post(`/api/lists/${listId}/items`, {
         listingId: this.listing.id
       })
     },

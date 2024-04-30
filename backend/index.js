@@ -99,7 +99,8 @@ initializeMiddleware().then(() => {
     const pool = require('./db');
 
     // Saved lists endpoints.
-    router.post('/api/lists', checkJwt, async (req, res) => {
+    // Create a new list.
+    router.post('/api/list', checkJwt, async (req, res) => {
         try {
             const { listName, userId } = req.body;
 
