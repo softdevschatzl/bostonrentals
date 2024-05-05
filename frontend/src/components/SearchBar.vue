@@ -18,12 +18,6 @@
 import { allNeighborhoods } from '@/utils/dataSets.js';
 
 export default {
-  props: {
-    isLoggedIn: {
-      type: Boolean,
-      required: true,
-    },
-  },
   data() {
     return {
       query: '',
@@ -55,7 +49,7 @@ export default {
 
       if (neighborhoodMatch) {
         const apiQuery = neighborhoodMatch.name;
-        this.$router.push({ name: 'Search', query: { q: apiQuery }, params: { isLoggedIn: this.isLoggedIn } });
+        this.$router.push({ name: 'Search', query: { q: apiQuery } });
       } else {
         this.queryError = 'City or Neighborhood not found.';
         console.error('Neighborhood not found.');

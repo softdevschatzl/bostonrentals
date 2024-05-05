@@ -43,7 +43,7 @@
       </tr>
     </tbody>
   </table>
-  <ListingInfo :listing="selectedListing" :visible="showListingInfo" @close="showListingInfo = false" :isLoggedIn="isLoggedIn"/>
+  <ListingInfo :listing="selectedListing" :visible="showListingInfo" @close="showListingInfo = false" />
 </div>
 
 <div class="no-listings-container" v-if="!Array.isArray(listings) || listings.length === 0">
@@ -90,10 +90,6 @@ export default {
           type: Boolean,
           required: true,
       },
-      isLoggedIn: {
-          type: Boolean,
-          required: true,
-      }
   },
   mounted() {
     // console.log('Listings: ', this.listings);

@@ -1,7 +1,7 @@
 <template>
   <div>
-    <NavBar :isLoggedIn="isLoggedIn"/>
-    <router-view></router-view>
+    <NavBar/>
+    <router-view />
   </div>
 </template>
 
