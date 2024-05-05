@@ -4,10 +4,12 @@
  */
 
 const express = require('express');
+require('dotenv').config();
 const xssFilters = require('xss-filters');
 const validator = require('validator');
 const router = express.Router();
 const { expressjwt: jwt } = require('express-jwt');
+const session = require('express-session');
 const jwksRsa = require('jwks-rsa');
 // helmet is for csp headers and general web security.
 const helmet = require('helmet');
@@ -22,7 +24,6 @@ const jwksClient = require('jwks-rsa');
 const AWS = require('aws-sdk');
 const { SecretsManagerClient, GetSecretValueCommand, } = require("@aws-sdk/client-secrets-manager");
 const path = require('path');
-require('dotenv').config();
 
 // import allNeighborhoods from '../frontend/src/utils/dataSets.js';
 // allNeighborhoods is an array that is exported from that file.
@@ -89,6 +90,13 @@ async function initializeMiddleware() {
             issuer: `https://cognito-idp.us-east-2.amazonaws.com/${secrets.COGNITO_USER_POOL_ID}`,
             algorithms: ['RS256'],
         });
+
+        app.use(session({
+            secret: secrets.SESSION_SECRET_KEY,
+            resave: false,
+            saveUninitialized: false,
+            cookie: { secure: true },
+        }));
     } catch (error) {
         console.error("Failed to initialize middleware:", error);
     }
@@ -170,6 +178,7 @@ app.post('/api/token', async (req, res) => {
     const { code } = req.body;
 
     console.log("Code:", code);
+    
 
     try {
         // Exchange code for tokens
@@ -177,7 +186,7 @@ app.post('/api/token', async (req, res) => {
             grant_type: 'authorization_code',
             client_id: cognitoClientId,
             code,
-            redirect_uri: process.env.CALLBACK_URL, // Change this for production.
+            redirect_uri: "http://localhost:8080/", // Change this for production.
         });
         
         const response = await axios.post(`https://alexandersrentals-nosms.auth.us-east-2.amazoncognito.com/oauth2/token?${urlSearchParams}`, null, {
@@ -213,6 +222,55 @@ app.post('/api/token', async (req, res) => {
         console.error('Failed to exchange code for tokens:', error);
         res.status(error.response?.status || 500).json({ error: error.message });
     }
+});
+
+app.get('/api/login', async (req, res) => {
+    const secrets = await getSecrets();
+    const cognitoUserPoolId = secrets.COGNITO_USER_POOL_ID;
+    const idToken = req.query.id_token;
+
+    if (!idToken) {
+        return res.status(401).json({ error: 'No ID token found' });
+    }
+
+    // Get the JSON Web Key Set from Cognito.
+    request({
+        url: `https://cognito-idp.us-east-2.amazonaws.com/${cognitoUserPoolId}/.well-known/jwks.json`,
+        json: true
+    }, (error, response, body) => {
+        if (error) {
+            return res.status(500).json({ error: 'Failed to fetch JSON Web Key Set' });
+        }
+
+        // Converting the JWKS to a PEM format.
+        const pems = {};
+        const keys = body.keys;
+        for (let i = 0; i < keys.length; i++) {
+            const key_id = keys[i].kid;
+            const modulus = keys[i].n;
+            const exponent = keys[i].e;
+            const key_type = keys[i].kty;
+            const jwk = { kty: key_type, n: modulus, e: exponent };
+            const pem = jwkToPem(jwk);
+            pems[key_id] = pem;
+        }
+
+        // Decode the ID token.
+        const decodedJwt = jswt.decode(idToken, { complete: true });
+
+        // Verify the ID token.
+        const pem = pems[decodedJwt.header.kid];
+        jwt.verify(idToken, pem, { issuer: `https://cognito-idp.us-east-2.amazonaws.com/${cognitoUserPoolId}` }, (err, payload) => {
+            if (err) {
+                console.error('Failed to verify ID token:', err);
+                res.clearCookie('accessToken');
+                res.json({ isLoggedIn: false });
+            } else {
+                req.session.userId = payload.sub; // Using the subject (sub) as the user ID.
+                res.json({ isLoggedIn: true });
+            }
+        });
+    });
 });
 
 // Endpoint for refreshing the access token.

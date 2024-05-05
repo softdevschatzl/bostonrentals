@@ -16,14 +16,13 @@ export default {
   methods: {
     async handleLogin() {
       // Redirect to Cognito Hosted UI.
-      // window.location.href = 'https://alexandersrentals-nosms.auth.us-east-2.amazoncognito.com/login?client_id=6srn63ccr7im4tagroi8sjs4sv&response_type=code&scope=email+openid+profile&redirect_uri=https%3A%2F%2Falexandersrentals.com';
       window.location.href = process.env.VUE_APP_COGNITO_URL;
     },
     goToMyAccount() {
       this.$router.push('/my-account');
     },
     checkLoginStatus() {
-      fetch('/api/check-login-status', {
+      fetch(`${process.env.VUE_APP_API_BASE_URL}/api/check-login-status`, {
         method: 'GET',
         credentials: 'include'
       })
@@ -39,7 +38,7 @@ export default {
         const formData = new URLSearchParams();
         formData.append('code', code);
 
-        const response = await fetch('/api/token', {
+        const response = await fetch('http://localhost:3000/api/login', { // Change for production.
           method: 'POST',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -49,14 +48,14 @@ export default {
         });
         
         if (response.ok) {
-          // const data = await response.json();
-          // console.log('Token response:', data);
+          const data = await response.json();
+          console.log('Login response:', data);
           this.checkLoginStatus();
         } else {
-          console.error('Token exchange failed.');
+          console.error('Login failed.');
         }
       } catch (error) {
-        console.error('Token exchange failed:', error.message);
+        console.error('Login failed:', error.message);
       }
     },
     async refreshToken() {
