@@ -31,12 +31,11 @@ const { allNeighborhoods, featureMapping } = require('./dataSets');
 
 const secretName = "AlexandersRentalsSecrets";
 const secretClient = new SecretsManagerClient({ region: 'us-east-2' });
-const SecretsManager = new AWS.SecretsManager({ region: 'us-east-2' });
 
 const cognito = require('./cognito');
 cognito.init();
 
-// Implement SecretsManager
+// Implement Secrets.
 async function getSecrets() {
     try {
     const response = await secretClient.send(new GetSecretValueCommand({ SecretId: secretName }));
@@ -146,25 +145,28 @@ initializeMiddleware().then(() => {
 });
 
 // Only allowing access from certain origin points.
-const allowedOrigins = [
-    'http://localhost:8080', 
-    'http://localhost:3000', 
-    'https://alexandersrentals.com', 
-    'https://alexandersrentals.com/',
-    'https://www.alexandersrentals.com',
-    'https://d1lcia0inyjsq.cloudfront.net', 
-    'https://alexandersrentals-nosms.auth.us-east-2.amazoncognito.com'
-];
-app.use(cors({
-    origin: function (origin, callback) {
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    credentials: true
-}));
+// Redacting this for now.
+// const allowedOrigins = [
+//     'http://localhost:8080', 
+//     'http://localhost:3000', 
+//     'https://alexandersrentals.com', 
+//     'https://alexandersrentals.com/',
+//     'https://www.alexandersrentals.com',
+//     'https://d1lcia0inyjsq.cloudfront.net', 
+//     'https://alexandersrentals-nosms.auth.us-east-2.amazoncognito.com'
+// ];
+// app.use(cors({
+//     origin: function (origin, callback) {
+//         if (!origin || allowedOrigins.includes(origin)) {
+//             callback(null, true);
+//         } else {
+//             callback(new Error('Not allowed by CORS'));
+//         }
+//     },
+//     credentials: true
+// }));
+
+app.use(cors());
 
 // Defines the root path to serve my frontend from.
 app.get('/', (req, res) => {
@@ -172,12 +174,12 @@ app.get('/', (req, res) => {
 });
 
 app.post('/api/token', async (req, res) => {
-    console.log("Received request:", req);
+    // console.log("Received request:", req);
     const secrets = await getSecrets();
     const cognitoClientId = secrets.COGNITO_CLIENT_ID;
     const { code } = req.body;
 
-    console.log("Code:", code);
+    // console.log("Code:", code);
     
 
     try {
@@ -343,7 +345,7 @@ async function getKey(header, callback) {
 
 // And then check the login status.
 app.get('/api/check-login-status', (req, res) => {
-    console.log("Received cookies: ", req.cookies);
+    // console.log("Received cookies: ", req.cookies);
     const accessToken = req.cookies.access_token;
 
     if (accessToken) {
@@ -363,14 +365,14 @@ app.get('/api/check-login-status', (req, res) => {
 
 app.get('/api/user', async (req, res) => {
     const idToken = req.cookies.id_token;
-    console.log("ID Token:", idToken);
+    // console.log("ID Token:", idToken);
     if (!idToken) {
         return res.status(401).json({ error: 'No ID token found' });
     }
 
     try {
         const decodedToken = jswt.decode(idToken);
-        console.log("Decoded Token:", decodedToken);
+        // console.log("Decoded Token:", decodedToken);
         res.json({ user: decodedToken });
     } catch (error) {
         console.error('Failed to decode token:', error);
@@ -450,7 +452,7 @@ app.post('/api/properties', async (req, res) => {
             request_type: 'JSON', 
         };
 
-        console.log("Req body:", req.body);
+        // console.log("Req body:", req.body);
 
         // let allowedYNValues = ['Parking Included', 'Only Listings With Photos', 'Only Listings With Virtual Tours'];
         // let allowedPetValues = ['Cats', 'Dogs', 'Friendly'];
@@ -559,7 +561,7 @@ app.post('/api/properties', async (req, res) => {
         if (laundry && !validator.isIn(laundry, ['In Unit', 'On Site', 'None', ''])) return res.status(400).json({ error: "Invalid laundry value.", message: "Invalid laundry value."});
             if (laundry) params.laundry = laundry;
 
-        console.log("Full Params:", params)
+        // console.log("Full Params:", params)
 
         const response = await axios.post(`https://www.yougotlistings.com/api/rentals/search.php?key=${apiKey}`, params);
                 

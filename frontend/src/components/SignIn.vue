@@ -22,7 +22,7 @@ export default {
       this.$router.push('/my-account');
     },
     checkLoginStatus() {
-      fetch(`${process.env.VUE_APP_API_BASE_URL}/api/check-login-status`, {
+      fetch('/api/check-login-status', {
         method: 'GET',
         credentials: 'include'
       })
@@ -38,7 +38,7 @@ export default {
         const formData = new URLSearchParams();
         formData.append('code', code);
 
-        const response = await fetch('http://localhost:3000/api/login', { // Change for production.
+        const response = await fetch('/api/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'

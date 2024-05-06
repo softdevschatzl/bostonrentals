@@ -78,7 +78,7 @@ export default {
     showApartmentDetails(apartment) {
       this.selectedApartment = apartment;
       this.showApartmentInfo = true;
-      console.log("Selected apartment: ", this.selectedApartment)
+      // console.log("Selected apartment: ", this.selectedApartment)
     },
   }
 };
