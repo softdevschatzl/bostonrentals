@@ -5,8 +5,13 @@ export default createStore({
     isLoggedIn: false,
   },
   mutations: {
-    setLoggedIn(state, value) {
-      state.isLoggedIn = value;
-    }
-  }
+    SET_LOGIN_STATUS(state, status) {
+      state.isLoggedIn = status;
+    },
+  },
+  actions: {
+    setLoginStatus({ commit }, status) {
+      commit("SET_LOGIN_STATUS", status);
+    },
+  },
 });

@@ -4,13 +4,14 @@
  */
 
 const express = require('express');
+const https = require('https');
 require('dotenv').config();
 const xssFilters = require('xss-filters');
 const validator = require('validator');
 const router = express.Router();
 const { expressjwt: jwt } = require('express-jwt');
 const session = require('express-session');
-const jwksRsa = require('jwks-rsa');
+const jwkToPem = require('jwk-to-pem');
 // helmet is for csp headers and general web security.
 const helmet = require('helmet');
 const axios = require('axios');
@@ -21,7 +22,6 @@ const querystring = require('querystring');
 const cookieParser = require('cookie-parser');
 const jswt = require('jsonwebtoken');
 const jwksClient = require('jwks-rsa');
-const AWS = require('aws-sdk');
 const { SecretsManagerClient, GetSecretValueCommand, } = require("@aws-sdk/client-secrets-manager");
 const path = require('path');
 
@@ -72,23 +72,52 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 let secrets;
-let checkJwt;
+let pems;
+
+async function initializePems() {
+    try {
+        secrets = await getSecrets();
+    } catch (error) {
+        console.error("Failed to fetch secrets:", error);
+    }
+
+    return new Promise((resolve, reject) => {
+        const jwksUrl = `https://cognito-idp.${secrets.AWS_REGION}.amazonaws.com/${secrets.COGNITO_USER_POOL_ID}/.well-known/jwks.json`;
+
+        https.get(jwksUrl, (res) => {
+            let data = '';
+
+            res.on('data', (chunk) => {
+                data += chunk;
+            });
+
+            res.on('end', () => {
+                const keys = JSON.parse(data).keys;
+                pems = {};
+
+                for (let i = 0; i < keys.length; i++) {
+                    const keyId = keys[i].kid;
+                    const modulus = keys[i].n;
+                    const exponent = keys[i].e;
+                    const keyType = keys[i].kty;
+                    const jwk = { kty: keyType, n: modulus, e: exponent };
+                    const pem = jwkToPem(jwk);
+                    pems[keyId] = pem;
+                }
+
+                resolve();
+            });
+        }).on('error', (err) => {
+            console.error('Failed to download JWKS:', err);
+            reject(err);
+        });
+    });
+}
 
 async function initializeMiddleware() {
     try {
         secrets = await getSecrets();
-
-        checkJwt = jwt({
-            secret: jwksRsa.expressJwtSecret({
-                cache: true,
-                rateLimit: true,
-                jwksRequestsPerMinute: 5,
-                jwksUri: `https://cognito-idp.us-east-2.amazonaws.com/${secrets.COGNITO_USER_POOL_ID}/.well-known/jwks.json`,
-            }),
-            audience: secrets.COGNITO_CLIENT_ID,
-            issuer: `https://cognito-idp.us-east-2.amazonaws.com/${secrets.COGNITO_USER_POOL_ID}`,
-            algorithms: ['RS256'],
-        });
+        await initializePems();
 
         app.use(session({
             secret: secrets.SESSION_SECRET_KEY,
@@ -101,12 +130,34 @@ async function initializeMiddleware() {
     }
 }
 
+function authenticate(req, res, next) {
+    const idToken = req.cookies.id_token;
+
+    if (!idToken) {
+        return res.status(401).json({ error: 'No ID token found' });
+    }
+
+    const decodedJwt = jswt.decode(idToken, { complete: true });
+    const pem = pems[decodedJwt.header.kid];
+
+    jswt.verify(idToken, pem, { issuer: `https://cognito-idp.us-east-2.amazonaws.com/${secrets.COGNITO_USER_POOL_ID}` }, (err, payload) => {
+        if (err) {
+            console.error('Failed to verify ID token:', err);
+            res.clearCookie('accessToken');
+            res.status(500).json({ error: 'Failed to verify ID token', details: err });
+        } else {
+            req.user = { id: payload.sub }; // Using the subject (sub) as the user ID.
+            next();
+        }
+    });
+}
+
 initializeMiddleware().then(() => {
     const pool = require('./db');
 
     // Saved lists endpoints.
     // Create a new list.
-    router.post('/api/list', checkJwt, async (req, res) => {
+    router.post('/api/list', authenticate, async (req, res) => {
         try {
             const { listName, userId } = req.body;
 
@@ -119,7 +170,7 @@ initializeMiddleware().then(() => {
     });
 
     // Get all lists for a user.
-    router.get('/api/lists', checkJwt, async (req, res) => {
+    router.get('/api/lists', authenticate, async (req, res) => {
         try {
             const userId = req.user.id;
             const lists = await pool.getLists(userId);
@@ -131,7 +182,7 @@ initializeMiddleware().then(() => {
     });
 
     // Add an item to a list.
-    router.post('/api/lists/:listId/items', checkJwt, async (req, res) => {
+    router.post('/api/lists/:listId/items', authenticate, async (req, res) => {
         try {
             const { listId } = req.params;
             const { itemData } = req.body;
@@ -145,28 +196,24 @@ initializeMiddleware().then(() => {
 });
 
 // Only allowing access from certain origin points.
-// Redacting this for now.
-// const allowedOrigins = [
-//     'http://localhost:8080', 
-//     'http://localhost:3000', 
-//     'https://alexandersrentals.com', 
-//     'https://alexandersrentals.com/',
-//     'https://www.alexandersrentals.com',
-//     'https://d1lcia0inyjsq.cloudfront.net', 
-//     'https://alexandersrentals-nosms.auth.us-east-2.amazoncognito.com'
-// ];
-// app.use(cors({
-//     origin: function (origin, callback) {
-//         if (!origin || allowedOrigins.includes(origin)) {
-//             callback(null, true);
-//         } else {
-//             callback(new Error('Not allowed by CORS'));
-//         }
-//     },
-//     credentials: true
-// }));
-
-app.use(cors());
+const allowedOrigins = [
+    'http://localhost:8080', 
+    'http://localhost:3000', 
+    'https://alexandersrentals.com', 
+    'https://alexandersrentals.com/',
+    'https://www.alexandersrentals.com',
+    'https://alexandersrentals-nosms.auth.us-east-2.amazoncognito.com'
+];
+app.use(cors({
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true
+}));
 
 // Defines the root path to serve my frontend from.
 app.get('/', (req, res) => {
@@ -180,7 +227,6 @@ app.post('/api/token', async (req, res) => {
     const { code } = req.body;
 
     // console.log("Code:", code);
-    
 
     try {
         // Exchange code for tokens
@@ -224,55 +270,6 @@ app.post('/api/token', async (req, res) => {
         console.error('Failed to exchange code for tokens:', error);
         res.status(error.response?.status || 500).json({ error: error.message });
     }
-});
-
-app.get('/api/login', async (req, res) => {
-    const secrets = await getSecrets();
-    const cognitoUserPoolId = secrets.COGNITO_USER_POOL_ID;
-    const idToken = req.query.id_token;
-
-    if (!idToken) {
-        return res.status(401).json({ error: 'No ID token found' });
-    }
-
-    // Get the JSON Web Key Set from Cognito.
-    request({
-        url: `https://cognito-idp.us-east-2.amazonaws.com/${cognitoUserPoolId}/.well-known/jwks.json`,
-        json: true
-    }, (error, response, body) => {
-        if (error) {
-            return res.status(500).json({ error: 'Failed to fetch JSON Web Key Set' });
-        }
-
-        // Converting the JWKS to a PEM format.
-        const pems = {};
-        const keys = body.keys;
-        for (let i = 0; i < keys.length; i++) {
-            const key_id = keys[i].kid;
-            const modulus = keys[i].n;
-            const exponent = keys[i].e;
-            const key_type = keys[i].kty;
-            const jwk = { kty: key_type, n: modulus, e: exponent };
-            const pem = jwkToPem(jwk);
-            pems[key_id] = pem;
-        }
-
-        // Decode the ID token.
-        const decodedJwt = jswt.decode(idToken, { complete: true });
-
-        // Verify the ID token.
-        const pem = pems[decodedJwt.header.kid];
-        jwt.verify(idToken, pem, { issuer: `https://cognito-idp.us-east-2.amazonaws.com/${cognitoUserPoolId}` }, (err, payload) => {
-            if (err) {
-                console.error('Failed to verify ID token:', err);
-                res.clearCookie('accessToken');
-                res.json({ isLoggedIn: false });
-            } else {
-                req.session.userId = payload.sub; // Using the subject (sub) as the user ID.
-                res.json({ isLoggedIn: true });
-            }
-        });
-    });
 });
 
 // Endpoint for refreshing the access token.
@@ -344,20 +341,9 @@ async function getKey(header, callback) {
 }
 
 // And then check the login status.
-app.get('/api/check-login-status', (req, res) => {
-    // console.log("Received cookies: ", req.cookies);
-    const accessToken = req.cookies.access_token;
-
-    if (accessToken) {
-        jswt.verify(accessToken, getKey, { algorithm: ['RS256'] }, function(err, decoded) {
-            if (err) {
-                console.error("Token validation error:", err.message);
-                res.clearCookie('accessToken'); // Clear the invalid token
-                res.json({ isLoggedIn: false });
-            } else {
-                res.json({ isLoggedIn: true });
-            }
-        });
+app.get('/api/check-login-status', authenticate, (req, res) => {
+    if (req.user && req.user.id) {
+        res.json({ isLoggedIn: true });
     } else {
         res.json({ isLoggedIn: false });
     }

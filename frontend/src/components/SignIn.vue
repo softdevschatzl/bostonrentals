@@ -1,18 +1,14 @@
 <!-- SignIn.vue -->
 
 <template>
-  <button v-if="!isUserLoggedIn" @click="handleLogin" class="user-sign-in">Login</button>
+  <button v-if="!isLoggedIn" @click="handleLogin" class="user-sign-in">Login</button>
   <button v-else @click="goToMyAccount" class="user-sign-in">My Account</button>
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex';
 
 export default {
-  data() {
-    return {
-      isUserLoggedIn: false
-    }
-  },
   methods: {
     async handleLogin() {
       // Redirect to Cognito Hosted UI.
@@ -21,24 +17,29 @@ export default {
     goToMyAccount() {
       this.$router.push('/my-account');
     },
-    checkLoginStatus() {
-      fetch('/api/check-login-status', {
-        method: 'GET',
-        credentials: 'include'
-      })
-      .then(response => response.json())
-      .then(data => {
-        // console.log('Login status response:', data);
-        this.isUserLoggedIn = data.isLoggedIn;
-      })
-      .catch(error => console.error('Error checking login status:', error));
+    async checkLoginStatus() {
+      try {
+        const response = await fetch('/api/check-login-status', {
+          credentials: 'include'
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Login status:', data);
+          this.$store.commit('SET_LOGIN_STATUS', data.isLoggedIn);
+        } else {
+          console.error('Login status check failed.');
+        }
+      } catch (error) {
+        console.error('Login status check failed:', error.message);
+      }
     },
     async handleAuthorizationCode(code) {
       try {
         const formData = new URLSearchParams();
         formData.append('code', code);
 
-        const response = await fetch('/api/login', {
+        const response = await fetch(`${process.env.VUE_APP_API_BASE_URL}/api/token`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -85,7 +86,16 @@ export default {
     if (code) {
       this.handleAuthorizationCode(code);
     }
-  }
+
+    this.checkLoginStatus();
+  },
+  created() {
+    this.checkLoginStatus();
+  },
+  computed: {
+    ...mapActions(['setLoginStatus']),
+    ...mapState(['isLoggedIn']),
+  },
 }
 </script>
 
