@@ -139,7 +139,9 @@ export default {
     },
     async addToList(itemId) {
       if (!this.$store.state.isLoggedIn) {
-        this.$router.push('/login');
+        this.$router.push({
+          path: '/login',
+        });
         return;
       }
       // Add to saved list.
@@ -457,8 +459,7 @@ th {
   }
   .container {
     width: 100%;
-    height: 82%;
-    margin-bottom: 25px;
+    height: 83.5vh;
     border-radius: 0;
   }
 

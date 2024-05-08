@@ -259,7 +259,8 @@ export default {
   max-width: 60vw;
   max-height: 60vh;
 }
-.slide:hover::after, .enlarged-image:hover::after {
+
+.slide:hover::after {
   content: attr(data-tooltip);
   position: absolute;
   top: 50%;
@@ -358,7 +359,7 @@ h4 {
 }
 .enlarged-image img {
   max-width: 90%;
-  max-height: 70%;
+  max-height: 40%;
   margin-bottom: 40px
 }
 

@@ -33,7 +33,8 @@ const routes = [
     },
     {
         path: '/login', 
-        beforeEnter() { location.href = process.send.VUE_APP_COGNITO_URL }
+        beforeEnter() { location.href = process.env.VUE_APP_COGNITO_URL; },
+        component: { template: '<div></div>' },
     }
 ];
 
