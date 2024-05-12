@@ -2,7 +2,7 @@
   <div class="listing-info" v-if="visible && listing">
     <div class="container">
       <div class="header">
-        <button @click="addToList" class="save">Save to List</button>
+        <button @click="showOverlay" class="save">Save to List</button>
         <h1>Rental Information</h1>
         <div class="right"></div>
         <!-- Credits: Cyril Lamotte on Codepen.
@@ -117,7 +117,6 @@
 import Carousel from './ImageCarousel.vue';
 import defaultImage from '../assets/no-image-found.jpg';
 import { statusMapping, squareFootageMapping, feeResultsMapping, parkingResultsKeyMapping, parkingResultsValueMapping } from '../utils/dataSets';
-import axios from 'axios';
 
 export default {
   data() {
@@ -137,31 +136,13 @@ export default {
     close() {
       this.$emit('close');
     },
-    async addToList(itemId) {
-      if (!this.$store.state.isLoggedIn) {
-        this.$router.push({
-          path: '/login',
-        });
+    showOverlay() {
+      // If not logged in, redirect to login.
+      if (!this.isLoggedIn) {
+        this.$router.push('/login');
         return;
       }
-      // Add to saved list.
-      try {
-        const listId = this.selectedListId;
-
-        const userToken = this.userToken;
-
-        const response = await axios.post(`/api/lists/${listId}/items`, {
-          itemId: itemId
-        }, {
-          headers: {
-            Authorization: `Bearer ${userToken}`
-          }
-        });
-
-        this.$emit('listUpdated', response.data);
-      } catch (error) {
-        console.error('Failed to add item to list:', error.message);
-      }
+      this.$emit('showOverlay', this.listing.id);
     },
   },
   computed: {

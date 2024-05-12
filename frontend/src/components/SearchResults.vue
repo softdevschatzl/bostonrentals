@@ -43,7 +43,8 @@
       </tr>
     </tbody>
   </table>
-  <ListingInfo :listing="selectedListing" :visible="showListingInfo" @close="showListingInfo = false" />
+  <ListingInfo :listing="selectedListing" :visible="showListingInfo" @close="showListingInfo = false" @showOverlay="handleShowOverlay" />
+  <ListOverlay v-if="showOverlay" @close="showOverlay = false" :propertyId="propertyId" />
 </div>
 
 <div class="no-listings-container" v-if="!Array.isArray(listings) || listings.length === 0">
@@ -65,11 +66,13 @@
 import ListingInfo from './ListingInfo.vue';
 import defaultImage from '../assets/no-image-found.jpg';
 import SearchingAnimation from '../components/SearchAnimation.vue';
+import ListOverlay from './ListOverlay.vue';
 
 export default {
   components: {
     ListingInfo,
     SearchingAnimation,
+    ListOverlay,
   },
   data() {
     return {
@@ -78,6 +81,8 @@ export default {
       selectedListing: null,
       showListingInfo: false,
       sortState: '',
+      showOverlay: false,
+      propertyId: null,
     }
   },
   props: {
@@ -115,7 +120,11 @@ export default {
       } else {
         this.sortState = '';
       }
-    }
+    },
+    handleShowOverlay(listingId) {
+      this.showOverlay = true;
+      this.propertyId = listingId;
+    },
   },
   computed: {
     sortedListings() {

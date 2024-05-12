@@ -341,7 +341,7 @@ async function getKey(header, callback) {
 }
 
 // And then check the login status.
-app.get('/api/check-login-status', authenticate, (req, res) => {
+app.get('/api/check-login-status', (req, res) => {
     if (req.user && req.user.id) {
         res.json({ isLoggedIn: true });
     } else {
