@@ -1,7 +1,7 @@
 <template>
     <transition name="fade">
         <div class="overlay" v-if="$store.state.isOverlayVisible">
-            <button type="button" class="btn-close" @click="close">
+            <button type="button" class="btn-close" @click="$emit('closeOverlay')">
                 <span class="icon-cross"></span>
                 <span class="visually-hidden">Close</span>
             </button>

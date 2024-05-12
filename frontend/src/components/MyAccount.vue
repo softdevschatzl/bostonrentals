@@ -64,7 +64,7 @@
       </div>
     </div>
     <div class="saved-lists">
-      <h2>Saved Lists</h2>
+      <SavedLists />
     </div>
   </div>
 </template>
@@ -72,8 +72,12 @@
 <script>
 import configureAWS from "../utils/aws-config.js";
 import { required, minLength, maxLength, minValue, maxValue } from 'vuelidate/lib/validators';
+import SavedLists from "./SavedLists.vue";
 
 export default {
+  components: {
+    SavedLists,
+  },
   data() {
     return {
       userAttributes: [],

@@ -342,7 +342,8 @@ async function getKey(header, callback) {
 
 // And then check the login status.
 app.get('/api/check-login-status', (req, res) => {
-    if (req.user && req.user.id) {
+    const idToken = req.cookies.id_token;
+    if (idToken) {
         res.json({ isLoggedIn: true });
     } else {
         res.json({ isLoggedIn: false });
