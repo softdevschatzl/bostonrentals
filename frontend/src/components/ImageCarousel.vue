@@ -379,7 +379,7 @@ h4 {
 }
 .enlarged-image-desktop img {
   max-width: 60%;
-  max-height: 60%;
+  max-height: 55%;
 }
 
 .enlarged-header {

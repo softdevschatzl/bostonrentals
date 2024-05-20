@@ -169,6 +169,18 @@ initializeMiddleware().then(() => {
         }
     });
 
+    // Get a specific list.
+    router.get('/api/list/:listId', authenticate, async (req, res) => {
+        try {
+            const { listId } = req.params;
+            const list = await pool.getList(listId);
+            res.json(list);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Error fetching list' });
+        }
+    });
+
     // Get all lists for a user.
     router.get('/api/lists', authenticate, async (req, res) => {
         try {
@@ -181,16 +193,90 @@ initializeMiddleware().then(() => {
         }
     });
 
-    // Add an item to a list.
+    // Get all items from a list.
     router.post('/api/lists/:listId/items', authenticate, async (req, res) => {
         try {
             const { listId } = req.params;
-            const { itemData } = req.body;
-            const newItem = await pool.addItemToList(listId, itemData);
-            res.status(201).json(newItem);
+            const items = await pool.getItems(listId);
+            res.json(items);
         } catch (error) {
             console.error(error);
             res.status(500).json({ message: 'Error adding item' });
+        }
+    });
+
+    // Update a specific list.
+    router.put('/api/list/:listId', authenticate, async (req, res) => {
+        try {
+            const { listId } = req.params;
+            const { listName } = req.body;
+            const updatedList = await pool.updateList(listId, listName);
+            res.json(updatedList);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Error updating list' });
+        }
+    });
+
+    // Delete a specific list.
+    router.delete('/api/list/:listId', authenticate, async (req, res) => {
+        try {
+            const { listId } = req.params;
+            const deletedList = await pool.deleteList(listId);
+            res.json(deletedList);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Error deleting list' });
+        }
+    });
+
+    // Create a new item in a list.
+    router.post('/api/list/:listId/item', authenticate, async (req, res) => {
+        try {
+            const { listId } = req.params;
+            const { itemName } = req.body;
+            const newItem = await pool.createItem(listId, itemName);
+            res.status(201).json(newItem);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Error creating item' });
+        }
+    });
+
+    // Get a specific item.
+    router.get('/api/item/:itemId', authenticate, async (req, res) => {
+        try {
+            const { itemId } = req.params;
+            const item = await pool.getItem(itemId);
+            res.json(item);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Error fetching item' });
+        }
+    });
+
+    // Update a specific item.
+    router.put('/api/item/:itemId', authenticate, async (req, res) => {
+        try {
+            const { itemId } = req.params;
+            const { itemName } = req.body;
+            const updatedItem = await pool.updateItem(itemId, itemName);
+            res.json(updatedItem);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Error updating item' });
+        }
+    });
+
+    // Delete a specific item.
+    router.delete('/api/item/:itemId', authenticate, async (req, res) => {
+        try {
+            const { itemId } = req.params;
+            const deletedItem = await pool.deleteItem(itemId);
+            res.json(deletedItem);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Error deleting item' });
         }
     });
 });

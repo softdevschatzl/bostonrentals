@@ -110,6 +110,10 @@
         <Carousel :images="listingImages" />
       </div>
     </div>
+    <!--Saved List Overlay-->
+    <div class="listing-overlay" v-if="showOverlay">
+      <ListOverlay :visible="showOverlay" @close="showOverlay = false" />
+    </div>
   </div>
 </template>
 
@@ -267,7 +271,7 @@ th {
 }
 
 .right {
-  width: 10%;
+  width: 5%;
 }
 
 .listing-info {
