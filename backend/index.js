@@ -56,6 +56,8 @@ const limiter = rateLimit({
 const app = express();
 const PORT = 3000;
 
+app.set('trust proxy', 1);
+
 app.use(limiter);
 
 // Logging middleware to an access.log file to monitor activity.

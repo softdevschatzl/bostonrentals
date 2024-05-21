@@ -14,33 +14,10 @@ export default {
   },
   data() {
     return {
-      inactivityTimer: null,
       isLoggedIn: false,
     }
   },
-  created() {
-    this.checkIfLoggedIn();
-    this.resetInactivityTimer()
-    window.addEventListener('mousemove', this.resetInactivityTimer);
-    window.addEventListener('keypress', this.resetInactivityTimer);
-  },
-  beforeUnmount() {
-    clearTimeout(this.inactivityTimer);
-    window.removeEventListener('mousemove', this.resetInactivityTimer);
-    window.removeEventListener('keypress', this.resetInactivityTimer);
-  },
   methods: {
-    resetInactivityTimer() {
-      clearTimeout(this.inactivityTimer);
-      if (this.isLoggedIn) {
-        this.inactivityTimer = setTimeout(() => {
-          this.redirectToCognitoUI();
-        }, 600000);
-      }
-    },
-    handleInactivity() {
-      this.redirectToCognitoUI();
-    },
     async redirectToCognitoUI() {
       try {
         const response = await fetch('/api/login');
@@ -70,6 +47,14 @@ export default {
       }
     },
   },
+  created() {
+    this.$store.dispatch('checkIfLoggedIn');
+  },
+  watch: {
+    '$route': function() {
+      this.$store.dispatch('checkIfLoggedIn');
+    }
+  }
 }
 </script>
 
