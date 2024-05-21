@@ -15,9 +15,36 @@ export default {
   data() {
     return {
       isLoggedIn: false,
+      timeoutId: null,
     }
   },
   methods: {
+    // Starts an inactivity timer for user sessions.
+    startTimer() {
+      this.timeoutId = setTimeout(this.logout, 600000);
+    },
+    resetTimer() {
+      clearTimeout(this.timeoutId);
+      this.startTimer();
+    },
+    async logout() {
+      try {
+        // Make a request to the lgout endpoint.
+        const response = await fetch('/api/logout', {
+          method: 'GET',
+          credentials: 'include',
+        });
+
+        if (!response.ok) {
+          throw new Error ('Logout request failed.');
+        }
+
+        // Update the logged-in state in the Vuex store.
+        this.$store.commit('SET_LOGIN_STATUS', false);
+      } catch (error) {
+        console.error('Logout failed:', error);
+      }
+    },
     async redirectToCognitoUI() {
       try {
         const response = await fetch('/api/login');
@@ -49,13 +76,30 @@ export default {
   },
   created() {
     this.$store.dispatch('checkIfLoggedIn');
+    this.startTimer();
   },
   watch: {
     '$route': function() {
       this.$store.dispatch('checkIfLoggedIn');
+      this.resetTimer();
     }
-  }
-}
+  },
+  mounted() {
+    // Reset the inactivity timer whenever the user interacts with the page.
+    window.addEventListener('click', this.resetTimer);
+    window.addEventListener('mousemove', this.resetTimer);
+    window.addEventListener('keypress', this.resetTimer);
+    window.addEventListener('scroll', this.resetTimer);
+    window.addEventListener('mousedown', this.resetTimer);
+  },
+  beforeDestroy() {
+    window.removeEventListener('click', this.resetTimer);
+    window.removeEventListener('mousemove', this.resetTimer);
+    window.removeEventListener('keypress', this.resetTimer);
+    window.removeEventListener('scroll', this.resetTimer);
+    window.removeEventListener('mousedown', this.resetTimer);
+  },
+};
 </script>
 
 <style>
