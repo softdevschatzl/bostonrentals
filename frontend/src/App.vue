@@ -92,7 +92,7 @@ export default {
     window.addEventListener('scroll', this.resetTimer);
     window.addEventListener('mousedown', this.resetTimer);
   },
-  beforeDestroy() {
+  beforeUnmount() {
     window.removeEventListener('click', this.resetTimer);
     window.removeEventListener('mousemove', this.resetTimer);
     window.removeEventListener('keypress', this.resetTimer);
