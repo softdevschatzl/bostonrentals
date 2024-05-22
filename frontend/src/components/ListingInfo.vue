@@ -121,6 +121,7 @@
 import Carousel from './ImageCarousel.vue';
 import defaultImage from '../assets/no-image-found.jpg';
 import { statusMapping, squareFootageMapping, feeResultsMapping, parkingResultsKeyMapping, parkingResultsValueMapping } from '../utils/dataSets';
+import { mapState } from 'vuex';
 
 export default {
   data() {
@@ -136,20 +137,8 @@ export default {
     visible: Boolean,
     isLoggedIn: Boolean,
   },
-  methods: {
-    close() {
-      this.$emit('close');
-    },
-    showOverlay() {
-      // If not logged in, redirect to login.
-      if (!this.isLoggedIn) {
-        this.$router.push('/login');
-        return;
-      }
-      this.$emit('showOverlay', this.listing.id);
-    },
-  },
   computed: {
+    ...mapState(['isLoggedIn']),
     listingImages() {
       return this.listing.photos || defaultImage;
     },
@@ -219,6 +208,22 @@ export default {
     isMobile() {
       return window.innerWidth <= 768;
     }
+  },
+  methods: {
+    close() {
+      this.$emit('close');
+    },
+    async showOverlay() {
+      // If not logged in, redirect to login.
+      await this.$store.dispatch('checkIfLoggedIn');
+
+      // If not logged in, redirect to login.
+      if (!this.isLoggedIn) {
+        this.$router.push('/login');
+      }
+
+      this.$emit('showOverlay', this.listing.id);
+    },
   },
 }
 </script>
