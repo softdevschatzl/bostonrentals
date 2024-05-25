@@ -9,20 +9,33 @@
     <div class="saved-list">
       <div class="header">
         <h2>Saved Lists</h2>
-        <button type="button" class="btn-close" @click="addNewList">
+        <button type="button" class="btn-close" @click="showOverlay">
           <span class="icon-cross"></span>
           <span class="visually-hidden">Close</span>
         </button>
       </div>
     </div>
+    <div class="overlay">
+      <NewListOverlay v-if="overlayVisible" @hideOverlay="hideOverlay" />
+    </div>
 </template>
 
 <script>
+import NewListOverlay from './NewListOverlay.vue';
+import { mapState } from 'vuex';
+
 export default {
   data() {
     return {
-      savedLists: []
+      savedLists: [],
+      overlayVisible: false,
     }
+  },
+  components: {
+    NewListOverlay,
+  },
+  computed: {
+    ...mapState(['isLoggedIn'])
   },
   async created() {
     try {
@@ -41,9 +54,19 @@ export default {
     }
   },
   methods: {
-    addNewList() {
-      // Call the /api/lists endpoint to create a new list.
+    async showOverlay() {
+      // Check if the user is logged in.
+      await this.$store.dispatch('checkIfLoggedIn');
 
+      // If not logged in, redirect to login.
+      if (!this.isLoggedIn) {
+        this.$router.push('/login');
+      } else {
+        this.overlayVisible = true;
+      }
+    },
+    hideOverlay() {
+      this.overlayVisible = false;
     }
   }
 }

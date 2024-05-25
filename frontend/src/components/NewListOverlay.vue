@@ -1,73 +1,66 @@
 <template>
-    <transition name="fade">
-        <div class="overlay-shadow">
-          <div class="overlay">
-            <div class="overlay-content">
-              <button type="button" class="btn-close" @click="$emit('closeOverlay')">
-                  <span class="icon-cross"></span>
-                  <span class="visually-hidden">Close</span>
-              </button>
-              <ul>
-                  <li v-for="list in userLists" :key="list.id">
-                      <button @click="addPropertyToList(list.id, propertyId)">Add to {{ list.name }}</button>
-                  </li>
-              </ul>
-              <button @click="createList">Create new list</button>
-            </div>
+  <transition name="fade">
+      <div class="overlay-shadow">
+        <div class="overlay">
+          <div class="overlay-content">
+            <h1>Create New List</h1>
+            <button type="button" class="btn-close" @click="$emit('hideOverlay')">
+                <span class="icon-cross"></span>
+                <span class="visually-hidden">Close</span>
+            </button>
+            <input class="list-name" type="text" placeholder="List Name" v-model="listName" />
+            <button class="create-btn" @click="createList">Create</button>
           </div>
         </div>
-    </transition>
+      </div>
+  </transition>
 </template>
 
 <script>
 import axios from 'axios';
 
 export default {
-    data() {
-        return {
-            isOverlayVisible: false,
-            userLists: [],
-            propertyId: null,
-        };
+  data() {
+      return {
+        overlayVisible: false,
+        userLists: [],
+        propertyId: null,
+      };
+  },
+  methods: {
+    async fetchUserLists() {
+      try {
+        const response = await axios.get('/api/lists');
+        this.userLists = response.data;
+      } catch (error) {
+        console.error(error);
+      }
     },
-    created() {
+    showOverlay(propertyId) {
+        this.propertyId = propertyId;
+        this.overlayVisible = true;
+    },
+    hideOverlay() {
+        this.overlayVisible = false;
+    },
+    async addPropertyToList(listId, propertyId) {
+      try {
+        await axios.post(`/api/lists/${listId}/properties`, {
+          propertyId,
+        });
         this.fetchUserLists();
+      } catch (error) {
+        console.error(error);
+      }
     },
-    methods: {
-        async fetchUserLists() {
-            try {
-                const response = await axios.get('/api/lists');
-                this.userLists = response.data;
-            } catch (error) {
-                console.error(error);
-            }
-        },
-        showOverlay(propertyId) {
-            this.propertyId = propertyId;
-            this.isOverlayVisible = true;
-        },
-        hideOverlay() {
-            this.isOverlayVisible = false;
-        },
-        async addPropertyToList(listId, propertyId) {
-            try {
-                await axios.post(`/api/lists/${listId}/properties`, {
-                    propertyId,
-                });
-                this.fetchUserLists();
-            } catch (error) {
-                console.error(error);
-            }
-        },
-        async createList() {
-            try {
-                await axios.post('/api/lists');
-                this.fetchUserLists();
-            } catch (error) {
-                console.error(error);
-            }
-        }
-    }
+    async createList() {
+      try {
+        await axios.post('/api/list');
+      } catch (error) {
+        console.error(error);
+      }
+    },
+  }
 }
 </script>
 
@@ -92,8 +85,8 @@ export default {
   position: absolute;
   top: 50%;
   left: 50%;
-  height: auto;
-  width: auto;
+  height: 50vh;
+  width: 50vh;
   transform: translate(-50%, -50%);
   background-color: white;
   padding: 20px;
@@ -106,7 +99,27 @@ export default {
   width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  align-items: center;
+  justify-content: center;
+}
+
+.list-name {
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 80%;
+}
+.create-btn {
+background-color: #007bff;
+color: white;
+border: none;
+padding: 10px;
+border-radius: 5px;
+cursor: pointer;
+}
+.create-btn:hover {
+background-color: #0056b3;
 }
 
 // Display a cross with CSS only.
@@ -155,8 +168,8 @@ export default {
 }
 .btn-close {
   position: absolute;
-  top: 3.5px;
-  right: 15px;
+  top: 10px;
+  right: 10px;
   margin: 0;
   border: 0;
   padding: 0;

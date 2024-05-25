@@ -143,6 +143,7 @@ export default {
         credentials: "include"
       });
       if (response.ok) {
+        this.$store.commit("SET_LOGIN_STATUS", false);
         window.location.href = "/";
       } else {
         console.error("Failed to logout.");

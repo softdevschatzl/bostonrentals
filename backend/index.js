@@ -161,8 +161,15 @@ initializeMiddleware().then(() => {
     // Saved lists endpoints.
     // Create a new list.
     router.post('/api/list', authenticate, async (req, res) => {
+        const idToken = req.cookies.id_token;
+        if (!idToken) return res.status(401).json({ error: 'No ID token found' });
+
         try {
-            const { listName, userId } = req.body;
+            const { listName } = req.body;
+
+            // Decode the id_token to get the user's ID.
+            const decodedToken = jswt.decode(idToken);
+            const userId = decodedToken.sub;
 
             const newList = await pool.createList(userId, listName);
             res.status(201).json(newList);
@@ -457,8 +464,8 @@ app.get('/api/user', async (req, res) => {
 });
 
 app.get('/api/logout', (req, res) => {
-    res.clearCookie('accessToken', { path: '/', domain: 'https://alexandersrentals.com'}); // Change this for production.
-    res.clearCookie('idToken', { path: '/', domain: 'https://alexandersrentals.com'}); // Change this for production.
+    res.clearCookie('access_token', { path: '/', domain: 'localhost'}); // Change this for production.
+    res.clearCookie('id_token', { path: '/', domain: 'localhost'}); // Change this for production.
     res.json({ message: 'Logged out successfully.' });
 });
 
