@@ -111,14 +111,15 @@
       </div>
     </div>
     <!--Saved List Overlay-->
-    <div class="listing-overlay" v-if="showOverlay">
-      <ListOverlay :visible="showOverlay" @close="showOverlay = false" />
+    <div class="listing-overlay" v-if="overlayVisible">
+      <ListOverlay v-if="overlayVisible" :listingId="listingId" @closeOverlay="hideOverlay" />
     </div>
   </div>
 </template>
 
 <script>
 import Carousel from './ImageCarousel.vue';
+import ListOverlay from './ListOverlay.vue';
 import defaultImage from '../assets/no-image-found.jpg';
 import { statusMapping, squareFootageMapping, feeResultsMapping, parkingResultsKeyMapping, parkingResultsValueMapping } from '../utils/dataSets';
 import { mapState } from 'vuex';
@@ -127,15 +128,16 @@ export default {
   data() {
     return {
       enlarged: false,
+      overlayVisible: false,
     }
   },
   components: {
     Carousel,
+    ListOverlay,
   },
   props: {
     listing: Object,
     visible: Boolean,
-    isLoggedIn: Boolean,
   },
   computed: {
     ...mapState(['isLoggedIn']),
@@ -220,10 +222,13 @@ export default {
       // If not logged in, redirect to login.
       if (!this.isLoggedIn) {
         this.$router.push('/login');
+      } else {
+        this.overlayVisible = true;
       }
-
-      this.$emit('showOverlay', this.listing.id);
     },
+    hideOverlay() {
+      this.showOverlay = false;
+    }
   },
 }
 </script>

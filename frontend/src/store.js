@@ -7,26 +7,26 @@ export default createStore({
   mutations: {
     SET_LOGIN_STATUS(state, status) {
       state.isLoggedIn = status;
+      console.log('Vuex login status:', status);
     },
   },
   actions: {
     setLoginStatus({ commit }, status) {
       commit("SET_LOGIN_STATUS", status);
     },
-    async checkIfLoggedIn({ commit }) {
-      try {
-        const response = await fetch('/api/user', {
-          method: 'GET',
-          credentials: 'include',
-        });
-        if (response.ok) {
-          commit('SET_LOGIN_STATUS', true);
-        } else {
-          commit('SET_LOGIN_STATUS', false);
-        }
-      } catch (error) {
-        console.error('Error checking if logged in:', error);
-      }
+    checkIfLoggedIn({ commit }) {
+      return new Promise((resolve, reject) => {
+        fetch('/api/check-login-status')
+          .then(response => response.json())
+          .then(data => {
+            commit('SET_LOGIN_STATUS', data.isLoggedIn);
+            resolve();
+          })
+          .catch(error => {
+            console.error('Error during checkIfLoggedIn:', error);
+            reject(error);
+          })
+      })
     }
   },
 });

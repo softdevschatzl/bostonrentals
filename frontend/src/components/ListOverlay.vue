@@ -1,16 +1,20 @@
 <template>
     <transition name="fade">
-        <div class="overlay" v-if="$store.state.isOverlayVisible">
-            <button type="button" class="btn-close" @click="$emit('closeOverlay')">
-                <span class="icon-cross"></span>
-                <span class="visually-hidden">Close</span>
-            </button>
-            <ul>
-                <li v-for="list in userLists" :key="list.id">
-                    <button @click="addPropertyToList(list.id, propertyId)">Add to {{ list.name }}</button>
-                </li>
-            </ul>
-            <button @click="createList">Create new list</button>
+        <div class="overlay-shadow">
+          <div class="overlay">
+            <div class="overlay-content">
+              <button type="button" class="btn-close" @click="$emit('closeOverlay')">
+                  <span class="icon-cross"></span>
+                  <span class="visually-hidden">Close</span>
+              </button>
+              <ul>
+                  <li v-for="list in userLists" :key="list.id">
+                      <button @click="addPropertyToList(list.id, propertyId)">Add to {{ list.name }}</button>
+                  </li>
+              </ul>
+              <button @click="createList">Create new list</button>
+            </div>
+          </div>
         </div>
     </transition>
 </template>
@@ -74,14 +78,35 @@ export default {
 .fade-enter, .fade-leave-to {
   opacity: 0;
 }
-.overlay {
+.overlay-shadow {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 9999;
+  z-index: 999999;
+}
+
+.overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: auto;
+  width: auto;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.overlay-content {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 // Display a cross with CSS only.

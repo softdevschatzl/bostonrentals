@@ -218,6 +218,10 @@ body {
   justify-content: space-around;
 }
 
+.acc-object {
+  box-shadow: inset 5px 5px 10px #a7a7a7, inset -5px -5px 10px #ffffff;
+}
+
 /* Account Information Styles */
 .account-info {
   background: #E0E5EC;
@@ -249,7 +253,6 @@ body {
 .additional-info {
   background: #E0E5EC;
   border-radius: 20px;
-  box-shadow: inset 5px 5px 10px #a7a7a7, inset -5px -5px 10px #ffffff;
   padding: 20px;
   margin-top: 20px;
   width: 300px;

@@ -155,6 +155,7 @@ function authenticate(req, res, next) {
 }
 
 initializeMiddleware().then(() => {
+    console.log('Middleware initialized, setting up routes...');
     const pool = require('./db');
 
     // Saved lists endpoints.
