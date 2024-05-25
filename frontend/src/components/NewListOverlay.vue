@@ -55,7 +55,7 @@ export default {
     },
     async createList() {
       try {
-        await axios.post('/api/list');
+        await axios.post('/api/list', {}, { withCredentials: true });
       } catch (error) {
         console.error(error);
       }
