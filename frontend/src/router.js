@@ -6,6 +6,7 @@ import PrivacyPolicyPage from '@/components/PrivacyPolicyPage.vue';
 import CookiePolicyPage from '@/components/CookiePolicyPage.vue';
 import TermsOfServicePage from '@/components/TermsOfServicePage.vue';
 import MyAccount from '@/components/MyAccount.vue';
+import store from '@/store';
 
 // Vue.use(Router);
 
@@ -29,7 +30,14 @@ const routes = [
         path: '/terms-of-service', name: 'TermsOfService', component: TermsOfServicePage
     },
     {
-        path: '/my-account', name: 'MyAccount', component: MyAccount, props: true
+        path: '/my-account', name: 'MyAccount', component: MyAccount, props: true,
+        beforeEnter: (to, from, next) => {
+            if (store.getters.isLoggedIn) {
+                next();
+            } else {
+                next({ path: '/login' });
+            }
+        }
     },
     {
         path: '/login', 

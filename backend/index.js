@@ -29,14 +29,13 @@ const path = require('path');
 // allNeighborhoods is an array that is exported from that file.
 const { allNeighborhoods, featureMapping } = require('./dataSets');
 
-const secretName = "AlexandersRentalsSecrets";
 const secretClient = new SecretsManagerClient({ region: 'us-east-2' });
 
 const cognito = require('./cognito');
 cognito.init();
 
 // Implement Secrets.
-async function getSecrets() {
+async function getSecrets(secretName) {
     try {
     const response = await secretClient.send(new GetSecretValueCommand({ SecretId: secretName }));
     const secrets = JSON.parse(response.SecretString);
@@ -80,7 +79,7 @@ let pems;
 
 async function initializePems() {
     try {
-        secrets = await getSecrets();
+        secrets = await getSecrets('AlexandersRentalsSecrets');
     } catch (error) {
         console.error("Failed to fetch secrets:", error);
     }
@@ -120,7 +119,7 @@ async function initializePems() {
 
 async function initializeMiddleware() {
     try {
-        secrets = await getSecrets();
+        secrets = await getSecrets('AlexandersRentalsSecrets');
         await initializePems();
 
         app.use(session({
@@ -198,6 +197,7 @@ initializeMiddleware().then(() => {
         try {
             const userId = req.user.id;
             const lists = await pool.getLists(userId);
+            console.log("Lists:", lists);
             res.json(lists);
         } catch (error) {
             console.error(error);
@@ -320,7 +320,7 @@ app.get('/', (req, res) => {
 
 app.post('/api/token', async (req, res) => {
     // console.log("Received request:", req);
-    const secrets = await getSecrets();
+    const secrets = await getSecrets('AlexandersRentalsSecrets');
     const cognitoClientId = secrets.COGNITO_CLIENT_ID;
     const { code } = req.body;
 
@@ -372,7 +372,8 @@ app.post('/api/token', async (req, res) => {
 
 // Endpoint for refreshing the access token.
 app.post('/api/refresh', async (req, res) => {
-    const { cognitoClientId } = await getSecrets();
+    const secrets = await getSecrets('AlexandersRentalsSecrets');
+    cognitoClientId = secrets.COGNITO_CLIENT_ID;
     const refreshToken = req.cookies.refresh_token;
 
     if (!refreshToken) {
@@ -413,7 +414,7 @@ app.post('/api/refresh', async (req, res) => {
 
 // We validate the token using the public key provided by Cognito.
 async function setUpClient () {
-    const secrets = await getSecrets();
+    const secrets = await getSecrets('AlexandersRentalsSecrets');
     const cognitoUserPoolId = secrets.COGNITO_USER_POOL_ID;
 
     const client = jwksClient({
@@ -473,7 +474,7 @@ app.get('/api/logout', (req, res) => {
 
 // Endpoint for fetching cognito client id and domain.
 app.get('/api/cognito-config', async (req, res) => {
-    const secrets = await getSecrets();
+    const secrets = await getSecrets('AlexandersRentalsSecrets');
     const cognitoClientId = secrets.COGNITO_CLIENT_ID;
     const cognitoUserPoolId = secrets.COGNITO_USER_POOL_ID;
     
@@ -519,7 +520,7 @@ app.post('/submit-preapproval', async (req, res) => {
 
 // Creating route to fetch data (YGL API)
 app.post('/api/properties', async (req, res) => {
-    const secrets = await getSecrets();
+    const secrets = await getSecrets('AlexandersRentalsSecrets');
     const apiKey = secrets.YGL_API_KEY;
     try {
         const { latitude_start, latitude_end, longitude_start, longitude_end, street_name, 

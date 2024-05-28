@@ -112,14 +112,14 @@
     </div>
     <!--Saved List Overlay-->
     <div class="listing-overlay" v-if="overlayVisible">
-      <EditListOverlay v-if="overlayVisible" :listingId="listingId" @hideOverlay="hideOverlay" />
+      <AddToListOverlay v-if="overlayVisible" :listingId="listingId" @hideOverlay="hideOverlay" />
     </div>
   </div>
 </template>
 
 <script>
 import Carousel from './ImageCarousel.vue';
-import EditListOverlay from './EditListOverlay.vue';
+import AddToListOverlay from './AddToListOverlay.vue';
 import defaultImage from '../assets/no-image-found.jpg';
 import { statusMapping, squareFootageMapping, feeResultsMapping, parkingResultsKeyMapping, parkingResultsValueMapping } from '../utils/dataSets';
 import { mapState } from 'vuex';
@@ -133,7 +133,7 @@ export default {
   },
   components: {
     Carousel,
-    EditListOverlay,
+    AddToListOverlay,
   },
   props: {
     listing: Object,

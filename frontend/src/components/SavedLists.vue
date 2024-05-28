@@ -9,6 +9,11 @@
     <div class="saved-list">
       <div class="header">
         <h2>Saved Lists</h2>
+        <div class="lists">
+          <div v-for="list in savedLists" :key="list.id">
+            <SavedList :list="list" @click="openList" />
+          </div>
+        </div>
         <button type="button" class="btn-close" @click="showOverlay">
           <span class="icon-cross"></span>
           <span class="visually-hidden">Close</span>
@@ -17,11 +22,14 @@
     </div>
     <div class="overlay">
       <NewListOverlay v-if="overlayVisible" @hideOverlay="hideOverlay" />
+      <EditListOverlay v-if="editOverlayVisible" @hideOverlay="hideEditOverlay" :list="selectedList" />
     </div>
 </template>
 
 <script>
 import NewListOverlay from './NewListOverlay.vue';
+import EditListOverlay from './EditListOverlay.vue';
+import SavedList from './SavedList.vue';
 import { mapState } from 'vuex';
 
 export default {
@@ -29,23 +37,28 @@ export default {
     return {
       savedLists: [],
       overlayVisible: false,
+      editOverlayVisible: false,
+      selectedList: null,
     }
   },
   components: {
     NewListOverlay,
+    SavedList,
+    EditListOverlay,
   },
   computed: {
     ...mapState(['isLoggedIn'])
   },
   async created() {
     try {
-      const response = await fetch('/api/lists', { // Not the right endpoint.
+      const response = await fetch('/api/lists', {
         method: 'GET',
         credentials: 'include'
       });
       if (response.ok) {
         const data = await response.json();
-        this.savedLists = data.savedLists;
+        this.savedLists = data;
+        console.log('Saved Lists:', this.savedLists);
       } else {
         console.error('Failed to fetch saved lists.');
       }
@@ -67,6 +80,24 @@ export default {
     },
     hideOverlay() {
       this.overlayVisible = false;
+    },
+    async showEditOverlay() {
+      // Check if the user is logged in.
+      await this.$store.dispatch('checkIfLoggedIn');
+
+      // If not logged in, redirect to login.
+      if (!this.isLoggedIn) {
+        this.$router.push('/login');
+      } else {
+        this.editOverlayVisible = true;
+      }
+    },
+    hideEditOverlay() {
+      this.editOverlayVisible = false;
+    },
+    openList(list) {
+      this.selectedList = list;
+      this.showEditOverlay();
     }
   }
 }

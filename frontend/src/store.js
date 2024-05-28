@@ -29,4 +29,7 @@ export default createStore({
       })
     }
   },
+  getters: {
+    isLoggedIn: state => state.isLoggedIn,
+  },
 });

@@ -148,7 +148,7 @@ export default {
 
         // Update your component's listings data with the sorted, scored listings
         this.listings = scoredListings;
-        // console.log('Scored Listings:', scoredListings);
+        console.log('Scored Listings:', scoredListings);
       } catch (error) {
         console.error('Error fetching listings:', error);
       } finally {

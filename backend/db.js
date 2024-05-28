@@ -8,17 +8,26 @@ let pool;
 async function initializePool() {
     let secrets;
     if (process.env.NODE_ENV === 'production') {
-        secrets = await getSecrets('rds!db-48e4c0b3-373c-4d20-8018-40553229b595');
-    } else {
         secrets = await getSecrets('rds!db-ffb0f2ee-a5f5-457f-8195-0383cd55502d');
+    } else {
+        secrets = await getSecrets('rds!db-48e4c0b3-373c-4d20-8018-40553229b595');
     }
+    let regSecrets = await getSecrets('database-values');
 
+    // console.log("database credentials: ", secrets.username, secrets.password, regSecrets.testHost, regSecrets.port, regSecrets.database);
+
+    // pool = new Pool({
+    //     user: secrets.username,
+    //     host: secrets.host,
+    //     database: regSecrets.database,
+    //     password: secrets.password,
+    //     port: regSecrets.port,
+    // });
     pool = new Pool({
-        user: secrets.username,
-        host: secrets.host,
-        database: secrets.database,
-        password: secrets.password,
-        port: secrets.port,
+        connectionString: `postgresql://${secrets.username}:${secrets.password}@${regSecrets.testHost}:${regSecrets.port}/${regSecrets.database}`,
+        ssl: {
+            rejectUnauthorized: false
+        }
     });
 }
 
@@ -31,6 +40,7 @@ async function getLists(userId) {
             'SELECT * FROM lists WHERE user_id = $1', [userId]
         );
         return result.rows;
+        console.log("result.rows: ", result.rows);
     } catch (error) {
         console.error("Error fetching lists:", error);
         throw error;
@@ -51,6 +61,14 @@ async function getList(listId) {
 
 async function createList(userId, name) {
     try {
+        const existingList = await pool.query(
+            'SELECT * FROM lists WHERE user_id = $1 AND name = $2', [userId, name]
+        );
+
+        if (existingList.rows.length > 0) {
+            throw new Error('A list with this name already exists for this user.');
+        }
+
         const result = await pool.query(
             'INSERT INTO lists (user_id, name) VALUES ($1, $2) RETURNING *', [userId, name]
         );

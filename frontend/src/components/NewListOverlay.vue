@@ -25,6 +25,7 @@ export default {
         overlayVisible: false,
         userLists: [],
         propertyId: null,
+        listName: '',
       };
   },
   methods: {
@@ -55,10 +56,28 @@ export default {
     },
     async createList() {
       try {
-        await axios.post('/api/list', {}, { withCredentials: true });
+        fetch('/api/list', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            listName: this.listName,
+          }),
+        })
+          .then(response => response.json())
+          .then(data => console.log(data))
+          .catch((error) => {
+            console.error('Error:', error);
+          });
       } catch (error) {
         console.error(error);
       }
+
+      // Close the overlay after a list is created.
+      this.overlayVisible = false;
+      // Emit listCreated so the parent component knows when to refresh the lists.
+      this.$emit('listCreated');
     },
   }
 }
@@ -92,6 +111,7 @@ export default {
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  border: 3px solid #333;
 }
 
 .overlay-content {
