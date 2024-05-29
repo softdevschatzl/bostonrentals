@@ -276,11 +276,11 @@ initializeMiddleware().then(() => {
     });
 
     // Create a new item in a list.
-    router.post('/api/list/:listId/item', authenticate, async (req, res) => {
+    router.post('/api/lists/:listId/item', authenticate, async (req, res) => {
         try {
             const { listId } = req.params;
-            const { itemName } = req.body;
-            const newItem = await pool.createItem(listId, itemName);
+            const { propertyId } = req.body;
+            const newItem = await pool.createItem(listId, propertyId);
             res.status(201).json(newItem);
         } catch (error) {
             console.error(error);

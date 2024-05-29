@@ -41,8 +41,14 @@ data() {
       overlayVisible: false,
       newOverlayVisible: false,
       userLists: [],
-      propertyId: null,
+      localPropertyId: null,
     };
+},
+props: {
+  propertyId: {
+    type: String,
+    required: true,
+  },
 },
 components: {
   NewListOverlay,
@@ -72,19 +78,19 @@ methods: {
     }
   },
   showOverlay(propertyId) {
-      this.propertyId = propertyId;
+      this.localPropertyId = propertyId;
       this.overlayVisible = true;
   },
   hideOverlay() {
       this.overlayVisible = false;
   },
-  async addPropertyToList(listId, propertyId) {
+  async addPropertyToList(listId) {
     try {
       await axios({
         method: 'post',
-        url: `/api/lists/${listId}/items`,
+        url: `/api/lists/${listId}/item`,
         data: {
-          propertyId: propertyId
+          propertyId: this.localPropertyId,
         },
         withCredentials: true
       });

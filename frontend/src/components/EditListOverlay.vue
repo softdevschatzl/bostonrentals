@@ -68,7 +68,7 @@ methods: {
   },
 },
 created() {
-  console.log("list", this.list);
+  console.log("list contents", this.listContents);
 },
 }
 </script>

@@ -115,10 +115,10 @@ async function getItems(listId) {
     }
 }
 
-async function createItem(listId, name, quantity) {
+async function createItem(listId, propertyId) {
     try {
         const result = await pool.query(
-            'INSERT INTO items (list_id, name, quantity) VALUES ($1, $2, $3) RETURNING *', [listId, name, quantity]
+            'INSERT INTO list_items (list_id, property_id) VALUES ($1, $2) RETURNING *', [listId, propertyId]
         );
         return result.rows[0];
     } catch (error) {

@@ -112,7 +112,7 @@
     </div>
     <!--Saved List Overlay-->
     <div class="listing-overlay" v-if="overlayVisible">
-      <AddToListOverlay v-if="overlayVisible" :listingId="listingId" @hideOverlay="hideOverlay" />
+      <AddToListOverlay v-if="overlayVisible" :propertyId="listingId" @hideOverlay="hideOverlay" />
     </div>
   </div>
 </template>
@@ -141,6 +141,9 @@ export default {
   },
   computed: {
     ...mapState(['isLoggedIn']),
+    listingId() {
+      return this.listing.id;
+    },
     listingImages() {
       return this.listing.photos || defaultImage;
     },
