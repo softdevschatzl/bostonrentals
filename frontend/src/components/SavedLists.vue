@@ -11,7 +11,7 @@
         <h2>Saved Lists</h2>
         <div class="lists">
           <div v-for="list in savedLists" :key="list.id">
-            <SavedList :list="list" @click="openList" />
+            <SavedList :list="list" @click="openList(list)" />
           </div>
         </div>
         <button type="button" class="btn-close" @click="showOverlay">
@@ -91,6 +91,7 @@ export default {
       } else {
         this.editOverlayVisible = true;
       }
+      console.log("Selected List:", this.selectedList);
     },
     hideEditOverlay() {
       this.editOverlayVisible = false;

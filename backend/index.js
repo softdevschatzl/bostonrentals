@@ -72,6 +72,39 @@ app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
 
+// Only allowing access from certain origin points.
+const allowedOrigins = [
+    'http://localhost:8080', 
+    'http://localhost:3000', 
+    'https://alexandersrentals.com', 
+    'https://alexandersrentals.com/',
+    'https://www.alexandersrentals.com',
+    'https://alexandersrentals-nosms.auth.us-east-2.amazoncognito.com'
+];
+
+app.options('*', cors({
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true,
+    allowedHeaders: ['Content-Type'], // replace with your headers
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // replace with your methods
+}));
+app.use(cors({
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true
+}));
+
 app.use(router);
 
 let secrets;
@@ -292,39 +325,6 @@ initializeMiddleware().then(() => {
         }
     });
 });
-
-// Only allowing access from certain origin points.
-const allowedOrigins = [
-    'http://localhost:8080', 
-    'http://localhost:3000', 
-    'https://alexandersrentals.com', 
-    'https://alexandersrentals.com/',
-    'https://www.alexandersrentals.com',
-    'https://alexandersrentals-nosms.auth.us-east-2.amazoncognito.com'
-];
-
-app.options('*', cors({
-    origin: function (origin, callback) {
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    credentials: true,
-    allowedHeaders: ['Content-Type'], // replace with your headers
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // replace with your methods
-}));
-app.use(cors({
-    origin: function (origin, callback) {
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    credentials: true
-}));
 
 // Defines the root path to serve my frontend from.
 app.get('/', (req, res) => {

@@ -67,9 +67,9 @@ methods: {
     }
   },
 },
-// created() {
-//   console.log("list", this.list);
-// },
+created() {
+  console.log("list", this.list);
+},
 }
 </script>
 

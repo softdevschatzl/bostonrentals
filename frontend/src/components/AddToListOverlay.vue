@@ -80,8 +80,14 @@ methods: {
   },
   async addPropertyToList(listId, propertyId) {
     try {
-      await axios.post(`/api/lists/${listId}/items`, { propertyId }, { withCredentials: true });
-      this.fetchUserLists();
+      await axios({
+        method: 'post',
+        url: `/api/lists/${listId}/items`,
+        data: {
+          propertyId: propertyId
+        },
+        withCredentials: true
+      });
     } catch (error) {
       console.error(error);
     }
