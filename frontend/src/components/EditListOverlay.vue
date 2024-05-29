@@ -50,7 +50,26 @@ methods: {
   hideOverlay() {
       this.overlayVisible = false;
   },
-}
+  async getListContents(listId) {
+    try {
+      const response = await fetch(`/api/lists/${listId}/items`, {
+        method: 'GET',
+        credentials: 'include'
+      });
+      if (response.ok) {
+        const data = await response.json();
+        this.listContents = data;
+      } else {
+        console.error('Failed to fetch list contents.');
+      }
+    } catch (error) {
+      console.error('Failed to fetch list contents:', error.message);
+    }
+  },
+},
+// created() {
+//   console.log("list", this.list);
+// },
 }
 </script>
 

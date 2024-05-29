@@ -121,6 +121,12 @@ export default {
   text-align: center;
 }
 
+.lists {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
 // Display a cross with CSS only.
 //
 // Cool close button.

@@ -44,16 +44,6 @@ export default {
     hideOverlay() {
         this.overlayVisible = false;
     },
-    async addPropertyToList(listId, propertyId) {
-      try {
-        await axios.post(`/api/lists/${listId}/properties`, {
-          propertyId,
-        });
-        this.fetchUserLists();
-      } catch (error) {
-        console.error(error);
-      }
-    },
     async createList() {
       try {
         fetch('/api/list', {

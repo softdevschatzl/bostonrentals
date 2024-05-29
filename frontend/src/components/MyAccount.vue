@@ -243,10 +243,10 @@ body {
   margin-bottom: 10px;
 }
 
-.button-row {
+.btn-row {
   width: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
 }
 

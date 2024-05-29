@@ -302,6 +302,19 @@ const allowedOrigins = [
     'https://www.alexandersrentals.com',
     'https://alexandersrentals-nosms.auth.us-east-2.amazoncognito.com'
 ];
+
+app.options('*', cors({
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true,
+    allowedHeaders: ['Content-Type'], // replace with your headers
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // replace with your methods
+}));
 app.use(cors({
     origin: function (origin, callback) {
         if (!origin || allowedOrigins.includes(origin)) {

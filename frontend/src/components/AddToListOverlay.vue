@@ -80,9 +80,7 @@ methods: {
   },
   async addPropertyToList(listId, propertyId) {
     try {
-      await axios.post(`/api/lists/${listId}/properties`, {
-        propertyId,
-      });
+      await axios.post(`/api/lists/${listId}/items`, { propertyId }, { withCredentials: true });
       this.fetchUserLists();
     } catch (error) {
       console.error(error);
@@ -181,6 +179,7 @@ background-color: #0056b3;
   margin-bottom: 0;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
   transition: transform 0.2s; /* Smooth hover effect */
+  cursor: pointer;
 }
 .list-item:hover {
   transform: translateY(-2px); /* Lift up slightly on hover */

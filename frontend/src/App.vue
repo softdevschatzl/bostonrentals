@@ -3,6 +3,10 @@
     <NavBar/>
     <router-view />
   </div>
+  <div v-if = "showSessionExpiredMessage" class="session-expired">
+    <p>Your session has expired. Please log in again.</p>
+    <button @click="onLoginButtonClick">Log In</button>
+  </div>
 </template>
 
 <script>
@@ -16,12 +20,18 @@ export default {
     return {
       isLoggedIn: false,
       timeoutId: null,
+      showSessionExpiredMessage: false,
     }
   },
   methods: {
     // Starts an inactivity timer for user sessions.
     startTimer() {
-      this.timeoutId = setTimeout(this.logout, 600000);
+      // what is 20 minutes in milliseconds?
+      // 20 minutes * 60 seconds * 1000 milliseconds
+      // 1200000 milliseconds
+      // thanks
+      // https://www.w3schools.com/jsref/met_win_settimeout.asp
+      this.timeoutId = setTimeout(this.logout, 1200000);
     },
     resetTimer() {
       clearTimeout(this.timeoutId);
@@ -72,6 +82,9 @@ export default {
       } catch (error) {
         console.error('Error checking if logged in:', error);
       }
+    },
+    onLoginButtonClick() {
+      this.redirectToCognitoUI();
     },
   },
   created() {
