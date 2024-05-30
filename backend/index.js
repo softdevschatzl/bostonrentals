@@ -239,7 +239,7 @@ initializeMiddleware().then(() => {
     });
 
     // Get all items from a list.
-    router.post('/api/lists/:listId/items', authenticate, async (req, res) => {
+    router.get('/api/lists/:listId/items', authenticate, async (req, res) => {
         try {
             const { listId } = req.params;
             const items = await pool.getItems(listId);

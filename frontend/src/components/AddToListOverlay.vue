@@ -9,6 +9,12 @@
             </button>
             <div class="top">
               <h1>Add To List</h1>
+              <div class="success" v-if="success">
+                <p v-if="success">Added to {{ list.name }}!</p>
+              </div>
+              <div v-if="error">
+                <p>{{ error }}</p>
+              </div>
             </div>
             <ul>
               <li v-for="list in userLists" :key="list.id">
@@ -94,8 +100,15 @@ methods: {
         },
         withCredentials: true
       });
+      this.success = true;
+
+      // Close the pop-up after 3 seconds.
+      setTimeout(() => {
+        this.success = false;
+      }, 3000);
     } catch (error) {
       console.error(error);
+      this.error = 'Failed to add property to list. Error: ' + error.message;
     }
   },
   async showNewOverlay() {

@@ -11,10 +11,10 @@
               <h1>{{ list.name }}</h1>
             </div>
             <ul>
-              <li v-for="(value, index) in list" :key="index">
-                  <p>{{ value }}</p>
+              <li v-for="(property, index) in propertyData" :key="index">
+                  <p>{{ property.name }}</p>
               </li>
-              <li v-if="list.length === 0">Nothing here!</li>
+              <li v-if="propertyData.length === 0">Nothing here!</li>
             </ul>
             <div class="bottom"></div>
           </div>
@@ -24,53 +24,67 @@
 </template>
 
 <script>
+import axios from 'axios';
 import { mapState } from 'vuex';
 
 export default {
-data() {
-    return {
-      overlayVisible: false,
-      propertyId: null,
-    };
-},
-props: {
-  list: {
-    type: Object,
-    required: true,
+  data() {
+      return {
+        overlayVisible: false,
+        propertyId: null,
+        listContents: [],
+        propertyData: [],
+      };
   },
-},
-computed: {
-  ...mapState(['isLoggedIn'])
-},
-methods: {
-  showOverlay(propertyId) {
-      this.propertyId = propertyId;
-      this.overlayVisible = true;
+  props: {
+    list: {
+      type: Object,
+      required: true,
+    },
   },
-  hideOverlay() {
-      this.overlayVisible = false;
+  computed: {
+    ...mapState(['isLoggedIn'])
   },
-  async getListContents(listId) {
-    try {
-      const response = await fetch(`/api/lists/${listId}/items`, {
-        method: 'GET',
-        credentials: 'include'
-      });
-      if (response.ok) {
-        const data = await response.json();
-        this.listContents = data;
-      } else {
-        console.error('Failed to fetch list contents.');
+  methods: {
+    showOverlay(propertyId) {
+        this.propertyId = propertyId;
+        this.overlayVisible = true;
+    },
+    hideOverlay() {
+        this.overlayVisible = false;
+    },
+    async getListContents(listId) {
+      try {
+        const response = await fetch(`/api/lists/${listId}/items`, {
+          method: 'GET',
+          credentials: 'include'
+        });
+        if (response.ok) {
+          const data = await response.json();
+          this.listContents = data;
+          console.log('List contents:', this.listContents);
+        } else {
+          console.error('Failed to fetch list contents.');
+        }
+      } catch (error) {
+        console.error('Failed to fetch list contents:', error.message);
       }
-    } catch (error) {
-      console.error('Failed to fetch list contents:', error.message);
+    },
+  },
+  async created() {
+    this.getListContents(this.list.id);
+
+    // Fetch property data.
+    for (let item of this.listContents) {
+      try {
+        const response = await axios.get(`/api/properties/${item.property_id}`);
+        this.propertyData.push(response.data);
+      } catch (error) {
+        console.error('Error fetching property data:', error);
+      }
     }
   },
-},
-created() {
-  console.log("list contents", this.listContents);
-},
-}
+};
 </script>
 
 <style scoped lang="scss">

@@ -106,7 +106,7 @@ async function updateList(listId, name) {
 async function getItems(listId) {
     try {
         const result = await pool.query(
-            'SELECT * FROM items WHERE list_id = $1', [listId]
+            'SELECT * FROM list_items WHERE list_id = $1', [listId]
         );
         return result.rows;
     } catch (error) {
