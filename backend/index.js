@@ -539,7 +539,7 @@ app.post('/api/properties', async (req, res) => {
         const { latitude_start, latitude_end, longitude_start, longitude_end, street_name, 
             city_neighborhood, zip, state = 'MA', beds, min_bed, max_bed, baths, min_bath, max_bath, 
             square_footage_min, square_footage_max, max_rent, min_rent, pet, parking, features,
-            listing_fee, avail_from, avail_to, photo, tours, laundry } = req.body;
+            listing_fee, avail_from, avail_to, photo, tours, laundry, listing_id } = req.body;
 
         // Needed a workaround for the API to work with blank query params.
         // If the query param is blank, it will not be included in the API call.
@@ -573,6 +573,9 @@ app.post('/api/properties', async (req, res) => {
             else if (longitude_end) params.longitude_end = longitude_end;
 
         // Other parameters.
+        if (listing_id && !validator.isInt(listing_id.toString())) return res.status(400).json({ error: "Invalid listing ID.", message: "Invalid listing ID." });
+            else if (listing_id) params.listing_id = listing_id.toString();
+
         if (street_name && !validator.isAlpha(street_name)) return res.status(400).json({ error: "Invalid street name.", message: "Invalid street name." });
            else if (street_name) params.street_name = xssFilters.inHTMLData(street_name);
 

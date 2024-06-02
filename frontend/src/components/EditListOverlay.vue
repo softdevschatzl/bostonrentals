@@ -11,30 +11,40 @@
               <h1>{{ list.name }}</h1>
             </div>
             <ul>
-              <li v-for="(property, index) in propertyData" :key="index">
-                  <p>{{ property.name }}</p>
+              <li v-for="(property, index) in propertyData.listings" :key="index">
+                <ListApartmentItem :propertyData="property" @click="showInfoOverlay(property.id)" />
               </li>
               <li v-if="propertyData.length === 0">Nothing here!</li>
             </ul>
-            <div class="bottom"></div>
+            <div class="bottom">
+              <button class="share-btn">Share List</button>
+            </div>
           </div>
         </div>
       </div>
   </transition>
+  <ListingInfo v-if="infoOverlayVisible" :propertyData="propertyData" @hideInfoOverlay="hideInfoOverlay" />
 </template>
 
 <script>
 import axios from 'axios';
 import { mapState } from 'vuex';
+import ListApartmentItem from './ListApartmentItem.vue';
+import ListingInfo from './ListingInfo.vue';
 
 export default {
   data() {
       return {
         overlayVisible: false,
-        propertyId: null,
+        infoOverlayVisible: false,
+        property_id: null,
         listContents: [],
         propertyData: [],
       };
+  },
+  components: {
+    ListApartmentItem,
+    ListingInfo,
   },
   props: {
     list: {
@@ -46,8 +56,14 @@ export default {
     ...mapState(['isLoggedIn'])
   },
   methods: {
-    showOverlay(propertyId) {
-        this.propertyId = propertyId;
+    showInfoOverlay() {
+      this.infoOverlayVisible = true;
+    },
+    hideInfoOverlay() {
+      this.infoOverlayVisible = false;
+    },
+    showOverlay(property_id) {
+        this.property_id = property_id;
         this.overlayVisible = true;
     },
     hideOverlay() {
@@ -63,6 +79,9 @@ export default {
           const data = await response.json();
           this.listContents = data;
           console.log('List contents:', this.listContents);
+          if (this.listContents.length > 0) {
+            this.getPropertyData(this.listContents[0].property_id);
+          }
         } else {
           console.error('Failed to fetch list contents.');
         }
@@ -70,19 +89,18 @@ export default {
         console.error('Failed to fetch list contents:', error.message);
       }
     },
+    async getPropertyData(property_id) {
+      try {
+        const response = await axios.post(`/api/properties`, { listing_id: property_id });
+        this.propertyData = response.data;
+        console.log('Property data:', this.propertyData);
+      } catch (error) {
+        console.error('Failed to fetch property data:', error.message);
+      }
+    },
   },
   async created() {
     this.getListContents(this.list.id);
-
-    // Fetch property data.
-    for (let item of this.listContents) {
-      try {
-        const response = await axios.get(`/api/properties/${item.property_id}`);
-        this.propertyData.push(response.data);
-      } catch (error) {
-        console.error('Error fetching property data:', error);
-      }
-    }
   },
 };
 </script>
@@ -148,6 +166,26 @@ cursor: pointer;
 }
 .create-btn:hover {
 background-color: #0056b3;
+}
+
+.share-btn {
+  font-size: 1em;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  background: #afc6d2;
+  box-shadow: -5px -5px 10px #ffffff, 5px 5px 10px #babecc;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  outline: none;
+}
+
+.share-btn:hover {
+  box-shadow: -2px -2px 5px #ffffff, 2px 2px 5px #babecc;
+}
+
+.share-btn:active {
+  box-shadow: inset 1px 1px 2px #babecc, inset -1px -1px 2px #ffffff;
 }
 
 // Display a cross with CSS only.
