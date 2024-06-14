@@ -10,14 +10,32 @@
               </button>
               <h1>{{ list.name }}</h1>
             </div>
-            <ul>
-              <li v-for="(property, index) in propertyData.listings" :key="index">
-                <div class="list-item-container">
-                  <ListApartmentItem :propertyData="property" @click="showInfoOverlay(property.id)" />
-                </div>
-              </li>
-              <li v-if="propertyData.length === 0">Nothing here!</li>
-            </ul>
+            <table>
+              <thead>
+                <tr class="header-row">
+                  <th>Street</th>
+                  <th>Price</th>
+                  <th>Bedrooms</th>
+                  <th>Bathrooms</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody class="table-body">
+                <tr class="table-content" v-for="(property, index) in listContents" :key="index">
+                  <td>{{ property.listings[0].streetName }}</td>
+                  <td>{{ property.listings[0].price }}</td>
+                  <td>{{ property.listings[0].beds }}</td>
+                  <td>{{ property.listings[0].baths }}</td>
+                  <td>
+                    <button @click="showInfoOverlay(property)">View</button>
+                    <button @click="deleteProperty(index)">Delete</button>
+                  </td>
+                </tr>
+                <tr v-if="listContents.length === 0">
+                  <td colspan="5">No properties found.</td>
+                </tr>
+              </tbody>
+            </table>
             <div class="bottom">
               <button class="share-btn">Share List</button>
             </div>
@@ -31,7 +49,6 @@
 <script>
 import axios from 'axios';
 import { mapState } from 'vuex';
-import ListApartmentItem from './ListApartmentItem.vue';
 import ListingInfo from './ListingInfo.vue';
 
 export default {
@@ -45,7 +62,6 @@ export default {
       };
   },
   components: {
-    ListApartmentItem,
     ListingInfo,
   },
   props: {
@@ -79,11 +95,7 @@ export default {
         });
         if (response.ok) {
           const data = await response.json();
-          this.listContents = data;
-          console.log('List contents:', this.listContents);
-          if (this.listContents.length > 0) {
-            this.getPropertyData(this.listContents[0].property_id);
-          }
+          this.listContents = await Promise.all(data.map(item => this.getPropertyData(item.property_id)));
         } else {
           console.error('Failed to fetch list contents.');
         }
@@ -94,12 +106,26 @@ export default {
     async getPropertyData(property_id) {
       try {
         const response = await axios.post(`/api/properties`, { listing_id: property_id });
-        this.propertyData = response.data;
-        console.log('Property data:', this.propertyData);
+        return response.data;
       } catch (error) {
         console.error('Failed to fetch property data:', error.message);
       }
     },
+    async deleteProperty(index) {
+      try {
+        const property = this.listContents[index];
+        console.log('Property:', property);
+        const propertyId = property.listings[0].id; // Accessing the id.
+        const response = await axios.delete(`/api/lists/${this.list.id}/items/${propertyId}`, { withCredentials: true });
+        if (response.status === 200) {
+          this.listContents.splice(index, 1);
+        } else {
+          console.error("Failed to delete property.")
+        }
+      } catch (error) {
+        console.error('Failed to delete property:', error.message);
+      }
+    }
   },
   async created() {
     this.getListContents(this.list.id);
@@ -108,18 +134,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-ul {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 0;
-  justify-content: center;
-  align-items: center;
-}
-li {
-  list-style: none;
-}
-
 .fade-enter-active, .fade-leave-active {
 transition: opacity .5s;
 }
@@ -164,6 +178,24 @@ justify-content: center;
 align-items: center;
 width: 300px;
 transform: scale(0.8);
+}
+
+// Table styling.
+.table-body {
+  overflow-y: auto;
+  max-height: 500px;
+}
+th {
+  text-decoration: underline;
+}
+thead {
+  background-color: #cecece;
+}
+tbody {
+  background-color: #f1f1f1;
+}
+td {
+  padding: 10px;
 }
 
 .create-btn {

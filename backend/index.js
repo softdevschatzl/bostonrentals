@@ -230,7 +230,6 @@ initializeMiddleware().then(() => {
         try {
             const userId = req.user.id;
             const lists = await pool.getLists(userId);
-            console.log("Lists:", lists);
             res.json(lists);
         } catch (error) {
             console.error(error);
@@ -314,7 +313,7 @@ initializeMiddleware().then(() => {
     });
 
     // Delete a specific item.
-    router.delete('/api/item/:itemId', authenticate, async (req, res) => {
+    router.delete('/api/lists/:listId/items/:itemId', authenticate, async (req, res) => {
         try {
             const { itemId } = req.params;
             const deletedItem = await pool.deleteItem(itemId);

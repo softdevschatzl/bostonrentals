@@ -11,7 +11,7 @@
               <h1>Add To List</h1>
               <div class="slide-down" v-if="success">
                 <div class="success">
-                  <p v-if="success">Added to {{ list.name }}!</p>
+                  <p v-if="selectedList">Added to {{ selectedList.name }}!</p>
                 </div>
               </div>
               <div v-if="error">
@@ -50,6 +50,8 @@ data() {
       newOverlayVisible: false,
       userLists: [],
       localPropertyId: null,
+      selectedList: null,
+      success: false,
     };
 },
 props: {
@@ -93,12 +95,14 @@ methods: {
       this.overlayVisible = false;
   },
   async addPropertyToList(listId) {
+    this.selectedList = this.userLists.find(list => list.id === listId);
+
     try {
       await axios({
         method: 'post',
         url: `/api/lists/${listId}/item`,
         data: {
-          propertyId: this.localPropertyId,
+          propertyId: this.propertyId,
         },
         withCredentials: true
       });
@@ -190,13 +194,17 @@ justify-content: space-between;
 
 .slide-down {
   position: absolute;
-  top: 0;
+  top: 75px;
   left: 0;
   right: 0;
   padding: 20px;
-  background: #e0e0e0;
+  background: #7ebb83;
   border-radius: 10px;
   animation: slide-down 0.3s ease-out forwards;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 @keyframes slide-down {

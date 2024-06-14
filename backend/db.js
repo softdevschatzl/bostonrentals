@@ -6,29 +6,38 @@ const { getSecrets } = require('./index');
 let pool;
 
 async function initializePool() {
-    let secrets;
-    if (process.env.NODE_ENV === 'production') {
-        secrets = await getSecrets('rds!db-ffb0f2ee-a5f5-457f-8195-0383cd55502d');
-    } else {
-        secrets = await getSecrets('rds!db-48e4c0b3-373c-4d20-8018-40553229b595');
-    }
-    let regSecrets = await getSecrets('database-values');
-
-    // console.log("database credentials: ", secrets.username, secrets.password, regSecrets.testHost, regSecrets.port, regSecrets.database);
-
-    // pool = new Pool({
-    //     user: secrets.username,
-    //     host: secrets.host,
-    //     database: regSecrets.database,
-    //     password: secrets.password,
-    //     port: regSecrets.port,
-    // });
-    pool = new Pool({
-        connectionString: `postgresql://${secrets.username}:${secrets.password}@${regSecrets.testHost}:${regSecrets.port}/${regSecrets.database}`,
-        ssl: {
-            rejectUnauthorized: false
+    try {
+        let secrets;
+        if (process.env.NODE_ENV === 'production') {
+            secrets = await getSecrets('rds!db-ffb0f2ee-a5f5-457f-8195-0383cd55502d');
+        } else {
+            secrets = await getSecrets('rds!db-48e4c0b3-373c-4d20-8018-40553229b595');
         }
-    });
+        let regSecrets = await getSecrets('database-values');
+
+        // console.log("database credentials: ", secrets.username, secrets.password, regSecrets.testHost, regSecrets.port, regSecrets.database);
+
+        // pool = new Pool({
+        //     user: secrets.username,
+        //     host: secrets.host,
+        //     database: regSecrets.database,
+        //     password: secrets.password,
+        //     port: regSecrets.port,
+        // });
+
+        const connectionString = `postgresql://${encodeURIComponent(secrets.username)}:${encodeURIComponent(secrets.password)}@${regSecrets.testHost}:${regSecrets.port}/${regSecrets.database}`;
+
+        pool = new Pool({
+            connectionString: connectionString,
+            ssl: {
+                rejectUnauthorized: false
+            }
+        });
+        console.log("Pool initialized.");
+    } catch (error) {
+        console.error("Error initializing pool:", error);
+        throw error;
+    }
 }
 
 initializePool().catch(err => console.error(err));
@@ -40,7 +49,6 @@ async function getLists(userId) {
             'SELECT * FROM lists WHERE user_id = $1', [userId]
         );
         return result.rows;
-        console.log("result.rows: ", result.rows);
     } catch (error) {
         console.error("Error fetching lists:", error);
         throw error;
@@ -130,7 +138,7 @@ async function createItem(listId, propertyId) {
 async function deleteItem(itemId) {
     try {
         const result = await pool.query(
-            'DELETE FROM items WHERE id = $1 RETURNING *', [itemId]
+            'DELETE FROM list_items WHERE property_id = $1 RETURNING *', [itemId]
         );
         return result.rows[0];
     } catch (error) {
