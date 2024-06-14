@@ -9,8 +9,10 @@
             </button>
             <div class="top">
               <h1>Add To List</h1>
-              <div class="success" v-if="success">
-                <p v-if="success">Added to {{ list.name }}!</p>
+              <div class="slide-down" v-if="success">
+                <div class="success">
+                  <p v-if="success">Added to {{ list.name }}!</p>
+                </div>
               </div>
               <div v-if="error">
                 <p>{{ error }}</p>
@@ -184,6 +186,26 @@ width: 100%;
 display: flex;
 flex-direction: column;
 justify-content: space-between;
+}
+
+.slide-down {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  background: #e0e0e0;
+  border-radius: 10px;
+  animation: slide-down 0.3s ease-out forwards;
+}
+
+@keyframes slide-down {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
 
 .create-btn {

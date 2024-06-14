@@ -12,7 +12,9 @@
             </div>
             <ul>
               <li v-for="(property, index) in propertyData.listings" :key="index">
-                <ListApartmentItem :propertyData="property" @click="showInfoOverlay(property.id)" />
+                <div class="list-item-container">
+                  <ListApartmentItem :propertyData="property" @click="showInfoOverlay(property.id)" />
+                </div>
               </li>
               <li v-if="propertyData.length === 0">Nothing here!</li>
             </ul>
@@ -154,6 +156,14 @@ width: 100%;
 display: flex;
 flex-direction: column;
 justify-content: space-between;
+}
+
+.list-item-container {
+display: flex;
+justify-content: center;
+align-items: center;
+width: 300px;
+transform: scale(0.8);
 }
 
 .create-btn {

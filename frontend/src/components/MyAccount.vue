@@ -4,7 +4,7 @@
       <div class="top-row">
       <h1>My Account</h1>
         <div class="container">
-          <div class="account-info acc-object" v-if="Object.keys(userAttributes).length > 0">
+          <div class="account-info acc-object">
             <h2 class="info-title">Account Information</h2>
             <!-- <ul>
               <li v-for="(value, key) in userAttributes" :key="key">
@@ -27,9 +27,6 @@
               <button class="btn-logout" @click="handleLogout">Logout</button>
               <button class="btn-pass" @click="redirectToCognitoUI">Change Password</button>
             </div>
-          </div>
-          <div v-else>
-            <p>Loading...</p>
           </div>
           <div class="additional-info acc-object">
             <div class="add-info-title">
