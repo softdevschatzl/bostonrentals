@@ -16,8 +16,8 @@
                   <th>Image</th>
                   <th>Street</th>
                   <th>Price</th>
-                  <th>Bedrooms</th>
-                  <th>Bathrooms</th>
+                  <th>Beds</th>
+                  <th>Baths</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -31,12 +31,12 @@
                   <td>{{ property.listings[0].beds }}</td>
                   <td>{{ property.listings[0].baths }}</td>
                   <td>
-                    <button @click="showInfoOverlay(property)">View</button>
-                    <button @click="deleteProperty(index)">Delete</button>
+                    <button class="actions" @click="showInfoOverlay(property)">View</button>
+                    <button class="actions" @click="deleteProperty(index)">Delete</button>
                   </td>
                 </tr>
                 <tr v-if="listContents.length === 0">
-                  <td colspan="5">No properties found.</td>
+                  <td colspan="6">No properties found.</td>
                 </tr>
               </tbody>
             </table>
@@ -199,9 +199,6 @@ transform: scale(0.8);
   overflow-y: auto;
   max-height: 60vh;
 }
-th {
-  text-decoration: underline;
-}
 thead {
   background-color: #cecece;
 }
@@ -332,5 +329,24 @@ border: 0 !important;
 height: 1px !important;
 width: 1px !important;
 overflow: hidden;
+}
+
+@media only screen and (max-width: 768px) {
+  .overlay {
+    width: 75%;
+    height: 75%;
+  }
+  .listing-img {
+    width: 40px;
+    height: 40px;
+  }
+  td, th {
+    font-size: 0.8rem;
+    padding: 5px;
+  }
+  .actions {
+    font-size: 0.8rem;
+    padding: 5px;
+  }
 }
 </style>

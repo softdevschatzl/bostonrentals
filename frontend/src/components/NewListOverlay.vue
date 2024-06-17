@@ -215,4 +215,19 @@ background-color: #0056b3;
   width: 1px !important;
   overflow: hidden;
 }
+
+@media only screen and (max-width: 768px) {
+  .overlay {
+    width: 60%;
+    height: 60%;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  .btn-close {
+    transform: scale(0.8);
+  }
+}
 </style>

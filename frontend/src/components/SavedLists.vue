@@ -11,8 +11,9 @@
         <h2>Saved Lists</h2>
         <div class="lists">
           <div v-for="list in savedLists" :key="list.id">
-            <SavedList :list="list" @click="openList(list)" />
+            <SavedList :list="list" @click="openList(list)" @listDeleted="updateListsAndHideOverlay" />
           </div>
+          <div v-if="savedLists.length === 0">No lists found, create one to start saving listings!</div>
         </div>
         <button type="button" class="btn-close" @click="showOverlay">
           <span class="icon-cross"></span>
@@ -21,7 +22,7 @@
       </div>
     </div>
     <div class="overlay">
-      <NewListOverlay v-if="overlayVisible" @hideOverlay="hideOverlay" />
+      <NewListOverlay v-if="overlayVisible" @hideOverlay="hideOverlay" @listCreated="updateListsAndHideOverlay" />
       <EditListOverlay v-if="editOverlayVisible" @hideOverlay="hideEditOverlay" :list="selectedList" />
     </div>
 </template>
@@ -50,23 +51,26 @@ export default {
     ...mapState(['isLoggedIn'])
   },
   async created() {
-    try {
-      const response = await fetch('/api/lists', {
-        method: 'GET',
-        credentials: 'include'
-      });
-      if (response.ok) {
-        const data = await response.json();
-        this.savedLists = data;
-        console.log('Saved Lists:', this.savedLists);
-      } else {
-        console.error('Failed to fetch saved lists.');
-      }
-    } catch (error) {
-      console.error('Failed to fetch saved lists:', error.message);
-    }
+    await this.getLists();
   },
   methods: {
+    async getLists() {
+      try {
+        const response = await fetch('/api/lists', {
+          method: 'GET',
+          credentials: 'include'
+        });
+        if (response.ok) {
+          const data = await response.json();
+          this.savedLists = data;
+          console.log('Saved Lists:', this.savedLists);
+        } else {
+          console.error('Failed to fetch saved lists.');
+        }
+      } catch (error) {
+        console.error('Failed to fetch saved lists:', error.message);
+      }
+    },
     async showOverlay() {
       // Check if the user is logged in.
       await this.$store.dispatch('checkIfLoggedIn');
@@ -99,6 +103,10 @@ export default {
     openList(list) {
       this.selectedList = list;
       this.showEditOverlay();
+    },
+    async updateListsAndHideOverlay() {
+      this.hideOverlay();
+      await this.getLists();
     }
   }
 }

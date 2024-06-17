@@ -7,6 +7,7 @@ const express = require('express');
 const https = require('https');
 require('dotenv').config();
 const xssFilters = require('xss-filters');
+const { body, validationResult } = require('express-validator');
 const validator = require('validator');
 const router = express.Router();
 const { expressjwt: jwt } = require('express-jwt');
@@ -194,11 +195,20 @@ initializeMiddleware().then(() => {
 
     // Saved lists endpoints.
     // Create a new list.
-    router.post('/api/list', authenticate, async (req, res) => {
+    router.post('/api/list', 
+        authenticate, 
+        body('listName').isString().notEmpty().trim().escape().isLength({ max: 50 }),
+        async (req, res) => {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                return res.status(400).json({ errors: errors.array() });
+            }
+
         const idToken = req.cookies.id_token;
         if (!idToken) return res.status(401).json({ error: 'No ID token found' });
 
         try {
+
             const { listName } = req.body;
 
             // Decode the id_token to get the user's ID.
@@ -593,22 +603,22 @@ app.post('/api/properties', async (req, res) => {
         if (zip && !validator.isPostalCode(zip, 'US')) return res.status(400).json({ error: "Invalid zip code.", message: "Invalid zip code."});
            else if (zip) params.zip = zip;
 
-        if (beds && !validator.isInt(beds)) return res.status(400).json({ error: "Invalid number of beds.", message: "Invalid number of beds."});
+        if (beds && !validator.isFloat(beds)) return res.status(400).json({ error: "Invalid number of beds.", message: "Invalid number of beds."});
            else if (beds) params.beds = beds;
 
-        if (min_bed && !validator.isInt(min_bed)) return res.status(400).json({ error: "Invalid number of minimum beds.", message: "Invalid number of minimum beds."});
+        if (min_bed && !validator.isFloat(min_bed)) return res.status(400).json({ error: "Invalid number of minimum beds.", message: "Invalid number of minimum beds."});
            else if (min_bed) params.min_bed = min_bed;
 
-        if (max_bed && !validator.isInt(max_bed)) return res.status(400).json({ error: "Invalid number of maximum beds.", message: "Invalid number of maximum beds."});
+        if (max_bed && !validator.isFloat(max_bed)) return res.status(400).json({ error: "Invalid number of maximum beds.", message: "Invalid number of maximum beds."});
            else if (max_bed) params.max_bed = max_bed;
 
-        if (baths && !validator.isInt(baths)) return res.status(400).json({ error: "Invalid number of baths.", message: "Invalid number of baths."});
+        if (baths && !validator.isFloat(baths)) return res.status(400).json({ error: "Invalid number of baths.", message: "Invalid number of baths."});
            else if (baths) params.baths = baths;
 
-        if (min_bath && !validator.isInt(min_bath)) return res.status(400).json({ error: "Invalid number of minimum baths.", message: "Invalid number of minimum baths."});
+        if (min_bath && !validator.isFloat(min_bath)) return res.status(400).json({ error: "Invalid number of minimum baths.", message: "Invalid number of minimum baths."});
            else if (min_bath) params.min_bath = min_bath;
 
-        if (max_bath && !validator.isInt(max_bath)) return res.status(400).json({ error: "Invalid number of maximum baths.", message: "Invalid number of maximum baths."});
+        if (max_bath && !validator.isFloat(max_bath)) return res.status(400).json({ error: "Invalid number of maximum baths.", message: "Invalid number of maximum baths."});
            else if (max_bath) params.max_bath = max_bath;
 
         if (square_footage_min && !validator.isInt(square_footage_min)) return res.status(400).json({ error: "Invalid minimum square footage.", message: "Invalid minimum square footage."});

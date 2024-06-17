@@ -33,7 +33,7 @@
       </div>
   </transition>
   <div class="new-overlay">
-    <NewListOverlay v-if="newOverlayVisible" @hideOverlay="hideNewOverlay" @listCreated="fetchUserLists" />
+    <NewListOverlay v-if="newOverlayVisible" @hideOverlay="hideNewOverlay" @listCreated="updateListsAndHideOverlay" />
   </div>
 </template>
 
@@ -131,6 +131,10 @@ methods: {
   hideNewOverlay() {
     this.newOverlayVisible = false;
   },
+  updateListsAndHideOverlay() {
+    this.hideNewOverlay();
+    this.fetchUserLists();
+  }
 }
 }
 </script>
@@ -146,6 +150,7 @@ ul {
 }
 li {
   list-style: none;
+  text-align: center;
 }
 
 .top {
@@ -322,5 +327,24 @@ border: 0 !important;
 height: 1px !important;
 width: 1px !important;
 overflow: hidden;
+}
+
+@media only screen and (max-width: 768px) {
+.overlay {
+  width: 60%;
+  height: 60%;
+}
+
+h1 {
+  font-size: 1.5rem;
+}
+
+.btn-close {
+  transform: scale(0.8);
+}
+
+li {
+  text-align: center;
+}
 }
 </style>

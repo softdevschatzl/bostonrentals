@@ -1,7 +1,7 @@
 <template>
 <div class="list-item">
   <div class="header">
-    <img :src="deleteIcon" @click="deleteList" class="delete-button" alt="Delete list" />
+    <img :src="deleteIcon" @click.stop="deleteList" class="delete-button" alt="Delete list" />
     <div class="header-text">
       <h2>{{ list.name }}</h2>
     </div>
