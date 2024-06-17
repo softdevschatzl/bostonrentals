@@ -13,6 +13,7 @@
             <table>
               <thead>
                 <tr class="header-row">
+                  <th>Image</th>
                   <th>Street</th>
                   <th>Price</th>
                   <th>Bedrooms</th>
@@ -22,6 +23,9 @@
               </thead>
               <tbody class="table-body">
                 <tr class="table-content" v-for="(property, index) in listContents" :key="index">
+                  <td>
+                    <img class="listing-img" :src="property.listings[0].photos[0]" alt="Property Image" />
+                  </td>
                   <td>{{ property.listings[0].streetName }}</td>
                   <td>{{ property.listings[0].price }}</td>
                   <td>{{ property.listings[0].beds }}</td>
@@ -43,7 +47,7 @@
         </div>
       </div>
   </transition>
-  <ListingInfo v-if="infoOverlayVisible" :propertyData="propertyData" @hideInfoOverlay="hideInfoOverlay" />
+  <ListingInfo v-if="infoOverlayVisible" :visible="infoOverlayVisible" :listing="selectedProperty" @close="hideInfoOverlay" class="info-overlay"/>
 </template>
 
 <script>
@@ -59,6 +63,7 @@ export default {
         property_id: null,
         listContents: [],
         propertyData: [],
+        selectedProperty: null,
       };
   },
   components: {
@@ -74,7 +79,10 @@ export default {
     ...mapState(['isLoggedIn'])
   },
   methods: {
-    showInfoOverlay() {
+    showInfoOverlay(property) {
+      console.log("Show Overlay is Called.")
+      this.selectedProperty = property.listings[0];
+      console.log("Selected Property: ", this.selectedProperty)
       this.infoOverlayVisible = true;
     },
     hideInfoOverlay() {
@@ -127,8 +135,10 @@ export default {
       }
     }
   },
+  emits: ['hideOverlay'],
   async created() {
     this.getListContents(this.list.id);
+    console.log("Listings: ", this.listContents)
   },
 };
 </script>
@@ -154,14 +164,18 @@ z-index: 999999;
 position: absolute;
 top: 50%;
 left: 50%;
-height: 50vh;
-width: 50vh;
+height: 75vh;
+width: 75vh;
 transform: translate(-50%, -50%);
 background-color: white;
 padding: 20px;
 border-radius: 10px;
 box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 border: 3px solid #333;
+}
+
+.info-overlay {
+  z-index: 9999999;
 }
 
 .overlay-content {
@@ -183,7 +197,7 @@ transform: scale(0.8);
 // Table styling.
 .table-body {
   overflow-y: auto;
-  max-height: 500px;
+  max-height: 60vh;
 }
 th {
   text-decoration: underline;
@@ -196,6 +210,12 @@ tbody {
 }
 td {
   padding: 10px;
+}
+.listing-img {
+  width: 75px;
+  height: 75px;
+  object-fit: cover;
+  border-radius: 10px;
 }
 
 .create-btn {
