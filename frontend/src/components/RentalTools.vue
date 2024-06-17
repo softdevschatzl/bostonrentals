@@ -6,10 +6,8 @@
         <div class="content">
             <div class="tool-section" ref="toolSection">
                 <div class="tool-content">
-                    <h3>(Coming Soon!)</h3>
                     <h3>For Renters</h3>
-                    <p>Access tools and resources specially designed for renters to cut out the clutter with renting.</p>
-                    <a class="tools-btn" href="/">Renter Tools</a>
+                    <p>Simplistic interface, allowing you to search, inquire, and be shown apartments in the quickest and most efficient way possible!</p>
                 </div>
                 <img src="../assets/renterstockimage.jpg" alt="Renter Image" class="tool-image">
             </div>
@@ -18,10 +16,8 @@
             <div class="tool-section" ref="toolSection">
                 <img src="../assets/lessorstockimage2.jpeg" alt="Lessor Image" class="tool-image">
                 <div class="tool-content">
-                    <h3>(Also Coming Soon!)</h3>
                     <h3>For Managers</h3>
-                    <p>Manage properties, input information, and streamline your leasing process.</p>
-                    <a class="tools-btn" href="/">Manage Rentals</a>
+                    <p>See your property engagement skyrocket by listing with us through our agents. </p>
                 </div>
             </div>
         </div>
