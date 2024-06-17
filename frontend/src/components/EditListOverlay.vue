@@ -9,37 +9,40 @@
                   <span class="visually-hidden">Close</span>
               </button>
               <h1>{{ list.name }}</h1>
+              <button class="edit-list-btn" @click="showChangeListName">Change List Name</button>
             </div>
-            <table>
-              <thead>
-                <tr class="header-row">
-                  <th>Image</th>
-                  <th>Street</th>
-                  <th>Price</th>
-                  <th>Beds</th>
-                  <th>Baths</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody class="table-body">
-                <tr class="table-content" v-for="(property, index) in listContents" :key="index">
-                  <td>
-                    <img class="listing-img" :src="property.listings[0].photos[0]" alt="Property Image" />
-                  </td>
-                  <td>{{ property.listings[0].streetName }}</td>
-                  <td>{{ property.listings[0].price }}</td>
-                  <td>{{ property.listings[0].beds }}</td>
-                  <td>{{ property.listings[0].baths }}</td>
-                  <td>
-                    <button class="actions" @click="showInfoOverlay(property)">View</button>
-                    <button class="actions" @click="deleteProperty(index)">Delete</button>
-                  </td>
-                </tr>
-                <tr v-if="listContents.length === 0">
-                  <td colspan="6">No properties found.</td>
-                </tr>
-              </tbody>
-            </table>
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr class="header-row">
+                    <th>Image</th>
+                    <th>Street</th>
+                    <th>Price</th>
+                    <th>Beds</th>
+                    <th>Baths</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody class="table-body">
+                  <tr class="table-content" v-for="(property, index) in listContents" :key="index">
+                    <td>
+                      <img class="listing-img" :src="property.listings[0].photos[0]" alt="Property Image" />
+                    </td>
+                    <td>{{ property.listings[0].streetName }}</td>
+                    <td>{{ property.listings[0].price }}</td>
+                    <td>{{ property.listings[0].beds }}</td>
+                    <td>{{ property.listings[0].baths }}</td>
+                    <td>
+                      <button class="actions" @click="showInfoOverlay(property)">View</button>
+                      <button class="actions" @click="deleteProperty(index)">Delete</button>
+                    </td>
+                  </tr>
+                  <tr v-if="listContents.length === 0">
+                    <td colspan="6">No properties found.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
             <div class="bottom">
               <button class="share-btn">Share List</button>
             </div>
@@ -48,12 +51,14 @@
       </div>
   </transition>
   <ListingInfo v-if="infoOverlayVisible" :visible="infoOverlayVisible" :listing="selectedProperty" @close="hideInfoOverlay" class="info-overlay"/>
+  <ChangeListName v-if="changeListNameVisible" :listId="list.id" @close="hideChangeNameOverlay" />
 </template>
 
 <script>
 import axios from 'axios';
 import { mapState } from 'vuex';
 import ListingInfo from './ListingInfo.vue';
+import ChangeListName from './ChangeListNameOverlay.vue';
 
 export default {
   data() {
@@ -64,10 +69,12 @@ export default {
         listContents: [],
         propertyData: [],
         selectedProperty: null,
+        changeListNameVisible: false,
       };
   },
   components: {
     ListingInfo,
+    ChangeListName,
   },
   props: {
     list: {
@@ -94,6 +101,12 @@ export default {
     },
     hideOverlay() {
         this.overlayVisible = false;
+    },
+    showChangeListName() {
+      this.changeListNameVisible = true;
+    },
+    hideChangeNameOverlay() {
+      this.changeListNameVisible = false;
     },
     async getListContents(listId) {
       try {
@@ -144,6 +157,14 @@ export default {
 </script>
 
 <style scoped lang="scss">
+table {
+  width: 100%;
+}
+.table-container {
+  max-height: 40vh;
+  overflow-y: auto;
+}
+
 .fade-enter-active, .fade-leave-active {
 transition: opacity .5s;
 }
@@ -194,6 +215,25 @@ width: 300px;
 transform: scale(0.8);
 }
 
+.edit-list-btn {
+  font-size: 0.8rem;
+  padding: 7.5px;
+  border: none;
+  border-radius: 10px;
+  background: #afc6d2;
+  box-shadow: -5px -5px 10px #ffffff, 5px 5px 10px #babecc;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  outline: none;
+}
+.edit-list-btn:hover {
+  box-shadow: -2px -2px 5px #ffffff, 2px 2px 5px #babecc;
+}
+
+.edit-list-btn:active {
+  box-shadow: inset 1px 1px 2px #babecc, inset -1px -1px 2px #ffffff;
+}
+
 // Table styling.
 .table-body {
   overflow-y: auto;
@@ -215,16 +255,9 @@ td {
   border-radius: 10px;
 }
 
-.create-btn {
-background-color: #007bff;
-color: white;
-border: none;
-padding: 10px;
-border-radius: 5px;
-cursor: pointer;
-}
-.create-btn:hover {
-background-color: #0056b3;
+.actions {
+  font-size: 1rem;
+  padding: 10px;
 }
 
 .share-btn {
