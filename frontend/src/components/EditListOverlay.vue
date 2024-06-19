@@ -51,7 +51,7 @@
       </div>
   </transition>
   <ListingInfo v-if="infoOverlayVisible" :visible="infoOverlayVisible" :listing="selectedProperty" @close="hideInfoOverlay" class="info-overlay"/>
-  <ChangeListName v-if="changeListNameVisible" :listId="list.id" @close="hideChangeNameOverlay" />
+  <ChangeListName v-if="changeListNameVisible" :listId="list.id" @close="hideChangeNameOverlay" @listChanged="updateListsAndHideNameOverlay" />
 </template>
 
 <script>
@@ -107,6 +107,10 @@ export default {
     },
     hideChangeNameOverlay() {
       this.changeListNameVisible = false;
+    },
+    updateListsAndHideNameOverlay() {
+      this.fetchUserLists();
+      this.hideChangeNameOverlay();
     },
     async getListContents(listId) {
       try {

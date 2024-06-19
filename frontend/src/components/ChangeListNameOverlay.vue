@@ -49,14 +49,16 @@ export default {
     },
     async updateList() {
       try {
-        await axios.put(`/api/list/${this.localListId}`, {
+        await axios.put(`/api/list/${this.listId}`, {
           listName: this.localListName,
+        }, {
+          withCredentials: true,
         });
 
-        // Close the overlay after a list is created.
+        // Close the overlay after a list is changed.
         this.changeListNameVisible = false;
         // Emit listCreated so the parent component knows when to refresh the lists.
-        this.$emit('listCreated');
+        this.$emit('listChanged');
       } catch (error) {
         console.error(error);
       }
