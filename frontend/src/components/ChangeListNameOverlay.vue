@@ -39,7 +39,7 @@ export default {
   },
   methods: {
     showChangeNameOverlay() {
-      this.loalListId = this.listId;
+      this.localListId = this.listId;
       this.localListName = this.listName;
       this.changeListNameVisible = true;
     },

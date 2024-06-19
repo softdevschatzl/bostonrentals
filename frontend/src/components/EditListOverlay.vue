@@ -109,8 +109,19 @@ export default {
       this.changeListNameVisible = false;
     },
     updateListsAndHideNameOverlay() {
-      this.fetchUserLists();
+      this.updateListName();
       this.hideChangeNameOverlay();
+    },
+    async updateListName() {
+      try {
+        await axios.put(`/api/list/${this.list.id}`, {
+          name: this.list.name,
+        }, {
+          withCredentials: true,
+        });
+      } catch (error) {
+        console.error('Failed to update list name:', error.message);
+      }
     },
     async getListContents(listId) {
       try {
@@ -161,6 +172,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
+h1 {
+  margin-bottom: 10px;
+}
 table {
   width: 100%;
 }
@@ -260,8 +274,10 @@ td {
 }
 
 .actions {
-  font-size: 1rem;
-  padding: 10px;
+  font-size: 0.8rem;
+  padding: 5px;
+  width: 50px;
+  max-width: 50px;
 }
 
 .share-btn {
