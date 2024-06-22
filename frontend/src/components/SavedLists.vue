@@ -23,7 +23,7 @@
     </div>
     <div class="overlay">
       <NewListOverlay v-if="overlayVisible" @hideOverlay="hideOverlay" @listCreated="updateListsAndHideOverlay" />
-      <EditListOverlay v-if="editOverlayVisible" @hideOverlay="hideEditOverlay" :list="selectedList" />
+      <EditListOverlay v-if="editOverlayVisible" :key="componentKey" @hideOverlay="hideEditOverlay" :list="selectedList" @listChanged="handleListChange" />
     </div>
 </template>
 
@@ -40,6 +40,7 @@ export default {
       overlayVisible: false,
       editOverlayVisible: false,
       selectedList: null,
+      componentKey: 0,
     }
   },
   components: {
@@ -54,6 +55,9 @@ export default {
     await this.getLists();
   },
   methods: {
+    handleListChange() {
+      this.getLists();
+    },
     async getLists() {
       try {
         const response = await fetch('/api/lists', {

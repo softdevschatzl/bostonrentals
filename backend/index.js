@@ -255,7 +255,7 @@ initializeMiddleware().then(() => {
             res.json(items);
         } catch (error) {
             console.error(error);
-            res.status(500).json({ message: 'Error adding item' });
+            res.status(500).json({ message: 'Error getting items from list' });
         }
     });
 

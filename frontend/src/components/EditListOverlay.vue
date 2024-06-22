@@ -33,8 +33,8 @@
                     <td>{{ property.listings[0].beds }}</td>
                     <td>{{ property.listings[0].baths }}</td>
                     <td>
-                      <button class="actions" @click="showInfoOverlay(property)">View</button>
-                      <button class="actions" @click="deleteProperty(index)">Delete</button>
+                      <button class="actions view" @click="showInfoOverlay(property)">View</button>
+                      <button class="actions delete" @click="deleteProperty(index)">Delete</button>
                     </td>
                   </tr>
                   <tr v-if="listContents.length === 0">
@@ -51,7 +51,7 @@
       </div>
   </transition>
   <ListingInfo v-if="infoOverlayVisible" :visible="infoOverlayVisible" :listing="selectedProperty" @close="hideInfoOverlay" class="info-overlay"/>
-  <ChangeListName v-if="changeListNameVisible" :listId="list.id" @close="hideChangeNameOverlay" @listChanged="updateListsAndHideNameOverlay" />
+  <ChangeListName v-if="changeListNameVisible" :listId="list.id" @close="hideChangeNameOverlay" @listChanged="handleListNameChange" />
 </template>
 
 <script>
@@ -83,7 +83,8 @@ export default {
     },
   },
   computed: {
-    ...mapState(['isLoggedIn'])
+    ...mapState(['isLoggedIn']),
+    ...mapState(['savedLists']),
   },
   methods: {
     showInfoOverlay(property) {
@@ -108,14 +109,17 @@ export default {
     hideChangeNameOverlay() {
       this.changeListNameVisible = false;
     },
-    updateListsAndHideNameOverlay() {
-      this.updateListName();
+    async handleListNameChange(listId) {
+      this.$store.dispatch('updateLists', this.list);
+      this.$emit('listChanged', listId);
       this.hideChangeNameOverlay();
+      this.componentKey += 1;
     },
     async updateListName() {
+      const listName = this.list.name;
       try {
         await axios.put(`/api/list/${this.list.id}`, {
-          name: this.list.name,
+          name: listName,
         }, {
           withCredentials: true,
         });
@@ -278,6 +282,24 @@ td {
   padding: 5px;
   width: 50px;
   max-width: 50px;
+}
+.view {
+  background-color: #5fabfc;
+  color: white;
+  transition: all 0.2s ease-in-out;
+}
+.view:hover {
+  background-color: #3772b1;
+  font-size: 0.7rem;
+}
+.delete {
+  background-color: #fc5f5f;
+  color: white;
+  transition: all 0.2s ease-in-out;
+}
+.delete:hover {
+  background-color: #b13737;
+  font-size: 0.7rem;
 }
 
 .share-btn {

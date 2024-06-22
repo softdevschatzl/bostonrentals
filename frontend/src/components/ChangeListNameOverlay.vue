@@ -58,7 +58,7 @@ export default {
         // Close the overlay after a list is changed.
         this.changeListNameVisible = false;
         // Emit listCreated so the parent component knows when to refresh the lists.
-        this.$emit('listChanged');
+        this.$emit('listChanged', this.newListName);
       } catch (error) {
         console.error(error);
       }
