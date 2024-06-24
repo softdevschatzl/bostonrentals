@@ -8,7 +8,7 @@
                   <span class="icon-cross"></span>
                   <span class="visually-hidden">Close</span>
               </button>
-              <h1>{{ list.name }}</h1>
+              <h1>{{ bigListName }}</h1>
               <button class="edit-list-btn" @click="showChangeListName">Change List Name</button>
             </div>
             <div class="table-container">
@@ -59,6 +59,7 @@ import axios from 'axios';
 import { mapState } from 'vuex';
 import ListingInfo from './ListingInfo.vue';
 import ChangeListName from './ChangeListNameOverlay.vue';
+import { bus } from '../utils/eventBus';
 
 export default {
   data() {
@@ -70,6 +71,12 @@ export default {
         propertyData: [],
         selectedProperty: null,
         changeListNameVisible: false,
+        currentList: {
+          id: this.list.id,
+          name: this.list.name,
+        },
+        componentKey: 0,
+        bigListName: this.list.name,
       };
   },
   components: {
@@ -87,6 +94,9 @@ export default {
     ...mapState(['savedLists']),
   },
   methods: {
+    forceRender() {
+      this.componentKey += 1;
+    },
     showInfoOverlay(property) {
       console.log("Show Overlay is Called.")
       this.selectedProperty = property.listings[0];
@@ -109,11 +119,9 @@ export default {
     hideChangeNameOverlay() {
       this.changeListNameVisible = false;
     },
-    async handleListNameChange(listId) {
-      this.$store.dispatch('updateLists', this.list);
-      this.$emit('listChanged', listId);
+    async handleListNameChange(newListName) {
       this.hideChangeNameOverlay();
-      this.componentKey += 1;
+      this.bigListName = newListName;
     },
     async updateListName() {
       const listName = this.list.name;
@@ -172,6 +180,12 @@ export default {
     this.getListContents(this.list.id);
     console.log("Listings: ", this.listContents)
   },
+  mounted() {
+    bus.on('listChanged', this.handleListChanged)
+  },
+  beforeUnmount() {
+    bus.off('listChanged', this.handleListChanged)
+  }
 };
 </script>
 

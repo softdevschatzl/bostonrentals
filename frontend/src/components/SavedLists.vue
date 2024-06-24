@@ -55,8 +55,12 @@ export default {
     await this.getLists();
   },
   methods: {
+    forceRender() {
+      this.componentKey += 1;
+    },
     handleListChange() {
       this.getLists();
+      this.forceRender();
     },
     async getLists() {
       try {
