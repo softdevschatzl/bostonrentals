@@ -8,7 +8,7 @@
                   <span class="icon-cross"></span>
                   <span class="visually-hidden">Close</span>
               </button>
-              <button class="edit-list-btn" @click="showChangeListName">Change List Name</button>
+              <button class="edit-list-btn" @click="showChangeListName">Edit List</button>
               <h1>{{ bigListName }}</h1>
               <div class="right"></div>
             </div>
@@ -208,7 +208,7 @@ table {
   justify-content: space-between;
 }
 .right {
-  width: 20%;
+  width: 10%;
 }
 
 .fade-enter-active, .fade-leave-active {
