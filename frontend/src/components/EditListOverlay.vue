@@ -8,8 +8,9 @@
                   <span class="icon-cross"></span>
                   <span class="visually-hidden">Close</span>
               </button>
-              <h1>{{ bigListName }}</h1>
               <button class="edit-list-btn" @click="showChangeListName">Change List Name</button>
+              <h1>{{ bigListName }}</h1>
+              <div class="right"></div>
             </div>
             <div class="table-container">
               <table>
@@ -199,6 +200,15 @@ table {
 .table-container {
   max-height: 40vh;
   overflow-y: auto;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.right {
+  width: 20%;
 }
 
 .fade-enter-active, .fade-leave-active {
@@ -436,6 +446,13 @@ overflow: hidden;
   .actions {
     font-size: 0.8rem;
     padding: 5px;
+  }
+  .edit-list-btn {
+    font-size: 0.7rem;
+    padding: 5px;
+  }
+  h1 {
+    font-size: 1.5rem;
   }
 }
 </style>
