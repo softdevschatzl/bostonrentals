@@ -95,9 +95,6 @@ export default {
     ...mapState(['savedLists']),
   },
   methods: {
-    forceRender() {
-      this.componentKey += 1;
-    },
     showInfoOverlay(property) {
       console.log("Show Overlay is Called.")
       this.selectedProperty = property.listings[0];
@@ -121,8 +118,9 @@ export default {
       this.changeListNameVisible = false;
     },
     async handleListNameChange(newListName) {
-      this.hideChangeNameOverlay();
       this.bigListName = newListName;
+      this.hideChangeNameOverlay();
+      // this.$emit('listChanged', newListName);
     },
     async updateListName() {
       const listName = this.list.name;
