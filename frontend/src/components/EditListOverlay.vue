@@ -105,11 +105,11 @@ export default {
       this.infoOverlayVisible = false;
     },
     showOverlay(property_id) {
-        this.property_id = property_id;
-        this.overlayVisible = true;
+      this.property_id = property_id;
+      this.overlayVisible = true;
     },
     hideOverlay() {
-        this.overlayVisible = false;
+      this.overlayVisible = false;
     },
     showChangeListName() {
       this.changeListNameVisible = true;
@@ -118,9 +118,9 @@ export default {
       this.changeListNameVisible = false;
     },
     async handleListNameChange(newListName) {
-      this.bigListName = newListName;
       this.hideChangeNameOverlay();
-      // this.$emit('listChanged', newListName);
+      this.$emit('hideOverlay');
+      this.$emit('listChanged', newListName);
     },
     async updateListName() {
       const listName = this.list.name;
