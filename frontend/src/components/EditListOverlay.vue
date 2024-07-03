@@ -45,7 +45,7 @@
               </table>
             </div>
             <div class="bottom">
-              <button class="share-btn">Share List</button>
+              <button class="share-btn" @click="navigateToSubmissionForm">Share List</button>
             </div>
           </div>
         </div>
@@ -172,7 +172,10 @@ export default {
       } catch (error) {
         console.error('Failed to delete property:', error.message);
       }
-    }
+    },
+    navigateToSubmissionForm() {
+      this.$router.push({ name: 'SubmitList', params: { listings: this.listContents } });
+    },
   },
   emits: ['hideOverlay'],
   async created() {

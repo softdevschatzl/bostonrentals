@@ -31,30 +31,20 @@
           <div class="additional-info acc-object">
             <div class="add-info-title">
               <h2>Additional Information</h2>
-              <p>Form to help pre-approval</p>
+              <p>Tips for contacting agents</p>
             </div>
-            <div class="pre-approval-form">
-              <label for="creditScore">Credit Score:</label>
-              <input type="number" id="creditScore" v-model="creditScore">
-
-              <label for="pets">Pets:</label>
-              <input type="text" id="pets" v-model="pets">
-
-              <div class="checkbox-group">
-                <label for="student">Student:</label>
-                <input class="checkbox" type="checkbox" id="student" v-model="isStudent">
+            <div class="faq-section">
+              <h2>FAQ</h2>
+              <div class="faq-questions">
+                <div class="faq-item">
+                  <h3>How do I start gathering listings I'd like to be shown to an agent?</h3>
+                  <p>For starters, after creating an account and verifying your email, you would need to create a saved list and start saving listings from the search page.</p>
+                </div>
+                <div class="faq-item">
+                  <h3>How do I contact an agent?</h3>
+                  <p>Once you have a list of listing(s) you'd like to be shown, you can contact an agent by clicking on the <strong style="text-decoration: underline;">Share List</strong> button on the list page. This will open up a form for you to fill out with related information regarding your rental journey and and agent will reach back out to you, either by phone or email, whichever you prefer!</p>
+                </div>
               </div>
-
-              <label for="employed">Apartment Preferences:</label>
-              <input placeholder="Describe your dream apartment..." type="text" id="apartmentPreferences" v-model="apartmentPreferences">
-
-              <div class="checkbox-group">
-                <label for="broker">Are you aware that you would be working with a brokerage, there could be a fee for our service?</label>
-                <input class="checkbox" type="checkbox" id="broker" v-model="isBroker">
-              </div>
-            </div>
-            <div class="btn-row">
-              <button class="submit-form" @click="submitForm">Submit</button>
             </div>
           </div>
         </div>
@@ -68,7 +58,6 @@
 
 <script>
 import configureAWS from "../utils/aws-config.js";
-import { required, minLength, maxLength, minValue, maxValue } from 'vuelidate/lib/validators';
 import SavedLists from "./SavedLists.vue";
 
 export default {
@@ -78,21 +67,7 @@ export default {
   data() {
     return {
       userAttributes: [],
-      income: '',
-      creditScore: '',
-      pets: '',
-      isStudent: false,
-      apartmentPreferences: '',
-      isBroker: false
     };
-  },
-  validations: {
-    income: { required, minValue: minValue(0) },
-    creditScore: { required, minValue: minValue(300), maxValue: maxValue(850) },
-    pets: { required, minLength: minLength(1), maxLength: maxLength(50) },
-    isStudent: { required },
-    apartmentPreferences: { required, minLength: minLength(1), maxLength: maxLength(500) },
-    isBroker: { required }
   },
   async created() {
     try {
@@ -145,10 +120,6 @@ export default {
       } else {
         console.error("Failed to logout.");
       }
-    },
-    submitForm() {
-      console.log("Submitting form...");
-      // implement this to submit and save to DB.
     },
     checkLoginStatus() {
       fetch("/api/check-login-status", {
@@ -253,41 +224,39 @@ body {
   border-radius: 20px;
   padding: 20px;
   margin-top: 20px;
-  width: 300px;
+  max-width: 750px;
 }
 .add-info-title {
   margin-bottom: 20px;
   text-align: center;
 }
 
-/* Form Styles */
-.pre-approval-form {
-  display: flex;
-  flex-direction: column;
-}
-
-.pre-approval-form input[type='text'],
-.pre-approval-form input[type='number'] {
-  border: none;
-  border-radius: 10px;
-  padding: 10px;
-  margin: 10px 0;
+.faq-section {
   background: #E0E5EC;
-  box-shadow: inset 2px 2px 5px #a7a7a7, inset -2px -2px 5px #ffffff;
-}
-.pre-approval-form input[type='checkbox'] {
-  border: none;
-  border-radius: 10px;
-  padding: 10px;
-  margin: 10px 0;
-  background: #E0E5EC;
-}
-.checkbox-group {
+  border-radius: 20px;
+  padding: 20px;
+  margin-top: 20px;
   display: flex;
+  justify-content: center;
   align-items: center;
   flex-direction: column;
-  text-align: center;
-  margin-top: 10px
+}
+.faq-section h2 {
+  margin-bottom: 20px;
+}
+.faq-section h3 {
+  margin-bottom: 20px;
+  text-decoration: underline;
+}
+
+.faq-questions {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  gap: 40px;
+}
+.faq-item {
+  width: 250px;
 }
 
 /* Button Styles */

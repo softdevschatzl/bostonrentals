@@ -1,6 +1,6 @@
 <template>
   <transition name="fade">
-      <div class="overlay-shadow">
+      <div class="overlay-shadow" :key="componentKey">
         <div class="overlay">
           <div class="overlay-content">
             <button type="button" class="btn-close" @click="$emit('hideOverlay')">
@@ -22,7 +22,7 @@
               <li v-for="list in userLists" :key="list.id">
                   <!-- <button @click="addPropertyToList(list.id, propertyId)">Add to {{ list.name }}</button> -->
                   <div class="list-item">
-                    <SavedList :list="list" @click="addPropertyToList(list.id, propertyId)" />
+                    <SavedList :list="list" @click="addPropertyToList(list.id, propertyId)" @listDeleted="updateListsAndHideOverlay" />
                   </div>
               </li>
               <li v-if="userLists.length === 0">No lists found, create one to start saving listings!</li>
@@ -52,6 +52,7 @@ data() {
       localPropertyId: null,
       selectedList: null,
       success: false,
+      componentKey: 0,
     };
 },
 props: {
@@ -134,9 +135,18 @@ methods: {
   updateListsAndHideOverlay() {
     this.hideNewOverlay();
     this.fetchUserLists();
+    this.refreshComponent();
+  },
+  refreshComponent() {
+    this.componentKey++;
   }
-}
-}
+},
+watch: {
+  userLists() {
+    this.fetchUserLists();
+  }
+},
+};
 </script>
 
 <style scoped lang="scss">
