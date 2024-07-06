@@ -6,6 +6,7 @@ import PrivacyPolicyPage from '@/components/PrivacyPolicyPage.vue';
 import CookiePolicyPage from '@/components/CookiePolicyPage.vue';
 import TermsOfServicePage from '@/components/TermsOfServicePage.vue';
 import MyAccount from '@/components/MyAccount.vue';
+import SubmissionFormOverlay from '@/components/SubmissionFormOverlay.vue';
 import store from '@/store';
 
 // Vue.use(Router);
@@ -38,6 +39,9 @@ const routes = [
                 next({ path: '/login' });
             }
         }
+    },
+    {
+        path: '/list-submission', name: 'SubmitList', component: SubmissionFormOverlay, props: true,
     },
     {
         path: '/login', 
