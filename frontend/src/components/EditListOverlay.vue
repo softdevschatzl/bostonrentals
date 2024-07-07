@@ -53,6 +53,7 @@
   </transition>
   <ListingInfo v-if="infoOverlayVisible" :visible="infoOverlayVisible" :listing="selectedProperty" @close="hideInfoOverlay" class="info-overlay"/>
   <ChangeListName v-if="changeListNameVisible" :listId="list.id" @close="hideChangeNameOverlay" @listChanged="handleListNameChange" />
+  <SubmissionFormOverlay v-if="submissionFormVisible" @close="hideSubmissionForm" :list="list" />
 </template>
 
 <script>
@@ -60,6 +61,7 @@ import axios from 'axios';
 import { mapState } from 'vuex';
 import ListingInfo from './ListingInfo.vue';
 import ChangeListName from './ChangeListNameOverlay.vue';
+import SubmissionFormOverlay from './SubmissionFormOverlay.vue';
 import { bus } from '../utils/eventBus';
 
 export default {
@@ -67,6 +69,7 @@ export default {
       return {
         overlayVisible: false,
         infoOverlayVisible: false,
+        submissionFormVisible: false,
         property_id: null,
         listContents: [],
         propertyData: [],
@@ -83,6 +86,7 @@ export default {
   components: {
     ListingInfo,
     ChangeListName,
+    SubmissionFormOverlay,
   },
   props: {
     list: {
@@ -173,8 +177,11 @@ export default {
         console.error('Failed to delete property:', error.message);
       }
     },
-    navigateToSubmissionForm() {
-      this.$router.push({ name: 'SubmitList', params: { listings: this.listContents } });
+    handleSharingList() {
+      this.submissionFormVisible = true;
+    },
+    hideSubmissionForm() {
+      this.submissionFormVisible = false;
     },
   },
   emits: ['hideOverlay'],
