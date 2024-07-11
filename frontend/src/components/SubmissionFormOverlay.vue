@@ -1,39 +1,57 @@
 <template>
   <div class="submission-form-overlay">
     <button type="button" class="btn-close" @click="close">
-        <span class="icon-cross"></span>
-        <span class="visually-hidden">Close</span>
+      <span class="icon-cross"></span>
+      <span class="visually-hidden">Close</span>
     </button>
     <h1>Submission Form</h1>
-    <p>Sharing List: {{  }}</p>
+    <p class="list-confirmation">List Name: {{ list.name }}</p>
     <form @submit.prevent="handleSubmit" class="actual-form">
       <label for="credit-score">Credit Score:</label>
       <input id="credit-score" type="number" v-model="creditScore" required>
       <label for="has-pets">Do You Have Pets?</label>
       <input type="checkbox" id="has-pets" v-model="hasPets" value="true">
-      <label for="is-student">Is Student:</label>
+      <label for="is-student">Are You A Student?</label>
       <input type="checkbox" id="is-student" v-model="isStudent" value="true">
       <label for="primary-contact">Primary Contact:</label>
       <select id="primary-contact" v-model="primaryContact" required>
         <option value="email">Email</option>
         <option value="phone">Phone</option>
       </select>
-      <button type="submit">Submit</button>
+      <label for="primary-contact-value" v-if="primaryContact">
+        Enter {{ primaryContact === 'email' ? 'Email Address' : 'Phone Number' }}
+      </label>
+      <input v-if="primaryContact" id="primary-contact-value" type="text" v-model="primaryContactValue" required>
+      <label v-if="creditScore && primaryContactValue" for="terms">
+        Are you aware that you would be working with a real-estate brokerage, where there could be a fee incurred for our services?
+      </label>
+      <input v-if="creditScore && primaryContactValue" type="checkbox" id="terms" v-model="terms" required>
+      <button class="submit-btn" type="submit">Submit</button>
     </form>
   </div>
 </template>
 
 <script>
 export default {
-  props: ['list'],
+  props: {
+    list: {
+      type: Object,
+      required: true,
+    },
+    listContents: {
+      type: Array,
+      required: true,
+    },
+  },
   data() {
     return {
       creditScore: null,
       hasPets: false,
       isStudent: false,
       primaryContact: null,
-      submissionNameVisible: false,
-    }
+      primaryContactValue: null,
+      terms: false,
+    };
   },
   methods: {
     handleSubmit() {
@@ -43,7 +61,6 @@ export default {
       console.log('Primary Contact:', this.primaryContact);
     },
     close() {
-      this.submissionFormVisible = false;
       this.$emit('close');
     },
   },
@@ -53,6 +70,12 @@ export default {
 <style scoped lang="scss">
 h1 {
   margin-bottom: 20px;
+}
+input {
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #333;
+  width: 200px;
 }
 .overlay-shadow {
   position: fixed;
@@ -64,12 +87,18 @@ h1 {
   z-index: 999999;
 }
 
+.list-confirmation {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
 .submission-form-overlay {
+  z-index: 9999999999;
   position: absolute;
-  top: 50%;
+  top: 60%;
   left: 50%;
-  height: 50vh;
-  width: 50vh;
+  height: 60vh;
+  width: 60vh;
   transform: translate(-50%, -50%);
   background-color: white;
   padding: 20px;
@@ -83,7 +112,20 @@ h1 {
 .actual-form {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   gap: 10px;
+}
+
+.submit-btn {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #333;
+  background-color: #afc6d2;
+  color: black;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 20px;
 }
 
 // Display a cross with CSS only.

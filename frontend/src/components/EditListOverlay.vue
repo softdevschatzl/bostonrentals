@@ -1,59 +1,59 @@
 <template>
   <transition name="fade">
-      <div class="overlay-shadow">
-        <div class="overlay">
-          <div class="overlay-content">
-            <div class="header">
-              <button type="button" class="btn-close" @click="$emit('hideOverlay')">
-                  <span class="icon-cross"></span>
-                  <span class="visually-hidden">Close</span>
-              </button>
-              <button class="edit-list-btn" @click="showChangeListName">Edit List</button>
-              <h1>{{ bigListName }}</h1>
-              <div class="right"></div>
-            </div>
-            <div class="table-container">
-              <table>
-                <thead>
-                  <tr class="header-row">
-                    <th>Image</th>
-                    <th>Street</th>
-                    <th>Price</th>
-                    <th>Beds</th>
-                    <th>Baths</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody class="table-body">
-                  <tr class="table-content" v-for="(property, index) in listContents" :key="index">
-                    <td>
-                      <img class="listing-img" :src="property.listings[0].photos[0]" alt="Property Image" />
-                    </td>
-                    <td>{{ property.listings[0].streetName }}</td>
-                    <td>{{ property.listings[0].price }}</td>
-                    <td>{{ property.listings[0].beds }}</td>
-                    <td>{{ property.listings[0].baths }}</td>
-                    <td>
-                      <button class="actions view" @click="showInfoOverlay(property)">View</button>
-                      <button class="actions delete" @click="deleteProperty(index)">Delete</button>
-                    </td>
-                  </tr>
-                  <tr v-if="listContents.length === 0">
-                    <td colspan="6">No properties found.</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="bottom">
-              <button class="share-btn" @click="navigateToSubmissionForm">Share List</button>
-            </div>
+    <div class="overlay-shadow">
+      <div class="overlay">
+        <div class="overlay-content">
+          <div class="header">
+            <button type="button" class="btn-close" @click="$emit('hideOverlay')">
+              <span class="icon-cross"></span>
+              <span class="visually-hidden">Close</span>
+            </button>
+            <button class="edit-list-btn" @click="showChangeListName">Edit List</button>
+            <h1>{{ bigListName }}</h1>
+            <div class="right"></div>
+          </div>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr class="header-row">
+                  <th>Image</th>
+                  <th>Street</th>
+                  <th>Price</th>
+                  <th>Beds</th>
+                  <th>Baths</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody class="table-body">
+                <tr class="table-content" v-for="(property, index) in listContents" :key="index">
+                  <td>
+                    <img class="listing-img" :src="property.listings[0].photos[0]" alt="Property Image" />
+                  </td>
+                  <td>{{ property.listings[0].streetName }}</td>
+                  <td>{{ property.listings[0].price }}</td>
+                  <td>{{ property.listings[0].beds }}</td>
+                  <td>{{ property.listings[0].baths }}</td>
+                  <td>
+                    <button class="actions view" @click="showInfoOverlay(property)">View</button>
+                    <button class="actions delete" @click="deleteProperty(index)">Delete</button>
+                  </td>
+                </tr>
+                <tr v-if="listContents.length === 0">
+                  <td colspan="6">No properties found.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="bottom">
+            <button class="share-btn" @click="handleSharingList">Share List</button>
           </div>
         </div>
       </div>
+    </div>
   </transition>
   <ListingInfo v-if="infoOverlayVisible" :visible="infoOverlayVisible" :listing="selectedProperty" @close="hideInfoOverlay" class="info-overlay"/>
   <ChangeListName v-if="changeListNameVisible" :listId="list.id" @close="hideChangeNameOverlay" @listChanged="handleListNameChange" />
-  <SubmissionFormOverlay v-if="submissionFormVisible" @close="hideSubmissionForm" :list="list" />
+  <SubmissionFormOverlay v-if="submissionFormVisible" @close="hideSubmissionForm" :list="list" :listContents="listContents" />
 </template>
 
 <script>
@@ -66,22 +66,22 @@ import { bus } from '../utils/eventBus';
 
 export default {
   data() {
-      return {
-        overlayVisible: false,
-        infoOverlayVisible: false,
-        submissionFormVisible: false,
-        property_id: null,
-        listContents: [],
-        propertyData: [],
-        selectedProperty: null,
-        changeListNameVisible: false,
-        currentList: {
-          id: this.list.id,
-          name: this.list.name,
-        },
-        componentKey: 0,
-        bigListName: this.list.name,
-      };
+    return {
+      overlayVisible: false,
+      infoOverlayVisible: false,
+      submissionFormVisible: false,
+      property_id: null,
+      listContents: [],
+      propertyData: [],
+      selectedProperty: null,
+      changeListNameVisible: false,
+      currentList: {
+        id: this.list.id,
+        name: this.list.name,
+      },
+      componentKey: 0,
+      bigListName: this.list.name,
+    };
   },
   components: {
     ListingInfo,
@@ -100,9 +100,8 @@ export default {
   },
   methods: {
     showInfoOverlay(property) {
-      console.log("Show Overlay is Called.")
       this.selectedProperty = property.listings[0];
-      console.log("Selected Property: ", this.selectedProperty)
+      console.log("Selected Property: ", this.selectedProperty);
       this.infoOverlayVisible = true;
     },
     hideInfoOverlay() {
@@ -171,7 +170,7 @@ export default {
         if (response.status === 200) {
           this.listContents.splice(index, 1);
         } else {
-          console.error("Failed to delete property.")
+          console.error("Failed to delete property.");
         }
       } catch (error) {
         console.error('Failed to delete property:', error.message);
@@ -187,13 +186,13 @@ export default {
   emits: ['hideOverlay'],
   async created() {
     this.getListContents(this.list.id);
-    console.log("Listings: ", this.listContents)
+    console.log("Listings: ", this.listContents);
   },
   mounted() {
-    bus.on('listChanged', this.handleListChanged)
+    bus.on('listChanged', this.handleListChanged);
   },
   beforeUnmount() {
-    bus.off('listChanged', this.handleListChanged)
+    bus.off('listChanged', this.handleListChanged);
   }
 };
 </script>
