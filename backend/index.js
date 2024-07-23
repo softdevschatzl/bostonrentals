@@ -24,7 +24,9 @@ const cookieParser = require('cookie-parser');
 const jswt = require('jsonwebtoken');
 const jwksClient = require('jwks-rsa');
 const { SecretsManagerClient, GetSecretValueCommand, } = require("@aws-sdk/client-secrets-manager");
-const path = require('path');
+const path = require('path'); 
+const AWS = require('aws-sdk');
+AWS.config.update({ region: 'us-east-2' });
 
 // import allNeighborhoods from '../frontend/src/utils/dataSets.js';
 // allNeighborhoods is an array that is exported from that file.
@@ -34,6 +36,26 @@ const secretClient = new SecretsManagerClient({ region: 'us-east-2' });
 
 const cognito = require('./cognito');
 cognito.init();
+
+// Implement SES to send lists emailts to agents.
+const ses = new AWS.SES({ apiVersion: '2010-12-01' });
+
+function sendEmail(to, subject, body) {
+    const params = {
+        Destination: {
+            ToAddress: [to],
+        },
+        Message: {
+            Body: {
+                Html: { Charset: 'UTF-8', Data: body },
+            },
+            Subject: { Charset: 'UTF-8', Data: subject },
+        },
+        Source: 'astamatiou123@alexandersrentals.gmail.com',
+    };
+
+    return ses.sendEmail(params).promise();
+}
 
 // Implement Secrets.
 async function getSecrets(secretName) {
@@ -339,6 +361,19 @@ initializeMiddleware().then(() => {
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
 });
+
+// Email endpoint
+app.post('/api/send-email', async (req, res) => {
+    const { to, subject, body } = req.body;
+
+    try {
+        await sendEmail(to, subject, body);
+        res.status(200).send('Email sent successfully');
+    } catch (error) {
+        console.error('Error sending email:', error);
+        res.status(500).send('Failed to send email');
+    }
+})
 
 app.post('/api/token', async (req, res) => {
     // console.log("Received request:", req);
