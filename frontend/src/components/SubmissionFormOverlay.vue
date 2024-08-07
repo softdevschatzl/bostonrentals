@@ -94,11 +94,11 @@ input {
 
 .submission-form-overlay {
   z-index: 9999999999;
-  position: absolute;
-  top: 60%;
+  position: fixed;
+  top: 50%;
   left: 50%;
-  height: 60vh;
-  width: 60vh;
+  height: 75vh;
+  width: 75vh;
   transform: translate(-50%, -50%);
   background-color: white;
   padding: 20px;
@@ -210,5 +210,12 @@ input {
   height: 1px !important;
   width: 1px !important;
   overflow: hidden;
+}
+
+@media only screen and (max-width: 768px) {
+  .submission-form-overlay {
+    width: 75%;
+    height: 75%;
+  }
 }
 </style>

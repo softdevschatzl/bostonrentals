@@ -286,4 +286,26 @@ body {
   text-align: center;
 }
 
+@media only screen and (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    align-items: center;
+  }
+  .account-info, .additional-info {
+    width: 90%;
+  }
+  .faq-questions {
+    flex-direction: column;
+  }
+  .faq-item {
+    width: 100%;
+  }
+  .btn-row {
+    flex-direction: column;
+  }
+  .btn-logout, .btn-pass {
+    margin-top: 10px;
+  }
+}
+
 </style>
