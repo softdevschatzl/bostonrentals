@@ -138,7 +138,7 @@ async function createItem(listId, propertyId) {
 async function deleteItem(itemId) {
     try {
         const result = await pool.query(
-            'DELETE FROM list_items WHERE property_id = $1 RETURNING *', [itemId]
+            'DELETE FROM list_items WHERE id = $1 RETURNING *', [itemId]
         );
         return result.rows[0];
     } catch (error) {
@@ -159,6 +159,19 @@ async function updateItem(name, quantity, itemId) {
     }
 }
 
+// Function to remove items from the database if they are removed from MLS/API
+async function removeItemsFromList(propertyId) {
+    try {
+        const result = await pool.query(
+            'DELETE FROM list_items WHERE property_id = $1 RETURNING *', [propertyId]
+        );
+        return result.rows[0];
+    } catch (error) {
+        console.error("Error deleting item:", error);
+        throw error;
+    }
+}
+
 module.exports = {
     getLists,
     getList,
@@ -168,5 +181,6 @@ module.exports = {
     getItems,
     createItem,
     deleteItem,
-    updateItem
+    updateItem,
+    removeItemsFromList
 }

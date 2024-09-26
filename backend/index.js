@@ -347,14 +347,24 @@ initializeMiddleware().then(() => {
     // Delete a specific item.
     router.delete('/api/lists/:listId/items/:itemId', authenticate, async (req, res) => {
         try {
-            const { itemId } = req.params;
-            const deletedItem = await pool.deleteItem(itemId);
-            res.json(deletedItem);
+          const { itemId } = req.params;
+          console.log(`Received request to delete item with ID: ${itemId}`); // Confirm the itemId
+          
+          if (!itemId || isNaN(itemId)) {
+            return res.status(400).json({ message: 'Invalid item ID' });
+          }
+      
+          const deletedItem = await pool.deleteItem(parseInt(itemId, 10)); // Ensure itemId is an integer
+          if (!deletedItem) {
+            return res.status(404).json({ message: 'Item not found' });
+          }
+      
+          res.json(deletedItem);
         } catch (error) {
-            console.error(error);
-            res.status(500).json({ message: 'Error deleting item' });
+          console.error('Error deleting item:', error);
+          res.status(500).json({ message: 'Error deleting item' });
         }
-    });
+      });      
 });
 
 // Defines the root path to serve my frontend from.

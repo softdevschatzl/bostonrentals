@@ -6,6 +6,8 @@
           <div class="header">
             <button type="button" class="btn-close" @click="$emit('hideOverlay')">
               <span class="icon-cross"></span>
+              <!-- Cool close button. Credits to Cyril Lamotte on Codepen. -->
+              <!-- https://codepen.io/cyril-lamotte/pen/bGVxjOr -->
               <span class="visually-hidden">Close</span>
             </button>
             <button class="edit-list-btn" @click="showChangeListName">Edit List</button>
@@ -26,20 +28,23 @@
               </thead>
               <tbody class="table-body">
                 <tr class="table-content" v-for="(property, index) in listContents" :key="index">
-                  <td>
+                  <td v-if="property.listings && property.listings[0] && property.listings[0].photos && property.listings[0].photos[0] && property.listings[0].photos[0].length > 0">
                     <img class="listing-img" :src="property.listings[0].photos[0]" alt="Property Image" />
                   </td>
-                  <td>{{ property.listings[0].streetName }}</td>
-                  <td>{{ property.listings[0].price }}</td>
-                  <td>{{ property.listings[0].beds }}</td>
-                  <td>{{ property.listings[0].baths }}</td>
+                  <td v-if="property.listings && property.listings[0] && property.listings[0].streetName && property.listings[0].streetName.length > 0">{{ property.listings[0].streetName }}</td>
+                  <td v-if="property.listings && property.listings[0] && property.listings[0].price">{{ property.listings[0].price }}</td>
+                  <td v-if="property.listings && property.listings[0] && property.listings[0].beds">{{ property.listings[0].beds }}</td>
+                  <td v-if="property.listings && property.listings[0] && property.listings[0].baths">{{ property.listings[0].baths }}</td>
                   <td>
-                    <button class="actions view" @click="showInfoOverlay(property)">View</button>
+                    <button class="actions view" @click="showInfoOverlay(property)" v-if="!listingRemoved">View</button>
                     <button class="actions delete" @click="deleteProperty(index)">Delete</button>
                   </td>
                 </tr>
                 <tr v-if="listContents.length === 0">
                   <td colspan="6">No properties found.</td>
+                </tr>
+                <tr v-if="listingRemoved">
+                  <td colspan="6">This listing has been removed.</td>
                 </tr>
               </tbody>
             </table>
@@ -70,7 +75,9 @@ export default {
       overlayVisible: false,
       infoOverlayVisible: false,
       submissionFormVisible: false,
+      listingRemoved: false,
       property_id: null,
+      listValues: [],
       listContents: [],
       propertyData: [],
       selectedProperty: null,
@@ -96,9 +103,16 @@ export default {
   },
   computed: {
     ...mapState(['isLoggedIn']),
-    ...mapState(['savedLists']),
+    // ...mapState(['savedLists']),
   },
   methods: {
+    isPropertyRemoved(property) {
+      return (
+        !property.listings ||
+        !property.listings[0] ||
+        Object.keys(property.listings[0]).length === 0
+      );
+    },
     showInfoOverlay(property) {
       this.selectedProperty = property.listings[0];
       console.log("Selected Property: ", this.selectedProperty);
@@ -145,6 +159,8 @@ export default {
         });
         if (response.ok) {
           const data = await response.json();
+          console.log('List contents:', data);
+          this.listValues = data;
           this.listContents = await Promise.all(data.map(item => this.getPropertyData(item.property_id)));
         } else {
           console.error('Failed to fetch list contents.');
@@ -156,6 +172,7 @@ export default {
     async getPropertyData(property_id) {
       try {
         const response = await axios.post(`/api/properties`, { listing_id: property_id });
+        console.log('Property data:', response.data);
         return response.data;
       } catch (error) {
         console.error('Failed to fetch property data:', error.message);
@@ -163,19 +180,26 @@ export default {
     },
     async deleteProperty(index) {
       try {
-        const property = this.listContents[index];
-        console.log('Property:', property);
-        const propertyId = property.listings[0].id; // Accessing the id.
-        const response = await axios.delete(`/api/lists/${this.list.id}/items/${propertyId}`, { withCredentials: true });
-        if (response.status === 200) {
-          this.listContents.splice(index, 1);
-        } else {
-          console.error("Failed to delete property.");
+        const item = this.listValues[index];
+        console.log('Item to delete:', item); // Log the item to delete
+        if (!item) {
+          throw new Error('Item is undefined or null.');
         }
+
+        const itemId = item.id;
+
+        console.log('Item ID to delete:', itemId); // Log the item ID
+        if (!itemId) {
+          throw new Error('Item ID is undefined or null.');
+        }
+        await axios.delete(`/api/lists/${this.list.id}/items/${itemId}`, {
+          withCredentials: true,
+        });
       } catch (error) {
         console.error('Failed to delete property:', error.message);
       }
     },
+
     handleSharingList() {
       this.submissionFormVisible = true;
     },
@@ -187,6 +211,7 @@ export default {
   async created() {
     this.getListContents(this.list.id);
     console.log("Listings: ", this.listContents);
+    console.log("List: ", this.list);
   },
   mounted() {
     bus.on('listChanged', this.handleListChanged);
