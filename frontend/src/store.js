@@ -7,7 +7,7 @@ export default createStore({
   mutations: {
     SET_LOGIN_STATUS(state, status) {
       state.isLoggedIn = status;
-      console.log('Vuex login status:', status);
+      // console.log('Vuex login status:', status);
     },
   },
   actions: {

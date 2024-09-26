@@ -115,7 +115,7 @@ export default {
     },
     showInfoOverlay(property) {
       this.selectedProperty = property.listings[0];
-      console.log("Selected Property: ", this.selectedProperty);
+      // console.log("Selected Property: ", this.selectedProperty);
       this.infoOverlayVisible = true;
     },
     hideInfoOverlay() {
@@ -159,7 +159,7 @@ export default {
         });
         if (response.ok) {
           const data = await response.json();
-          console.log('List contents:', data);
+          // console.log('List contents:', data);
           this.listValues = data;
           this.listContents = await Promise.all(data.map(item => this.getPropertyData(item.property_id)));
         } else {
@@ -172,7 +172,7 @@ export default {
     async getPropertyData(property_id) {
       try {
         const response = await axios.post(`/api/properties`, { listing_id: property_id });
-        console.log('Property data:', response.data);
+        // console.log('Property data:', response.data);
         return response.data;
       } catch (error) {
         console.error('Failed to fetch property data:', error.message);
@@ -181,14 +181,14 @@ export default {
     async deleteProperty(index) {
       try {
         const item = this.listValues[index];
-        console.log('Item to delete:', item); // Log the item to delete
+        // console.log('Item to delete:', item); // Log the item to delete
         if (!item) {
           throw new Error('Item is undefined or null.');
         }
 
         const itemId = item.id;
 
-        console.log('Item ID to delete:', itemId); // Log the item ID
+        // console.log('Item ID to delete:', itemId); // Log the item ID
         if (!itemId) {
           throw new Error('Item ID is undefined or null.');
         }
@@ -210,8 +210,8 @@ export default {
   emits: ['hideOverlay'],
   async created() {
     this.getListContents(this.list.id);
-    console.log("Listings: ", this.listContents);
-    console.log("List: ", this.list);
+    // console.log("Listings: ", this.listContents);
+    // console.log("List: ", this.list);
   },
   mounted() {
     bus.on('listChanged', this.handleListChanged);

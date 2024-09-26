@@ -59,7 +59,7 @@ export default {
       } else {
         this.editOverlayVisible = true;
       }
-      console.log("Selected List:", this.selectedList);
+      // console.log("Selected List:", this.selectedList);
     },
     hideEditOverlay() {
       this.editOverlayVisible = false;

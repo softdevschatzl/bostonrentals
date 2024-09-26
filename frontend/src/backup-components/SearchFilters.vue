@@ -236,7 +236,7 @@ export default {
       }
       const criteriaForApi = this.prepareSearchCriteriaForApi();
       // Sends the event to the parent component.
-      console.log("Criteria for API: ", criteriaForApi);
+      // console.log("Criteria for API: ", criteriaForApi);
       this.$emit('search', criteriaForApi);
     },
     // Toggles the group with the given name (mobile dropdowns).
@@ -320,7 +320,7 @@ export default {
         apiCriteria.tours = "Y";
       }
 
-      console.log("API Criteria: ", apiCriteria);
+      // console.log("API Criteria: ", apiCriteria);
 
       return apiCriteria;
     },

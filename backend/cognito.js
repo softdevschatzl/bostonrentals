@@ -83,7 +83,7 @@ async function redirectToCognitoUI() {
 
   const loginUrl = `${cognitoDomain}/login?client_id=${clientId}&response_type=${responseType}&scope=email+openid+profile&redirect_uri=${callbackUrl}`;
 
-  console.log('loginUrl:', loginUrl);
+  // console.log('loginUrl:', loginUrl);
   return loginUrl;
 }
 

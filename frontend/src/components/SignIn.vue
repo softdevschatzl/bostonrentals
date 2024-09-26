@@ -25,7 +25,7 @@ export default {
 
         if (response.ok) {
           const data = await response.json();
-          console.log('Login status:', data);
+          // console.log('Login status:', data);
           this.$store.commit('SET_LOGIN_STATUS', data.isLoggedIn);
         } else {
           console.error('Login status check failed.');
@@ -49,8 +49,8 @@ export default {
         });
         
         if (response.ok) {
-          const data = await response.json();
-          console.log('Login response:', data);
+          await response.json();
+          // console.log('Login response:', data);
           this.checkLoginStatus();
         } else {
           console.error('Login failed.');

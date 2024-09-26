@@ -55,10 +55,10 @@ export default {
   },
   methods: {
     handleSubmit() {
-      console.log('Credit Score:', this.creditScore);
-      console.log('Has Pets:', this.hasPets);
-      console.log('Is Student:', this.isStudent);
-      console.log('Primary Contact:', this.primaryContact);
+      // console.log('Credit Score:', this.creditScore);
+      // console.log('Has Pets:', this.hasPets);
+      // console.log('Is Student:', this.isStudent);
+      // console.log('Primary Contact:', this.primaryContact);
     },
     close() {
       this.$emit('close');
