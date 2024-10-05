@@ -69,6 +69,7 @@ export default {
         // Sort apartments by their scores.
         scoredApartments.sort((a, b) => b.score - a.score);
         // Return top three apartments.
+        // console.log("Scored Apartments: ", scoredApartments);
         return scoredApartments.slice(0, 3);
       }
       return [];

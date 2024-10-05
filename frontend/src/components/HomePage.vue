@@ -56,6 +56,7 @@
             const response = await axios.post('/api/properties', coords);
             // console.log("API Response For ApartmentItem: ", response.data);
             this.apartments = response.data; // Assuming this is an array.
+            // console.log("Apartments: ", this.apartments);
           } catch (error) {
             console.error('Failed to fetch apartments:', error.message);
           } finally {

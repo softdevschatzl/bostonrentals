@@ -6,7 +6,7 @@
  * 
  */
 const { CognitoUserPool, CognitoUser, AuthenticationDetails } = require('amazon-cognito-identity-js');
-const AWS = require('aws-sdk');
+// const AWS = require('aws-sdk');
 const { SecretsManagerClient, GetSecretValueCommand } = require('@aws-sdk/client-secrets-manager');
 
 const secretName = "AlexandersRentalsSecrets";

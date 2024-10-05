@@ -5,7 +5,13 @@
 
 const express = require('express');
 const https = require('https');
-require('dotenv').config();
+
+// Configuring environment variables.
+const path = require('path'); 
+const envFile = process.env.NODE_ENv === 'production' ? '.env.production' : '.env.development';
+require('dotenv').config({ path: path.resolve(__dirname, envFile) });
+
+
 const xssFilters = require('xss-filters');
 const { body, validationResult } = require('express-validator');
 const validator = require('validator');
@@ -24,26 +30,31 @@ const cookieParser = require('cookie-parser');
 const jswt = require('jsonwebtoken');
 const jwksClient = require('jwks-rsa');
 const { SecretsManagerClient, GetSecretValueCommand, } = require("@aws-sdk/client-secrets-manager");
-const path = require('path'); 
-const AWS = require('aws-sdk');
-AWS.config.update({ region: 'us-east-2' });
+const { SESClient, SendEmailCommand } = require("@aws-sdk/client-ses");
+// const AWS = require('aws-sdk');
+// AWS.config.update({ region: 'us-east-2' });
+
+// console.log("env", process.env);
 
 // import allNeighborhoods from '../frontend/src/utils/dataSets.js';
 // allNeighborhoods is an array that is exported from that file.
 const { allNeighborhoods, featureMapping } = require('./dataSets');
 
+// Configuring AWS Services.
 const secretClient = new SecretsManagerClient({ region: 'us-east-2' });
+const sesClient = new SESClient({ region: 'us-east-2' });
 
 const cognito = require('./cognito');
 cognito.init();
 
 // Implement SES to send lists emailts to agents.
-const ses = new AWS.SES({ apiVersion: '2010-12-01' });
+// const ses = new AWS.SES({ apiVersion: '2010-12-01' });
 
-function sendEmail(to, subject, body) {
+// Implement SES to send lists emails to agents.
+async function sendEmail(to, subject, body) {
     const params = {
         Destination: {
-            ToAddress: [to],
+            ToAddresses: [to],
         },
         Message: {
             Body: {
@@ -54,7 +65,14 @@ function sendEmail(to, subject, body) {
         Source: 'astamatiou123@alexandersrentals.gmail.com',
     };
 
-    return ses.sendEmail(params).promise();
+    try {
+        const command = new SendEmailCommand(params);
+        const response = await sesClient.send(command);
+        return response;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
 }
 
 // Implement Secrets.
@@ -399,7 +417,8 @@ app.post('/api/token', async (req, res) => {
             grant_type: 'authorization_code',
             client_id: cognitoClientId,
             code,
-            redirect_uri: "http://localhost:8080/", // Change this for production.
+            // redirect_uri: "http://localhost:8080/", // Change this for production.
+            redirect_uri: process.env.CALLBACK_URL, 
         });
         
         const response = await axios.post(`https://alexandersrentals-nosms.auth.us-east-2.amazoncognito.com/oauth2/token?${urlSearchParams}`, null, {
@@ -534,8 +553,8 @@ app.get('/api/user', async (req, res) => {
 });
 
 app.get('/api/logout', (req, res) => {
-    res.clearCookie('access_token', { path: '/', domain: 'localhost'}); // Change this for production.
-    res.clearCookie('id_token', { path: '/', domain: 'localhost'}); // Change this for production.
+    res.clearCookie('access_token', { path: '/', domain: process.env.DOMAIN}); // Change this for production.
+    res.clearCookie('id_token', { path: '/', domain: process.env.DOMAIN}); // Change this for production.
     res.json({ message: 'Logged out successfully.' });
 });
 

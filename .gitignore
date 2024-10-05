@@ -19,3 +19,4 @@ frontend/.env.development
 frontend/.env.production
 frontend/.env.development
 /.vs/bostonrentals/FileContentIndex
+.venv/
