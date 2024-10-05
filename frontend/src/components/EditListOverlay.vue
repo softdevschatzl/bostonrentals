@@ -12,7 +12,13 @@
             </button>
             <button class="edit-list-btn" @click="showChangeListName">Edit List</button>
             <h1>{{ bigListName }}</h1>
+            
             <div class="right"></div>
+          </div>
+          <div class="slide-down" v-if="success">
+            <div class="success">
+              <p>Removed from {{ bigListName }}!</p>
+            </div>
           </div>
           <div class="table-container">
             <table>
@@ -88,6 +94,7 @@ export default {
       },
       componentKey: 0,
       bigListName: this.list.name,
+      success: false,
     };
   },
   components: {
@@ -198,6 +205,13 @@ export default {
         await axios.delete(`/api/lists/${this.list.id}/items/${itemId}`, {
           withCredentials: true,
         });
+        this.getListContents(this.list.id);
+        this.success = true;
+
+        // Close the success popup after 3 seconds
+        setTimeout(() => {
+          this.success = false;
+        }, 3000);
       } catch (error) {
         console.error('Failed to delete property:', error.message);
       }
@@ -463,6 +477,31 @@ border: 0 !important;
 height: 1px !important;
 width: 1px !important;
 overflow: hidden;
+}
+
+.slide-down {
+  position: absolute;
+  top: 75px;
+  // width: 50%;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  background: #e14949;
+  border-radius: 10px;
+  animation: slide-down 0.3s ease-out forwards;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@keyframes slide-down {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
 
 @media only screen and (max-width: 768px) {
