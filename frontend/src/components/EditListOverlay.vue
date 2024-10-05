@@ -162,7 +162,10 @@ export default {
           // console.log('List contents:', data);
           this.listValues = data;
           this.listContents = await Promise.all(data.map(item => this.getPropertyData(item.property_id)));
-        } else {
+        } else if (this.listContents.length === 0) {
+          this.listingRemoved = true;
+        } 
+        else {
           console.error('Failed to fetch list contents.');
         }
       } catch (error) {
