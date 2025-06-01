@@ -224,7 +224,7 @@ export default {
       this.submissionFormVisible = false;
     },
   },
-  emits: ['hideOverlay'],
+  emits: ['hideOverlay', 'listChanged'],
   async created() {
     this.getListContents(this.list.id);
     // console.log("Listings: ", this.listContents);

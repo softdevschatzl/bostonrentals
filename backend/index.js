@@ -51,6 +51,8 @@ cognito.init();
 // const ses = new AWS.SES({ apiVersion: '2010-12-01' });
 
 // Implement SES to send lists emails to agents.
+// User not authorized to send-email.
+/// Need to find someway to allow any user to send the email without handing out permissions willy nilly
 async function sendEmail(to, subject, body) {
     const params = {
         Destination: {
@@ -62,7 +64,7 @@ async function sendEmail(to, subject, body) {
             },
             Subject: { Charset: 'UTF-8', Data: subject },
         },
-        Source: 'astamatiou123@alexandersrentals.gmail.com',
+        Source: 'johncschatzl@gmail.com',
     };
 
     try {

@@ -14,7 +14,7 @@
       <label for="is-student">Are You A Student?</label>
       <input type="checkbox" id="is-student" v-model="isStudent" value="true">
       <label for="primary-contact">Primary Contact:</label>
-      <select id="primary-contact" v-model="primaryContact" required>
+      <select id="primary-contact" v-model="primaryContact" @change="updatePreferredContact" required>
         <option value="email">Email</option>
         <option value="phone">Phone</option>
       </select>
@@ -26,7 +26,7 @@
         Are you aware that you would be working with a real-estate brokerage, where there could be a fee incurred for our services?
       </label>
       <input v-if="creditScore && primaryContactValue" type="checkbox" id="terms" v-model="terms" required>
-      <button class="submit-btn" type="submit">Submit</button>
+      <button class="submit-btn" type="submit" onClick="handleSubmit()">Submit</button>
     </form>
   </div>
 </template>
@@ -51,18 +51,84 @@ export default {
       primaryContact: null,
       primaryContactValue: null,
       terms: false,
+      userDetails: null,
+      preferredContact: null,
     };
   },
   methods: {
-    handleSubmit() {
-      // console.log('Credit Score:', this.creditScore);
-      // console.log('Has Pets:', this.hasPets);
-      // console.log('Is Student:', this.isStudent);
-      // console.log('Primary Contact:', this.primaryContact);
+    // async getListContents(listId) {
+    //   try {
+    //     const response = await fetch(`/api/lists/${listId}`, {
+    //       method: "GET",
+    //       credentials: "include",
+    //     });
+    //     if (!response.ok) {
+    //       throw new Error("Failed to fetch list contents.");
+    //     }
+    //     const data = await response.json();
+    //     this.listContents = data;
+    //     console.log("List contents:", this.listContents);
+    //   } catch (error) {
+    //     console.error("Failed to fetch list contents:", error);
+    //   }
+    // },
+    async fetchUserDetails() {
+      try {
+        const response = await fetch("/api/user", {
+          method: "GET",
+          credentials: "include",
+        });
+        if (!response.ok) {
+          throw new Error("Failed to fetch user details.");
+        }
+        const data = await response.json();
+        this.userDetails = data;
+      } catch (error) {
+        console.error("Failed to fetch user details:", error);
+      }
+    },
+    // updatePreferredContact(event) {
+    //   if (event.target.value === 'email') {
+    //     this.preferredContact = this.primaryContactValue;
+    //   } else {
+    //     this.preferredContact = this.userDetails.user.phone_number;
+    //   }
+    // },
+    buildEmailBody() {
+      return `
+      <h1>Client has submitted a list</h1>
+      <p><strong>Name: </strong>${this.userDetails.user.name}</p>
+      <P><strong>Preferred Contact: </strong>${this.primaryContactValue}</p>
+      <p><strong>Credit Score: </strong>${this.creditScore}</p>
+      <p><strong>Has Pets: </strong>${this.hasPets ? 'Yes' : 'No'}</p>
+      <p><strong>Is Student: </strong>${this.isStudent ? 'Yes' : 'No'}</p>
+      <p><strong>Listing(s): ${this.listContents}</strong></p>
+      `;
+    },
+    async handleSubmit() {
+      const to = 'johncschatzl@gmail.com';
+      const subject = 'New Client Submission';
+      const body = this.buildEmailBody();
+
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ to, subject, body }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to send email');
+      }
     },
     close() {
       this.$emit('close');
     },
+  },
+  async created() {
+    await this.fetchUserDetails();
+    console.log('List: ', this.list);
   },
 };
 </script>
