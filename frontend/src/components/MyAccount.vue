@@ -25,7 +25,7 @@
             </ul>
             <div class="btn-row">
               <button class="btn-logout" @click="handleLogout">Logout</button>
-              <button class="btn-pass" @click="redirectToCognitoUI">Change Password</button>
+              <button class="btn-pass" @click="$router.push('/change-password')">Change Password</button>
             </div>
           </div>
           <div class="additional-info acc-object">
@@ -57,7 +57,6 @@
 </template>
 
 <script>
-import configureAWS from "../utils/aws-config.js";
 import SavedLists from "./SavedLists.vue";
 
 export default {
@@ -70,27 +69,11 @@ export default {
     };
   },
   async created() {
-    try {
-      const userPool = await configureAWS();
-      // console.log("User pool:", userPool);
-      this.fetchUserAttributes(userPool);
-    } catch (error) {
-      console.error("Error configuring AWS:", error);
-    }
+    this.fetchUserAttributes();
   },
   methods: {
     async redirectToCognitoUI() {
-      try {
-        const response = await fetch('/api/login');
-        if (response.ok) {
-          const data = await response.json();
-          window.location.href = data.url;
-        } else {
-          console.error('Login failed.');
-        }
-      } catch (error) {
-        console.error('Login failed:', error.message);
-      }
+      this.$router.push('/change-password');
     },
     async fetchUserAttributes() {
       try {

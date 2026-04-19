@@ -11,8 +11,7 @@ import { mapActions, mapState } from 'vuex';
 export default {
   methods: {
     async handleLogin() {
-      // Redirect to Cognito Hosted UI.
-      window.location.href = process.env.VUE_APP_COGNITO_URL;
+      this.$router.push('/login');
     },
     goToMyAccount() {
       this.$router.push('/my-account');

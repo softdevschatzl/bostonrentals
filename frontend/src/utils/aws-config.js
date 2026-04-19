@@ -1,29 +1,5 @@
-import AWS from 'aws-sdk';
-import { CognitoUserPool } from 'amazon-cognito-identity-js';
-
-let userPool;
-
-async function configureAWS() {
-  if (userPool) return userPool;
-
-  try {
-    const response = await fetch('/api/cognito-config');
-    const config = await response.json();
-
-    AWS.config.update({
-      region: config.cognitoRegion,
-    });
-
-    const userPool = new CognitoUserPool({
-      UserPoolId: config.cognitoUserPoolId,
-      ClientId: config.cognitoClientId,
-    });
-
-    return userPool;
-  } catch (error) {
-    console.error('Failed to fetch AWS configuration.', error);
-    throw error;
-  }
+// aws-config.js — AWS removed. This file is kept as a stub for compatibility.
+// configureAWS() now returns null; callers have been updated to use /api/user directly.
+export default async function configureAWS() {
+    return null;
 }
-
-export default configureAWS;

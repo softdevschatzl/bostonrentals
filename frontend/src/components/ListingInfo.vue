@@ -15,10 +15,13 @@
       </div>
       <div class="table-container">
         <table class="info-table">
-          <!-- Header Row -->
-          <tr class="info-header">
-            <th colspan="2">{{ listing?.streetName }}, {{ listing?.city }}, {{ listing?.state }} {{ listing?.zip }}</th>
-          </tr>
+          <thead>
+            <!-- Header Row -->
+            <tr class="info-header">
+              <th colspan="2">{{ listing?.streetName }}, {{ listing?.city }}, {{ listing?.state }} {{ listing?.zip }}</th>
+            </tr>
+          </thead>
+          <tbody>
           <!-- Property Type -->
           <tr class="info-row" v-if="listing?.propertyType">
             <td class="key">Property Type</td>
@@ -102,6 +105,7 @@
           </tr>
           <!-- Additional Details -->
           <!-- ... Add more rows as needed -->
+          </tbody>
         </table>
       </div>
       <div class="image-container">

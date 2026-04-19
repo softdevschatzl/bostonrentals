@@ -8,17 +8,16 @@ const https = require('https');
 
 // Configuring environment variables.
 const path = require('path'); 
-const envFile = process.env.NODE_ENv === 'production' ? '.env.production' : '.env.development';
+const envFile = process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development';
 require('dotenv').config({ path: path.resolve(__dirname, envFile) });
 
-
+const nodemailer = require('nodemailer');
 const xssFilters = require('xss-filters');
 const { body, validationResult } = require('express-validator');
 const validator = require('validator');
 const router = express.Router();
 const { expressjwt: jwt } = require('express-jwt');
 const session = require('express-session');
-const jwkToPem = require('jwk-to-pem');
 // helmet is for csp headers and general web security.
 const helmet = require('helmet');
 const axios = require('axios');
@@ -28,65 +27,28 @@ const morgan = require('morgan');
 const querystring = require('querystring');
 const cookieParser = require('cookie-parser');
 const jswt = require('jsonwebtoken');
-const jwksClient = require('jwks-rsa');
-const { SecretsManagerClient, GetSecretValueCommand, } = require("@aws-sdk/client-secrets-manager");
-const { SESClient, SendEmailCommand } = require("@aws-sdk/client-ses");
-// const AWS = require('aws-sdk');
-// AWS.config.update({ region: 'us-east-2' });
 
-// console.log("env", process.env);
-
-// import allNeighborhoods from '../frontend/src/utils/dataSets.js';
-// allNeighborhoods is an array that is exported from that file.
 const { allNeighborhoods, featureMapping } = require('./dataSets');
+const auth = require('./auth');
 
-// Configuring AWS Services.
-const secretClient = new SecretsManagerClient({ region: 'us-east-2' });
-const sesClient = new SESClient({ region: 'us-east-2' });
+// Nodemailer transporter (uses env vars — swap host/port for any SMTP provider).
+const mailer = nodemailer.createTransport({
+    host: process.env.EMAIL_HOST || 'smtp.gmail.com',
+    port: parseInt(process.env.EMAIL_PORT || '587'),
+    secure: false,
+    auth: {
+        user: process.env.EMAIL_FROM,
+        pass: process.env.EMAIL_PASS,
+    },
+});
 
-const cognito = require('./cognito');
-cognito.init();
-
-// Implement SES to send lists emailts to agents.
-// const ses = new AWS.SES({ apiVersion: '2010-12-01' });
-
-// Implement SES to send lists emails to agents.
-// User not authorized to send-email.
-/// Need to find someway to allow any user to send the email without handing out permissions willy nilly
 async function sendEmail(to, subject, body) {
-    const params = {
-        Destination: {
-            ToAddresses: [to],
-        },
-        Message: {
-            Body: {
-                Html: { Charset: 'UTF-8', Data: body },
-            },
-            Subject: { Charset: 'UTF-8', Data: subject },
-        },
-        Source: 'johncschatzl@gmail.com',
-    };
-
-    try {
-        const command = new SendEmailCommand(params);
-        const response = await sesClient.send(command);
-        return response;
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
-}
-
-// Implement Secrets.
-async function getSecrets(secretName) {
-    try {
-    const response = await secretClient.send(new GetSecretValueCommand({ SecretId: secretName }));
-    const secrets = JSON.parse(response.SecretString);
-    return secrets;
-    } catch (error) {
-        console.error("Failed to fetch secrets:", error);
-        throw error;
-    }
+    await mailer.sendMail({
+        from: process.env.EMAIL_FROM,
+        to,
+        subject,
+        html: body,
+    });
 }
 
 const limiter = rateLimit({
@@ -122,7 +84,6 @@ const allowedOrigins = [
     'https://alexandersrentals.com', 
     'https://alexandersrentals.com/',
     'https://www.alexandersrentals.com',
-    'https://alexandersrentals-nosms.auth.us-east-2.amazoncognito.com'
 ];
 
 app.options('*', cors({
@@ -150,90 +111,126 @@ app.use(cors({
 
 app.use(router);
 
-let secrets;
-let pems;
+// ── Local JWT authentication middleware ───────────────────────────────────────
 
-async function initializePems() {
-    try {
-        secrets = await getSecrets('AlexandersRentalsSecrets');
-    } catch (error) {
-        console.error("Failed to fetch secrets:", error);
-    }
-
-    return new Promise((resolve, reject) => {
-        const jwksUrl = `https://cognito-idp.${secrets.AWS_REGION}.amazonaws.com/${secrets.COGNITO_USER_POOL_ID}/.well-known/jwks.json`;
-
-        https.get(jwksUrl, (res) => {
-            let data = '';
-
-            res.on('data', (chunk) => {
-                data += chunk;
-            });
-
-            res.on('end', () => {
-                const keys = JSON.parse(data).keys;
-                pems = {};
-
-                for (let i = 0; i < keys.length; i++) {
-                    const keyId = keys[i].kid;
-                    const modulus = keys[i].n;
-                    const exponent = keys[i].e;
-                    const keyType = keys[i].kty;
-                    const jwk = { kty: keyType, n: modulus, e: exponent };
-                    const pem = jwkToPem(jwk);
-                    pems[keyId] = pem;
-                }
-
-                resolve();
-            });
-        }).on('error', (err) => {
-            console.error('Failed to download JWKS:', err);
-            reject(err);
-        });
-    });
-}
-
-async function initializeMiddleware() {
-    try {
-        secrets = await getSecrets('AlexandersRentalsSecrets');
-        await initializePems();
-
-        app.use(session({
-            secret: secrets.SESSION_SECRET_KEY,
-            resave: false,
-            saveUninitialized: false,
-            cookie: { secure: true },
-        }));
-    } catch (error) {
-        console.error("Failed to initialize middleware:", error);
-    }
-}
+app.use(session({
+    secret: process.env.SESSION_SECRET_KEY,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: process.env.NODE_ENV === 'production' },
+}));
 
 function authenticate(req, res, next) {
     const idToken = req.cookies.id_token;
-
     if (!idToken) {
-        return res.status(401).json({ error: 'No ID token found' });
+        return res.status(401).json({ error: 'Not authenticated' });
     }
-
-    const decodedJwt = jswt.decode(idToken, { complete: true });
-    const pem = pems[decodedJwt.header.kid];
-
-    jswt.verify(idToken, pem, { issuer: `https://cognito-idp.us-east-2.amazonaws.com/${secrets.COGNITO_USER_POOL_ID}` }, (err, payload) => {
-        if (err) {
-            console.error('Failed to verify ID token:', err);
-            res.clearCookie('accessToken');
-            res.status(500).json({ error: 'Failed to verify ID token', details: err });
-        } else {
-            req.user = { id: payload.sub }; // Using the subject (sub) as the user ID.
-            next();
-        }
-    });
+    try {
+        const payload = auth.verifyToken(idToken);
+        req.user = { id: payload.sub, email: payload.email };
+        next();
+    } catch (err) {
+        res.clearCookie('id_token');
+        return res.status(401).json({ error: 'Invalid or expired token' });
+    }
 }
 
-initializeMiddleware().then(() => {
-    console.log('Middleware initialized, setting up routes...');
-    const pool = require('./db');
+// ── Auth routes ───────────────────────────────────────────────────────────────
+
+const pool = require('./db');
+
+// Register
+app.post('/api/auth/register',
+    body('email').isEmail().normalizeEmail(),
+    body('password').isLength({ min: 8 }),
+    body('name').isString().trim().notEmpty().isLength({ max: 100 }),
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+
+        const { email, password, name } = req.body;
+        try {
+            const hash = await auth.hashPassword(password);
+            const user = await pool.createUser(email, name, hash);
+            res.status(201).json({ message: 'Account created.', user: { id: user.id, email: user.email, name: user.name } });
+        } catch (err) {
+            if (err.message.includes('already exists')) return res.status(409).json({ error: err.message });
+            console.error(err);
+            res.status(500).json({ error: 'Failed to create account.' });
+        }
+    }
+);
+
+// Login
+app.post('/api/auth/login',
+    body('email').isEmail().normalizeEmail(),
+    body('password').notEmpty(),
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+
+        const { email, password } = req.body;
+        try {
+            const user = await pool.getUserByEmail(email);
+            if (!user || !(await auth.verifyPassword(password, user.password_hash))) {
+                return res.status(401).json({ error: 'Invalid email or password.' });
+            }
+            const payload = { sub: String(user.id), email: user.email, name: user.name };
+            const idToken = auth.signAccessToken(payload);
+            const refreshToken = auth.signRefreshToken({ sub: String(user.id) });
+
+            const fifteenMinutes = 1000 * 60 * 15;
+            res.cookie('id_token', idToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'Strict', maxAge: fifteenMinutes });
+            res.cookie('refresh_token', refreshToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'Strict', maxAge: 1000 * 60 * 60 * 24 * 30 });
+            res.json({ message: 'Login successful.' });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ error: 'Login failed.' });
+        }
+    }
+);
+
+// Refresh
+app.post('/api/refresh', async (req, res) => {
+    const refreshToken = req.cookies.refresh_token;
+    if (!refreshToken) return res.status(401).json({ error: 'No refresh token found.' });
+    try {
+        const payload = auth.verifyToken(refreshToken);
+        const user = await pool.getUserById(payload.sub);
+        if (!user) return res.status(401).json({ error: 'User not found.' });
+        const newToken = auth.signAccessToken({ sub: String(user.id), email: user.email, name: user.name });
+        res.cookie('id_token', newToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'Strict', maxAge: 1000 * 60 * 15 });
+        res.json({ success: true });
+    } catch (err) {
+        res.status(401).json({ error: 'Invalid or expired refresh token.' });
+    }
+});
+
+// Change password
+app.post('/api/auth/change-password', authenticate,
+    body('currentPassword').notEmpty(),
+    body('newPassword').isLength({ min: 8 }),
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+        const { currentPassword, newPassword } = req.body;
+        try {
+            const user = await pool.getUserByEmail(req.user.email);
+            if (!user || !(await auth.verifyPassword(currentPassword, user.password_hash))) {
+                return res.status(401).json({ error: 'Current password is incorrect.' });
+            }
+            const hash = await auth.hashPassword(newPassword);
+            await pool.query('UPDATE users SET password_hash = $1 WHERE id = $2', [hash, user.id]);
+            res.json({ message: 'Password updated.' });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ error: 'Failed to update password.' });
+        }
+    }
+);
+
+{
+// ── Protected list routes ────────────────────────────────────────────────────
 
     // Saved lists endpoints.
     // Create a new list.
@@ -384,8 +381,8 @@ initializeMiddleware().then(() => {
           console.error('Error deleting item:', error);
           res.status(500).json({ message: 'Error deleting item' });
         }
-      });      
-});
+      });
+}
 
 // Defines the root path to serve my frontend from.
 app.get('/', (req, res) => {
@@ -406,128 +403,12 @@ app.post('/api/send-email', async (req, res) => {
 })
 
 app.post('/api/token', async (req, res) => {
-    // console.log("Received request:", req);
-    const secrets = await getSecrets('AlexandersRentalsSecrets');
-    const cognitoClientId = secrets.COGNITO_CLIENT_ID;
-    const { code } = req.body;
-
-    // console.log("Code:", code);
-
-    try {
-        // Exchange code for tokens
-        const urlSearchParams = new URLSearchParams({
-            grant_type: 'authorization_code',
-            client_id: cognitoClientId,
-            code,
-            // redirect_uri: "http://localhost:8080/", // Change this for production.
-            redirect_uri: process.env.CALLBACK_URL, 
-        });
-        
-        const response = await axios.post(`https://alexandersrentals-nosms.auth.us-east-2.amazoncognito.com/oauth2/token?${urlSearchParams}`, null, {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-        });
-
-        const tokens = response.data;
-
-        // Set tokens in HTTP-only cookies.
-        const fifteenMinutes = 1000 * 60 * 15;
-        res.cookie('access_token', tokens.access_token, { 
-            httpOnly: true, 
-            secure: true, 
-            sameSite: 'Strict', 
-            maxAge: fifteenMinutes
-        });
-        res.cookie('id_token', tokens.id_token, { 
-            httpOnly: true, 
-            secure: true, 
-            sameSite: 'Strict' 
-        });
-        res.cookie('refresh_token', tokens.refresh_token, {
-            httpOnly: true,
-            secure: true, 
-            sameSite: 'Strict',
-            maxAge: 1000 * 60 * 60 * 24 * 30 // 30 days
-        });
-
-        res.json({ message: 'Authentication successful', tokens: response.data});
-    } catch (error) {
-        console.error('Failed to exchange code for tokens:', error);
-        res.status(error.response?.status || 500).json({ error: error.message });
-    }
+    // Deprecated Cognito token exchange — replaced by /api/auth/login
+    res.status(410).json({ error: 'This endpoint has been removed. Use /api/auth/login.' });
 });
 
 // Endpoint for refreshing the access token.
-app.post('/api/refresh', async (req, res) => {
-    const secrets = await getSecrets('AlexandersRentalsSecrets');
-    cognitoClientId = secrets.COGNITO_CLIENT_ID;
-    const refreshToken = req.cookies.refresh_token;
-
-    if (!refreshToken) {
-        return res.status(401).json({ error: 'No refresh token found' });
-    }
-
-    try {
-        // Use Cognito to validate the refresh token and get a new access token.
-        // Replace the URL and headers with the correct values.
-        const response = await axios.post('https://alexandersrentals-nosms.auth.us-east-2.amazoncognito.com/oauth2/token', querystring.stringify({
-            grant_type: 'refresh_token',
-            client_id: cognitoClientId,
-            refresh_token: refreshToken,
-        }), {
-            headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-    });
-
-    const tokens = response.data;
-
-    // Set the new access token in an HTTP-only cookie.
-    res.cookie('access_token', tokens.access_token, {
-        httpOnly: true,
-        secure: true, 
-        sameSite: 'Lax',
-        maxAge: 1000 * 60 * 10 // 10 minutes
-    });
-    
-
-    res.json({ success: true });
-
-    } catch (error) {
-        console.error('Failed to refresh token:', error);
-        res.status(500).json({ error: 'Failed to refresh token' });
-    }
-});
-
-// We validate the token using the public key provided by Cognito.
-async function setUpClient () {
-    const secrets = await getSecrets('AlexandersRentalsSecrets');
-    const cognitoUserPoolId = secrets.COGNITO_USER_POOL_ID;
-
-    const client = jwksClient({
-        jwksUri: `https://cognito-idp.us-east-2.amazonaws.com/${cognitoUserPoolId}/.well-known/jwks.json`
-    });
-
-    return client;
-}
-
-setUpClient();
-
-async function getKey(header, callback) {
-    const client = await setUpClient();
-    client.getSigningKey(header.kid, function(err, key) {
-        if (err) {
-            callback(err, null);
-        } else {
-            // Use getPublicKey() to get the actual key
-            var signingKey = key.getPublicKey();
-            callback(null, signingKey);
-        }
-    });
-}
-
-// And then check the login status.
+// (kept at same path so existing frontend calls still work)
 app.get('/api/check-login-status', (req, res) => {
     const idToken = req.cookies.id_token;
     if (idToken) {
@@ -555,36 +436,23 @@ app.get('/api/user', async (req, res) => {
 });
 
 app.get('/api/logout', (req, res) => {
-    res.clearCookie('access_token', { path: '/', domain: process.env.DOMAIN}); // Change this for production.
-    res.clearCookie('id_token', { path: '/', domain: process.env.DOMAIN}); // Change this for production.
+    res.clearCookie('id_token', { path: '/' });
+    res.clearCookie('refresh_token', { path: '/' });
     res.json({ message: 'Logged out successfully.' });
 });
 
-// Endpoint for fetching cognito client id and domain.
-app.get('/api/cognito-config', async (req, res) => {
-    const secrets = await getSecrets('AlexandersRentalsSecrets');
-    const cognitoClientId = secrets.COGNITO_CLIENT_ID;
-    const cognitoUserPoolId = secrets.COGNITO_USER_POOL_ID;
-    
-    res.json({
-        cognitoRegion: 'us-east-2',
-        cognitoClientId: cognitoClientId,
-        cognitoUserPoolId: cognitoUserPoolId,
-        cognitoDomain: 'https://alexandersrentals-nosms.auth.us-east-2.amazoncognito.com',
-        redirectUri: 'https://alexandersrentals.com/'
-    });
+// Redirect to login page (used by frontend).
+app.get('/api/login', (req, res) => {
+    res.json({ url: '/login' });
 });
 
-//Test
-
-// Setting CSP headers to allow Cognito scripts.
+// Setting CSP headers.
 app.use(helmet.contentSecurityPolicy({
     directives: {
         defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "https://d1lcia0inyjsq.cloudfront.net", "https://alexanderrentals-login.auth.us-east-2.amazoncognito.com"]
+        scriptSrc: ["'self'"],
     },
     reportOnly: true,
-    reportUri: '/report-violation',
 }));
 
 app.post('/submit-preapproval', async (req, res) => {
@@ -608,8 +476,7 @@ app.post('/submit-preapproval', async (req, res) => {
 
 // Creating route to fetch data (YGL API)
 app.post('/api/properties', async (req, res) => {
-    const secrets = await getSecrets('AlexandersRentalsSecrets');
-    const apiKey = secrets.YGL_API_KEY;
+    const apiKey = process.env.YGL_API_KEY;
     try {
         const { latitude_start, latitude_end, longitude_start, longitude_end, street_name, 
             city_neighborhood, zip, state = 'MA', beds, min_bed, max_bed, baths, min_bath, max_bath, 
@@ -767,6 +634,3 @@ app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
 
-module.exports = {
-    getSecrets,
-};

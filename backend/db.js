@@ -1,48 +1,41 @@
 // Database connection setup.
 
 const { Pool } = require('pg');
-const { getSecrets } = require('./index');
 
-let pool;
+const pool = new Pool({
+    connectionString: process.env.DB_CONNECTION_STRING,
+    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+});
 
-async function initializePool() {
-    try {
-        let secrets;
-        if (process.env.NODE_ENV === 'production') {
-            secrets = await getSecrets('rds!db-ffb0f2ee-a5f5-457f-8195-0383cd55502d');
-        } else {
-            secrets = await getSecrets('rds!db-48e4c0b3-373c-4d20-8018-40553229b595');
-        }
-        let regSecrets = await getSecrets('database-values');
+pool.on('connect', () => console.log('Database pool connected.'));
+pool.on('error', (err) => console.error('Unexpected database pool error:', err));
 
-        // console.log("database credentials: ", secrets.username, secrets.password, regSecrets.testHost, regSecrets.port, regSecrets.database);
+// ── Users ─────────────────────────────────────────────────────────────────────
 
-        // pool = new Pool({
-        //     user: secrets.username,
-        //     host: secrets.host,
-        //     database: regSecrets.database,
-        //     password: secrets.password,
-        //     port: regSecrets.port,
-        // });
-
-        const connectionString = `postgresql://${encodeURIComponent(secrets.username)}:${encodeURIComponent(secrets.password)}@${regSecrets.testHost}:${regSecrets.port}/${regSecrets.database}`;
-
-        pool = new Pool({
-            connectionString: connectionString,
-            ssl: {
-                rejectUnauthorized: false
-            }
-        });
-        console.log("Pool initialized.");
-    } catch (error) {
-        console.error("Error initializing pool:", error);
-        throw error;
-    }
+async function getUserByEmail(email) {
+    const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+    return result.rows[0] || null;
 }
 
-initializePool().catch(err => console.error(err));
+async function getUserById(id) {
+    const result = await pool.query('SELECT id, email, name FROM users WHERE id = $1', [id]);
+    return result.rows[0] || null;
+}
 
-// Database interaction.
+async function createUser(email, name, passwordHash) {
+    const existing = await pool.query('SELECT id FROM users WHERE email = $1', [email]);
+    if (existing.rows.length > 0) {
+        throw new Error('An account with that email already exists.');
+    }
+    const result = await pool.query(
+        'INSERT INTO users (email, name, password_hash) VALUES ($1, $2, $3) RETURNING id, email, name',
+        [email, name, passwordHash]
+    );
+    return result.rows[0];
+}
+
+// ── Lists ─────────────────────────────────────────────────────────────────────
+
 async function getLists(userId) {
     try {
         const result = await pool.query(
@@ -173,6 +166,9 @@ async function removeItemsFromList(propertyId) {
 }
 
 module.exports = {
+    getUserByEmail,
+    getUserById,
+    createUser,
     getLists,
     getList,
     createList,
@@ -182,5 +178,5 @@ module.exports = {
     createItem,
     deleteItem,
     updateItem,
-    removeItemsFromList
+    removeItemsFromList,
 }

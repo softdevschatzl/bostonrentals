@@ -2,7 +2,16 @@ const { defineConfig } = require('@vue/cli-service')
 const webpack = require('webpack');
 
 module.exports = defineConfig({
-  transpileDependencies: true,
+  // Set to '/bostonrentals/' if hosted at username.github.io/bostonrentals/
+  // Set to '/' if hosted at the root of a custom domain or separate repo
+  publicPath: process.env.NODE_ENV === 'production' ? '/bostonrentals/' : '/',
+  transpileDependencies: [],
+  css: {
+    loaderOptions: {
+      sass: { api: 'modern' },
+      scss: { api: 'modern' },
+    },
+  },
   devServer: {
     proxy: {
       '/api': {

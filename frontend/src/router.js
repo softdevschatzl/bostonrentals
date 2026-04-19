@@ -6,6 +6,7 @@ import PrivacyPolicyPage from '@/components/PrivacyPolicyPage.vue';
 import CookiePolicyPage from '@/components/CookiePolicyPage.vue';
 import TermsOfServicePage from '@/components/TermsOfServicePage.vue';
 import MyAccount from '@/components/MyAccount.vue';
+import LoginPage from '@/components/LoginPage.vue';
 import store from '@/store';
 
 // Vue.use(Router);
@@ -40,9 +41,7 @@ const routes = [
         }
     },
     {
-        path: '/login', 
-        beforeEnter() { location.href = process.env.VUE_APP_COGNITO_URL; },
-        component: { template: '<div></div>' },
+        path: '/login', name: 'Login', component: LoginPage,
     }
 ];
 
